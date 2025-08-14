@@ -2,9 +2,11 @@ import { useState } from 'react'
 import './index.css'
 
 export default function Linguaskill() {
+  let instruction = ''
   return (
     <div className='flex justify-start items-center flex-col h-full'>
       <Header />
+      <Instruction text={instruction}/>
       <Content etapa={0}/>
       <Footer></Footer>
     </div>
@@ -13,11 +15,19 @@ export default function Linguaskill() {
 
 export function Header() {
   return (
-    <div className="flex w-screen h-10 bg-gray-950">
+    <div className="flex w-screen h-10 bg-neutral-800">
     </div>
   )
 }
 
+export function Instruction({text}) {
+  return (
+    text ? <div className="flex items-center p-7 h-12 text-lg w-full bg-neutral-700 text-white ">
+    {text}  
+    </div> :
+    <div className="hidden"></div>
+  )
+}
 export function Content({etapa}) {
   console.log(etapa)
   if (etapa == 0) {
@@ -29,7 +39,7 @@ export function Content({etapa}) {
         <p className='mb-3 text-xl'>Linguaskill is an adaptive test</p>
         <p className='mb-3 text-xl'>This demonstration will show you what the Reading questions look like.</p >
         <p className='mb-3 text-xl'>To move through the questions, click the arrows in the bottom-right corner of the screen.</p >
-        <p className='mb-3 text-xl'>Click Start in the bottom-right corner of the screen to begin the demonstration.</p>
+        <p className='mb-3 text-xl'>Click <strong>Start</strong> in the bottom-right corner of the screen to begin the demonstration.</p>
       </div>
     </div>
     )
