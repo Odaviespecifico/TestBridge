@@ -1,18 +1,22 @@
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState, useEffect } from "react";
 
 export function InlineOpen({id}) {
-
+  useEffect(() => {
+    let inputs = document.querySelectorAll('input')
+    inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
+  }, [])
+  
   function removeSpace(e) { ''
     e.target.value = e.target.value.replaceAll(' ', '')
-  }
+  } 
 
   return (
-    <span className="group inline-flex gap-1 items-center min-w-32">
+    <span className="group inline-flex gap-1 items-center">
       <span className="size-8 bg-neutral-900 text-white text-base inline-flex justify-center items-center font-bold group-has-focus:bg-blue-700">
-        {id}
+        {id}  
       </span>
       <input
-        className="h-9 bg-blue-100 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
+        className="h-9 bg-blue-100 lg:w-64 sm:w-40 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
         type="text"
         name={id}
         onInput={(e) => removeSpace(e)}

@@ -1,23 +1,19 @@
 import {InlineOpen, InlineClosed} from './Alternatives.jsx'
 
-export function OneCollumnQuestion() {
+export function OneCollumnQuestion({formRef}) {
   let idCount = 0
   function incrementId() {
     idCount++
+    console.log(localStorage.getItem(idCount))
     return idCount
   }  
-
-  function handleSubmit(e) {
-    e.preventDefault()
-    let myform = new FormData(e.target)
-    myform = Object.fromEntries(myform.entries())
-    console.log(myform)
-    alert(myform)
+  function inputValue(id) {
+    console.log(localStorage.getItem(id))
   }
   return (
-    <div className="flex flex-col gap-10 py-7 w-6xl px-6 flex-1" >
+    <div className="flex flex-col gap-10 px-6 w-full max-w-5xl flex-1" >
         <h1 className="font-bold text-2xl text-center">Teste</h1>
-        <form id='formQuestion1' className='mb-3 text-xl' onSubmit={(e) => handleSubmit(e)}> I've read the same weekend newspaper for years. I make sure I manage to read it every week, or I feel out of touch. I started reading my favourite paper a couple of years <InlineOpen id={incrementId()}/>. <InlineOpen id={incrementId()}/> 
+        <form id='formQuestion' ref={formRef} className='mb-3 text-xl'> I've read the same weekend newspaper for years. I make sure I manage to read it every week, or I feel out of touch. I started reading my favourite paper a couple of years <InlineOpen id={incrementId()}/>. <InlineOpen id={incrementId()}/> 
         I agree with many things in it, the paper also challenges me. It makes me look at things in <InlineOpen id={incrementId()}/> 
         different way. I usually find the reviews interesting - but I must admit some weeks I can't bear them as they've <InlineOpen id={incrementId()}/> 
         written in a very sarcastic style. The regular writers have made me shake my head with anger too, on occasions, or smile <InlineOpen id={incrementId()}/> 
