@@ -2,6 +2,8 @@ import {InlineOpen, InlineClosed, FourAlternatives, RadioTableInput, IdBox, OneQ
 import {DndContext} from '@dnd-kit/core';
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
+import {DragOverlay} from '@dnd-kit/core';
+
 
 export function RegisterAttempt({formRef}) {
   return (
@@ -122,7 +124,7 @@ export function DragQuestion({formRef}) {
     return (
       <DndContext>
       <div className="grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12">
-        <div className='flex flex-col gap-5 overflow-y-scroll'>
+        <div className='flex flex-col relative gap-5 overflow-y-scroll z-0'>
           <div>
             <TextTitle center={false}>Question Title</TextTitle>
             <em className='text-[18px]'>Sub-title</em>
@@ -131,8 +133,8 @@ export function DragQuestion({formRef}) {
           <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative></DropAlternative>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
           <OneCollumnParagraph>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
         </div>
-        <form id='formQuestion' ref={formRef} className='p-5 overflow-y-auto'>
-          <DragAlternative>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nam, quaerat quae praesentium aspernatur animi numquam aliquam dolorum fugiat. Nulla quasi consequuntur sint quos, repudiandae odit maxime eum! Dolor, doloremque!</DragAlternative>
+        <form id='formQuestion' ref={formRef} className='relative p-5 overflow-y-auto z-40'>
+            <DragAlternative>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nam, quaerat quae praesentium aspernatur animi numquam aliquam dolorum fugiat. Nulla quasi consequuntur sint quos, repudiandae odit maxime eum! Dolor, doloremque!</DragAlternative>
         </form> 
       </div>
     </DndContext>
@@ -141,7 +143,7 @@ export function DragQuestion({formRef}) {
 // Small components
 function OneCollumnParagraph({children}) {
     return(
-        <p className='mb-3 text-lg'>{children}</p>
+        <p className='relative mb-3 text-lg '>{children}</p>
     )
 }
 
@@ -168,20 +170,6 @@ function BoxText({children, title}) {
 }
 
 function DragAlternative({children}) {
-  const {isOver, setNodeRef} = useDroppable({
-    id: 'droppable',
-  });
-  const style = {
-    color: isOver ? 'green' : undefined,
-  };
-  return (
-    <div ref={setNodeRef} className="w-full bg-blue-500 text-lg text-white p-2">
-      {children}
-    </div>
-  )
-}
-
-function DropAlternative() {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: 'draggable',
   });
@@ -189,19 +177,31 @@ function DropAlternative() {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
-  return(
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      texting
-    </button>
+  return (
+      <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="w-full relative bg-blue-500 text-lg text-white p-2 z-50">
+        {children}
+      </div>
+  )
+}
+
+function DropAlternative(props) {
+  const {isOver, setNodeRef} = useDroppable({
+    id: 'droppable',
+  });
+  isOver ? console.log('over') : (true)
+  
+  return (
+    <span className="inline-block relative align-middle h-9 bg-blue-100 w-32 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center" ref={setNodeRef}>
+    </span>
   );
+}
 
   // <span className="group inline-flex gap-1 items-center">
   //     <IdBox>66</IdBox>
   //     <input
-  //       className="h-9 bg-blue-100 min-w-40 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
+  //       className=""
   //       type="text"
   //       name={66}
   //       readOnly
   //     />
   //   </span>
-}

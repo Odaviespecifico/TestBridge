@@ -103,7 +103,7 @@ export function RadioTableInput({children, id}) {
   }, [])
 
   return (
-    <tr className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full' key={children} onClick={(e) => e.target.children[0].click()}>
+    <tr className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
       <input type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 hover:cursor-pointer"/>
       <label htmlFor={"input-"+id+children+'id'} className="hover:cursor-pointer">{children}</label>
     </tr>
