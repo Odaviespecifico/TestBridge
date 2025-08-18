@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = 'https://lwxhswosqyfujmjspryh.supabase.co'
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
-const supabase = createClient(supabaseUrl, 'supabaseKey ')
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function adicionarTentativa(nomeAluno, nomeProfessor) {
     const { data, error } = await supabase
