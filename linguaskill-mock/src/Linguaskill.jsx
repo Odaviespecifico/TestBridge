@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
 import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice } from "./questions.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt} from "./questions.jsx";
 import {} from "./Alternatives.jsx";
+import {adicionarTentativa} from './supabase.js'
 
 export default function Linguaskill() {
   let answers = Object()
@@ -13,16 +14,37 @@ export default function Linguaskill() {
       case 0:
         return <Introduction />;
       case 1:
-        return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
+        return <RegisterAttempt formRef={formRef}></RegisterAttempt>
       case 2:
-        return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
+        return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
       case 3:
+        return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
+      case 4:
         return <OneQuestionMultipleChoice formRef={formRef}></OneQuestionMultipleChoice>
-    }
+      case 5: 
+        return <DragQuestion formRef={formRef}></DragQuestion>
+      default:
+        return <h1>Essa pagina {currentQuestion} não existe =(</h1>
+      }
   }
 
-  const advanceQuestion = () => {
-    if (formRef.current) {
+  const advanceQuestion = async () => {
+    // Verifica se o local Storage não tem o ID da tentativa
+    if (currentQuestion == 1 && localStorage.getItem('id') == null) {
+      let myform = new FormData(formRef.current)
+      let myformObj = Object.fromEntries(myform.entries())
+      console.log(myformObj)
+      let id = await adicionarTentativa(myformObj.studentName,myformObj.teacherName)
+      localStorage.setItem('id',id.id)
+      alert('registrado com sucesso')
+    }
+    
+    // Caso tenha o ID, pular o registro de tentativa
+    else if (localStorage.getItem('id') != null && currentQuestion == 0) {
+      setCurrentQuestion((prevState) => prevState + 1);
+    }
+
+    else if (formRef.current) {
       let myform = new FormData(formRef.current)
       let myformObj = Object.fromEntries(myform.entries())
       myform.entries().forEach((pair) => {
@@ -35,6 +57,10 @@ export default function Linguaskill() {
 
   const returnQuestion = () => {
     setCurrentQuestion((prevState) => prevState - 1);
+    // Caso tenha o ID
+    if (localStorage.getItem('id') != null && currentQuestion == 2) {
+      setCurrentQuestion((prevState) => prevState - 1);
+    }
   };
 
   return (

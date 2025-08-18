@@ -1,5 +1,33 @@
 import {InlineOpen, InlineClosed, FourAlternatives, RadioTableInput, IdBox, OneQuestionAlternative} from './Alternatives.jsx'
+import {DndContext} from '@dnd-kit/core';
+import {useDroppable} from '@dnd-kit/core';
+import {useDraggable} from '@dnd-kit/core';
 
+export function RegisterAttempt({formRef}) {
+  return (
+    <form ref={formRef} className="flex flex-col gap-4 p-4 max-w-md mx-auto h-full justify-center -mt-35">
+      <h1 className="text-2xl font-bold text-center mb-4">Registrar tentativa</h1>
+      <label className="flex flex-col font-semibold text-lg">
+        Seu nome
+        <input
+          type="text"
+          name="studentName"
+          className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+          placeholder="Digite seu nome"
+        />
+      </label>
+      <label className="flex flex-col font-semibold text-lg">
+        Nome do seu professor
+        <input
+          type="text"
+          name="teacherName"
+          className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+          placeholder="Digite o nome do professor"
+        />
+      </label>
+    </form>
+  )
+}
 export function OneCollumnQuestion({formRef}) {
   let idCount = 0
   
@@ -72,7 +100,7 @@ export function OneQuestionMultipleChoice({formRef}) {
   } 
 
   return (
-    <div className="flex gap-8 items-start p-8 w-full h-full">
+    <div className="flex gap-8 items-start p-8 w-full max-w-5xl h-full">
       <IdBox>{incrementId()}</IdBox>
       <div className='border-4 rounded-2xl p-2 max-w-96 text-base'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur debitis at, quis quos incidunt error voluptas tempora suscipit magni eius dolores fuga deleniti nihil eum ducimus laboriosam autem ullam reiciendis!</div>
       <form ref={formRef} className='flex-1'>
@@ -85,10 +113,35 @@ export function OneQuestionMultipleChoice({formRef}) {
   )
 }
 
+export function DragQuestion({formRef}) {
+    let idCount = 5
+    function incrementId() {
+      idCount++
+      return idCount
+    } 
+    return (
+      <DndContext>
+      <div className="grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12">
+        <div className='flex flex-col gap-5 overflow-y-scroll'>
+          <div>
+            <TextTitle center={false}>Question Title</TextTitle>
+            <em className='text-[18px]'>Sub-title</em>
+          </div>
+          <OneCollumnParagraph>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+          <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative></DropAlternative>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+          <OneCollumnParagraph>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+        </div>
+        <form id='formQuestion' ref={formRef} className='p-5 overflow-y-auto'>
+          <DragAlternative>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nam, quaerat quae praesentium aspernatur animi numquam aliquam dolorum fugiat. Nulla quasi consequuntur sint quos, repudiandae odit maxime eum! Dolor, doloremque!</DragAlternative>
+        </form> 
+      </div>
+    </DndContext>
+  )
+}
 // Small components
-function OneCollumnParagraph() {
+function OneCollumnParagraph({children}) {
     return(
-        <p className='mb-3 text-xl'></p>
+        <p className='mb-3 text-lg'>{children}</p>
     )
 }
 
@@ -114,3 +167,41 @@ function BoxText({children, title}) {
   )
 }
 
+function DragAlternative({children}) {
+  const {isOver, setNodeRef} = useDroppable({
+    id: 'droppable',
+  });
+  const style = {
+    color: isOver ? 'green' : undefined,
+  };
+  return (
+    <div ref={setNodeRef} className="w-full bg-blue-500 text-lg text-white p-2">
+      {children}
+    </div>
+  )
+}
+
+function DropAlternative() {
+  const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    id: 'draggable',
+  });
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+  } : undefined;
+
+  return(
+    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      texting
+    </button>
+  );
+
+  // <span className="group inline-flex gap-1 items-center">
+  //     <IdBox>66</IdBox>
+  //     <input
+  //       className="h-9 bg-blue-100 min-w-40 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
+  //       type="text"
+  //       name={66}
+  //       readOnly
+  //     />
+  //   </span>
+}
