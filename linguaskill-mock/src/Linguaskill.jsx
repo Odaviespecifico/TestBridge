@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import "./index.css";
-import { OneCollumnQuestion } from "./questions.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice } from "./questions.jsx";
 import {} from "./Alternatives.jsx";
 
 export default function Linguaskill() {
-  const answers = Object()
+  let answers = Object()
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const formRef = useRef(null) 
 
@@ -14,19 +14,21 @@ export default function Linguaskill() {
         return <Introduction />;
       case 1:
         return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
+      case 2:
+        return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
+      case 3:
+        return <OneQuestionMultipleChoice formRef={formRef}></OneQuestionMultipleChoice>
     }
   }
 
   const advanceQuestion = () => {
-    console.log()
     if (formRef.current) {
       let myform = new FormData(formRef.current)
       let myformObj = Object.fromEntries(myform.entries())
       myform.entries().forEach((pair) => {
         localStorage.setItem(pair[0],pair[1])
       })
-      answers = localStorage()
-      console.log(answers)
+      answers = localStorage
     }
     setCurrentQuestion((prevState) => prevState + 1);
   };
@@ -61,7 +63,7 @@ export function Instruction({ text }) {
   if (text) {
     return text.map((line) => (
       <div
-        className="flex items-center p-7 py-4 h-fit mb-6 text-lg w-full bg-neutral-700 font-medium text-white :: --mb-5"
+        className="flex items-center p-7 py-4 h-fit text-lg w-full bg-neutral-700 font-medium text-white"
         key={line}
       >
         {line}
@@ -137,7 +139,7 @@ export function Footer({ nextQuestion, previousQuestion, currentQuestion }) {
   };
 
   return (
-    <div className="flex w-full h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end z-2">
+    <div className="flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end z-2">
       {renderBottomButton()}
     </div>
   );
