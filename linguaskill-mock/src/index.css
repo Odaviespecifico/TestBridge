@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@theme {
+  --animate-comeTop: comeTop 0.2s ease-in-out forwards;
+  --animate-backBottom: comeTop 0.2s ease-in-out backwards;
+
+  @keyframes comeTop {
+    from {
+      transform: translateY(+100px);
+    }
+    to {
+    transform: translateY(0px);
+    }
+  }
+}

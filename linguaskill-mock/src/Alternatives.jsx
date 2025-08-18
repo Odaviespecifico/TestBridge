@@ -53,7 +53,7 @@ export function InlineClosed({alternatives, id}) {
         onFocus={() => alternativeDiv.current.className = alternativeDiv.current.className + ' hover:grid'}
       />
     </span>
-    <div className="absolute bottom-[56px] left-0 w-full h-24 bg-blue-600 hidden grid-cols-4 peer-has-focus:grid active:grid transition-all 2s z-1"
+    <div className="absolute bottom-[56px] left-0 w-full h-24 bg-blue-600 hidden grid-cols-4 peer-has-focus:grid active:grid animate-(--animate-comeTop)"
          ref={alternativeDiv}>
       <button type='button' className="flex justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{alternatives[0]}</button>
       <button type='button' className="flex justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{alternatives[1]}</button>
