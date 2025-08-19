@@ -45,6 +45,8 @@ export default function Linguaskill() {
     }
 
     else if (formRef.current) {
+      console.log('Salvando as respostas de...')
+      console.log(formRef.current)
       let myform = new FormData(formRef.current)
       let myformObj = Object.fromEntries(myform.entries())
       myform.entries().forEach((pair) => {

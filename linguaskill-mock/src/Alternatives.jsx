@@ -1,4 +1,6 @@
 import { useId, useRef, useState, useEffect, use } from "react";
+import {useDroppable} from '@dnd-kit/core';
+import {useDraggable} from '@dnd-kit/core';
 
 export function InlineOpen({id}) {
   // Get the previous answer
@@ -128,4 +130,44 @@ export function OneQuestionAlternative({children,id}) {
           <label htmlFor={id+children} className="hover:cursor-pointer">{children}</label>
     </tr>
   )
+}
+
+export function DragAlternative({children, id,}) {
+  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
+    id: id,
+    data: children,
+  });
+
+  return (
+      <div id={id} ref={setNodeRef} {...listeners} {...attributes} className="w-full relative bg-blue-500 text-lg text-white p-2
+        rounded-xl hover:cursor-grab active:cursor-grabbing
+        transition-colors duration-200 ease-in-out
+        hover:bg-blue-600 active:bg-blue-700
+        shadow-md hover:shadow-lg"
+        >
+        {children}
+      </div>
+  )
+}
+
+export function DropAlternative({children, id, handleclick}) {
+  const {isOver, setNodeRef} = useDroppable({
+    id: id,
+  });
+  useEffect(() => {
+      let inputs = document.querySelectorAll('input')
+      inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
+  }, [])
+  
+  return (
+    <>
+      <IdBox>{id}</IdBox>
+      <input type='text' id={id} className="inline-block relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
+      ref={setNodeRef}
+      readOnly
+      name={id}
+      onClick={(e) => handleclick(e)}>
+      </input>
+    </>
+  );
 }
