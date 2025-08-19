@@ -24,7 +24,7 @@ export default function Linguaskill() {
       case 5: 
         return <DragQuestion formRef={formRef}></DragQuestion>
       default:
-        return <h1>Essa pagina {currentQuestion} não existe =(</h1>
+        return <h1>Essa pagina {currentQuestion} não existe </h1>
       }
   }
 

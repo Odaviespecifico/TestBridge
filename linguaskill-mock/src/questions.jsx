@@ -3,6 +3,7 @@ import {DndContext} from '@dnd-kit/core';
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
 import {DragOverlay} from '@dnd-kit/core';
+import { useState } from 'react';
 
 
 export function RegisterAttempt({formRef}) {
@@ -121,22 +122,49 @@ export function DragQuestion({formRef}) {
       idCount++
       return idCount
     } 
+    let alternativeOriginal = ['teste 1', 'teste 2', 'teste 3','teste 4','teste 5']
+    const [alternatives, setAlternatives] = useState(['teste 1', 'teste 2', 'teste 3','teste 4','teste 5'])
+    
+    function handleDragEnd (e) {
+      let over = e.over
+      let text = document.querySelector(`#${e.active.id}`).innerHTML
+      if (over != null) {
+        document.querySelector(`#${over.id}`).value = text
+        if (alternatives.indexOf(text) != -1) {
+          let removeIndex = alternatives.indexOf(text)
+          alternatives.splice(removeIndex,1)
+          // Colocar o array na ordem padrão
+          setAlternatives([...alternatives])
+        }
+        // setAlternatives(alternatives.splice(alternatives.indexOf(text), 1))
+      }
+    }
+    
+    function handleAlternativeRemoval(e) {
+      if (e.target.value != '') {
+        alternatives.push(e.target.value)
+        alternatives.sort((a, b) => {return alternativeOriginal.indexOf(a) - alternativeOriginal.indexOf(b)})
+        setAlternatives([...alternatives])
+        e.target.value = ''
+      }
+    }
+
     return (
-      <DndContext>
-      <div className="grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12">
-        <div className='flex flex-col relative gap-5 overflow-y-scroll z-0'>
-          <div>
-            <TextTitle center={false}>Question Title</TextTitle>
-            <em className='text-[18px]'>Sub-title</em>
+      <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)}>
+        <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12'>
+          <div className='flex flex-col relative gap-5 overflow-y-scroll z-0'>
+            <div>
+              <TextTitle center={false}>Question Title</TextTitle>
+              <em className='text-[18px]'>Sub-title</em>
+            </div>
+            <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id='Mytest1' handleclick={handleAlternativeRemoval}></DropAlternative>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+            <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id='Mytest2' handleclick={handleAlternativeRemoval}></DropAlternative>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+            <OneCollumnParagraph>Lorem ipsum dolor <DropAlternative id='Mytest3' handleclick={handleAlternativeRemoval}></DropAlternative> sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
           </div>
-          <OneCollumnParagraph>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
-          <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative></DropAlternative>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
-          <OneCollumnParagraph>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+          <div className='flex flex-col gap-2'>
+            {alternatives.length >= 1 ? alternatives.map((alt) => <DragAlternative id={alt.replaceAll(' ','')} key={alt.replaceAll(' ','')}>{alt}</DragAlternative>) : 'vazio'}
+          </div>
         </div>
-        <form id='formQuestion' ref={formRef} className='relative p-5 overflow-y-auto z-40'>
-            <DragAlternative>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero nam, quaerat quae praesentium aspernatur animi numquam aliquam dolorum fugiat. Nulla quasi consequuntur sint quos, repudiandae odit maxime eum! Dolor, doloremque!</DragAlternative>
-        </form> 
-      </div>
     </DndContext>
   )
 }
@@ -169,30 +197,32 @@ function BoxText({children, title}) {
   )
 }
 
-function DragAlternative({children}) {
+function DragAlternative({children, id}) {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: 'draggable',
+    id: id,
   });
   const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    transform: `translate3d(${transform.x/.75}px, ${transform.y/.75}px, 0)`,
   } : undefined;
 
   return (
-      <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="w-full relative bg-blue-500 text-lg text-white p-2 z-50">
+      <div id={id} ref={setNodeRef} style={style} {...listeners} {...attributes} className="w-full relative bg-blue-500 text-lg text-white p-2 z-50 opacity-100 active:opacity-70 active:-rotate-3 transform all 2s active:scale-75 hover:cursor-all-scroll rounded-xl">
         {children}
       </div>
   )
 }
 
-function DropAlternative(props) {
+function DropAlternative({children, id, handleclick}) {
   const {isOver, setNodeRef} = useDroppable({
-    id: 'droppable',
+    id: id,
   });
-  isOver ? console.log('over') : (true)
   
   return (
-    <span className="inline-block relative align-middle h-9 bg-blue-100 w-32 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center" ref={setNodeRef}>
-    </span>
+    <input type='text' id={id} className="inline-block relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
+    ref={setNodeRef}
+    readOnly
+    onClick={(e) => handleclick(e)}>
+    </input>
   );
 }
 
