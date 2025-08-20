@@ -15,7 +15,7 @@ export default function Linguaskill() {
         return <Introduction title={'Linguaskill - Mock test 1'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
       case -2:
         return <RegisterAttempt formRef={formRef}></RegisterAttempt>
-      case 2:
+      case 1:
         return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
       case 3:
         return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
