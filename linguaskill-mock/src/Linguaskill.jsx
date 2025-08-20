@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, Children } from "react";
 import "./index.css";
 import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt} from "./questions.jsx";
 import {} from "./Alternatives.jsx";
@@ -12,8 +12,8 @@ export default function Linguaskill() {
   function renderContent() {
     switch (currentQuestion) {
       case 0:
-        return <Introduction />;
-      case 1:
+        return <Introduction title={'Linguaskill - Mock test 1'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
+      case -2:
         return <RegisterAttempt formRef={formRef}></RegisterAttempt>
       case 2:
         return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
@@ -23,6 +23,8 @@ export default function Linguaskill() {
         return <OneQuestionMultipleChoice formRef={formRef}></OneQuestionMultipleChoice>
       case 5: 
         return <DragQuestion formRef={formRef}></DragQuestion>
+      case 6:
+        return <Introduction title='Linguaskill - Listening section'>This is the Listening section </Introduction>;
       default:
         return <h1>Essa pagina {currentQuestion} não existe </h1>
       }
@@ -65,23 +67,23 @@ export default function Linguaskill() {
     }
   };
 
-  return (
-    <div className="flex items-center flex-col h-full w-screen justify-stretch">
-      <Header />
-      <Instruction
-        text={[
-          "Click on each gap then type the word which you think fits best. Type only one word in each gap.",
-        ]}
-      />
-      {renderContent()}
-      <Footer
-        nextQuestion={advanceQuestion}
-        previousQuestion={returnQuestion}
-        currentQuestion={currentQuestion}
-      ></Footer>
-    </div>
-  );
-}
+    return (
+      <div className="flex items-center flex-col h-full w-screen justify-stretch">
+        <Header />
+        <Instruction
+          text={[
+            "Click on each gap then type the word which you think fits best.",
+          ]}
+        />
+        {renderContent()}
+        <Footer
+          nextQuestion={advanceQuestion}
+          previousQuestion={returnQuestion}
+          currentQuestion={currentQuestion}
+        ></Footer>
+      </div>
+    );
+  }
 
 export function Header() {
   return <div className="flex w-full h-10 bg-neutral-800"></div>;
@@ -102,7 +104,7 @@ export function Instruction({ text }) {
   }
 }
 
-export function Introduction() {
+export function Introduction({title,children}) {
   return (
     <div className="flex flex-col gap-10 py-7 w-fit xl:-ml-48 px-6 flex-1">
       <img
@@ -111,19 +113,10 @@ export function Introduction() {
         className="h-[65px] w-fit"
       />
       <div>
-        <h1 className="text-4xl font-bold mb-7">Reading - Mock 1</h1>
-        <p className="mb-3 text-xl">Linguaskill is an exam</p>
-        <p className="mb-3 text-xl">
-          This demonstration will show you what the look like.
-        </p>
-        <p className="mb-3 text-xl">
-          To move through the, click the arrows in the bottom-right corner of
-          the screen.
-        </p>
-        <p className="mb-3 text-xl">
-          Click <strong>Start</strong> in the bottom corner of the screen to
-          begin the demonstration.
-        </p>
+        <h1 className="text-4xl font-bold mb-7">{title}</h1>
+        <div className="mb-3 text-xl/loose"> 
+        {children}
+        </div>
       </div>
     </div>
   );

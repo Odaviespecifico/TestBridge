@@ -9,8 +9,8 @@ export function InlineOpen({id}) {
     inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
   }, [])
   
-  function removeSpace(e) { ''
-    e.target.value = e.target.value.replaceAll(' ', '')
+  function removeSpace(e) { 
+    // e.target.value = e.target.value.replaceAll(' ', '')
   } 
 
   return (

@@ -39,9 +39,24 @@ export function OneCollumnQuestion({formRef}) {
   return (
     <div className="flex flex-col gap-10 px-6 w-full max-w-5xl flex-1 mt-5" >
         <TextTitle>Question Title</TextTitle>
-        <form id='formQuestion' ref={formRef} className='mb-3 text-xl'> With this kind of question you can have inline opens <InlineOpen id={incrementId()}></InlineOpen>
-        or inline closed <InlineClosed id={incrementId()} alternatives={['You','have to', 'pass the alternatives','as a array prop']}></InlineClosed>
+        <form id='formQuestion' ref={formRef} className='mb-3 text-xl/loose'> 
+        <p>If you <InlineOpen id={incrementId()}></InlineOpen> ice, it melts <br></br></p> 
+        <hr />
+        If she <InlineOpen id={incrementId()}/> hard, she will pass the exam <br />
+        <hr />
+        If I <InlineOpen id={incrementId()}/> more confidente, I would speak in the meeting. <br />
+        <hr />
+        If they invite me, I <InlineOpen id={incrementId()}/> to the party <br />
+        <hr />
+        If we <InlineOpen id={incrementId()}/> earlier, we wouldn't have missed the train. <br />
+        <hr />
+        if I <InlineOpen id={incrementId()}/> the answer, I would have told you
+        <hr />
+        You will feel better if you <InlineOpen id={incrementId()}/> some rest.<br />
+        <hr />
+        If he <InlineOpen id={incrementId()}/> the meeting yesterday, he would know the plan now.
         </form>
+        {/* <InlineClosed id={incrementId()} alternatives={['You','have to', 'pass the alternatives','as a array prop']}></InlineClosed> */}
     </div>
     )
   }
