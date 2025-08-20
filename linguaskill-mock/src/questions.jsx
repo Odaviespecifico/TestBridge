@@ -38,7 +38,7 @@ export function OneCollumnQuestion({formRef}) {
 }  
   return (
     <div className="flex flex-col gap-10 px-6 w-full max-w-5xl flex-1 mt-5" >
-        <TextTitle>Question Title</TextTitle>
+        <TextTitle>Open gap fill</TextTitle>
         <form id='formQuestion' ref={formRef} className='mb-3 text-xl/loose'> 
         <p>If you <InlineOpen id={incrementId()}></InlineOpen> ice, it melts <br></br></p> 
         <hr />
