@@ -16,7 +16,6 @@ export default function Linguaskill() {
       case -2:
         return <RegisterAttempt formRef={formRef}></RegisterAttempt>
       case 1:
-        return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
       case 3:
         return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
       case 4:
@@ -26,7 +25,8 @@ export default function Linguaskill() {
       case 6:
         return <Introduction title='Linguaskill - Listening section'>This is the Listening section </Introduction>;
       default:
-        return <h1>Essa pagina {currentQuestion} não existe </h1>
+        return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
+        // return <h1>Essa pagina {currentQuestion} não existe </h1>
       }
   }
 
