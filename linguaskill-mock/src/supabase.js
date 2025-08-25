@@ -11,7 +11,7 @@ export async function adicionarTentativa(nomeAluno, nomeProfessor) {
   ])
   .select('id')
   .single()
-  return data
+  return {data, error}
 }
 
 export async function adicionarResposta(idTentativa, idQuestão, resposta,) {

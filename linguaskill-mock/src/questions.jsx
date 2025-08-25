@@ -11,6 +11,8 @@ export function RegisterAttempt({formRef}) {
       <label className="flex flex-col font-semibold text-lg">
         Seu nome
         <input
+          required
+          minLength='3'
           type="text"
           name="studentName"
           className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
@@ -20,6 +22,8 @@ export function RegisterAttempt({formRef}) {
       <label className="flex flex-col font-semibold text-lg">
         Nome do seu professor
         <input
+          required
+          minLength='3'
           type="text"
           name="teacherName"
           className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"

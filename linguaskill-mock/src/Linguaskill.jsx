@@ -3,6 +3,8 @@ import "./index.css";
 import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt} from "./questions.jsx";
 import {} from "./Alternatives.jsx";
 import {adicionarTentativa} from './supabase.js'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 export default function Linguaskill() {
   let answers = Object()
@@ -13,9 +15,16 @@ export default function Linguaskill() {
     switch (currentQuestion) {
       case 0:
         return <Introduction title={'Linguaskill - Mock test 1'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
-      case -2:
-        return <RegisterAttempt formRef={formRef}></RegisterAttempt>
       case 1:
+        console.log('case 1')
+        return <RegisterAttempt formRef={formRef}></RegisterAttempt>
+      case 1.5:
+        console.log('case 1.5')
+        return (<Loading status='loading'></Loading>)
+      case 1.75:
+        console.log('case 1.75')
+        return (<Loading status='sucess'></Loading>)
+      case 2:
         return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
       case 3:
         return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
@@ -26,28 +35,44 @@ export default function Linguaskill() {
       case 6:
         return <Introduction title='Linguaskill - Listening section'>This is the Listening section </Introduction>;
       default:
-        
-        return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
-        // return <h1>Essa pagina {currentQuestion} não existe </h1>
+        return <h1>Essa página {currentQuestion} não existe </h1>
       }
   }
 
   const advanceQuestion = async () => {
-    // Verifica se o local Storage não tem o ID da tentativa
-    if (currentQuestion == 1 && localStorage.getItem('id') == null) {
-      let myform = new FormData(formRef.current)
-      let myformObj = Object.fromEntries(myform.entries())
-      console.log(myformObj)
-      let id = await adicionarTentativa(myformObj.studentName,myformObj.teacherName)
-      localStorage.setItem('id',id.id)
-      alert('registrado com sucesso')
+    console.log(currentQuestion)
+    // Verifica se o local Storage não tem o ID da tentativa e verifica o registro de tentativa
+    if (currentQuestion >= 1 && currentQuestion < 2 && localStorage.getItem('id') == null) {
+      if (formRef.current.reportValidity()) {
+        console.log('Validando formulário')
+        let myform = new FormData(formRef.current)
+        let myformObj = Object.fromEntries(myform.entries())
+        console.log(myformObj)
+        setCurrentQuestion(1.5)
+        console.log('Registrando tentativa')
+        let id = await adicionarTentativa(myformObj.studentName,myformObj.teacherName)
+        if (id.error != null) {
+          console.log('erro')
+        }
+        else {
+          setTimeout(() => {
+            setCurrentQuestion(1.75)
+          }, 500);
+          localStorage.setItem('id',id.data.id)
+          setTimeout(() => {
+            setCurrentQuestion(2)
+          }, 2500);
+        }
+      }
+
     }
     
     // Caso tenha o ID, pular o registro de tentativa
     else if (localStorage.getItem('id') != null && currentQuestion == 0) {
-      setCurrentQuestion((prevState) => prevState + 1);
+      setCurrentQuestion((prevState) => prevState + 2);
     }
 
+    // Parse do formulário
     else if (formRef.current) {
       console.log('Salvando as respostas de...')
       console.log(formRef.current)
@@ -57,8 +82,11 @@ export default function Linguaskill() {
         localStorage.setItem(pair[0],pair[1])
       })
       answers = localStorage
+      setCurrentQuestion((prevState) => prevState + 1);
     }
-    setCurrentQuestion((prevState) => prevState + 1);
+    else {
+      setCurrentQuestion((prevState) => prevState + 1);
+    }
   };
 
   const returnQuestion = () => {
@@ -170,3 +198,24 @@ export function Footer({ nextQuestion, previousQuestion, currentQuestion }) {
 
 // Small components
 export function QuestionTitle() {}
+
+
+export function Loading({status}) {
+  console.log(status)
+  if (status == 'sucess') {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <DotLottieReact className="h-6/12 hue-rotate-250 brightness-160 saturate-200"
+        src="./success.lottie"
+        autoplay/>
+      </div>
+    )}
+      
+  else {
+    return (
+      <div className="flex h-full justify-center items-center">
+        <img src="./loading.svg" alt="Loading icon" className="size-9/12" />
+      </div>
+    )
+  }
+}
