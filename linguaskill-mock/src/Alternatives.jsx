@@ -1,33 +1,36 @@
 import { useId, useRef, useState, useEffect, use } from "react";
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
+import useUniqueId from './hooks.jsx'
 
-export function InlineOpen({id}) {
+export function InlineOpen() {
   // Get the previous answer
+  const questionId = useUniqueId();
   useEffect(() => {
     let inputs = document.querySelectorAll('input')
     inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
   }, [])
   
   function removeSpace(e) { 
-    // e.target.value = e.target.value.replaceAll(' ', '')
+    e.target.value = e.target.value.replaceAll(' ', '')
   } 
 
   return (
     <span className="group inline-flex gap-1 items-center">
-      <IdBox>{id}</IdBox>
+      <IdBox>{questionId}</IdBox>
       <input
         className="h-9 bg-blue-100 lg:w-64 sm:w-40 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
         type="text"
-        name={id}
+        name={questionId}
         onInput={(e) => removeSpace(e)}
       />
     </span>
   );
 }
 
-export function InlineClosed({alternatives, id}) {
+export function InlineClosed({alternatives}) {
   // Get the previous answer
+  const questionId = useUniqueId()
   useEffect(() => {
     let inputs = document.querySelectorAll('input')
     inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
@@ -45,9 +48,9 @@ export function InlineClosed({alternatives, id}) {
     <>
     <span className="peer group inline-flex gap-1 items-center min-w-32">
       <span className="size-8 bg-neutral-900 text-white text-base inline-flex justify-center items-center font-bold group-has-focus:bg-blue-700">
-        {id}
+        {questionId}
       </span>
-      <input name={id}
+      <input name={questionId}
         className="h-9 lg:w-64 sm:w-40 bg-blue-100 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
         type="text"
         ref={alternativeInput}
@@ -66,22 +69,41 @@ export function InlineClosed({alternatives, id}) {
   )
 }
 
-export function FourAlternatives({alternatives,heading,id, handleToggle}) {
+export function FourAlternatives({alternatives,heading, handleToggle}) {
+  const questionId = useUniqueId()
   return(
     <div className="w-full">
-      <button type="button" className="flex items-start gap-1 py-2 w-full transition all duration-300" onClick={(e) => handleToggle(e)} id={id}>
+      <button type="button" className="flex items-start gap-1 py-2 w-full transition all duration-300" onClick={(e) => handleToggle(e)} id={questionId}>
         <img src="/triangleArrow.png" alt="arrow" className="size-8 inline rotate-180 transition all duration-300"/>
-        <IdBox>{id}</IdBox>
+        <IdBox>{questionId}</IdBox>
         <h1 className="text-lg text-left">{heading}</h1>
       </button>
       <table className="hidden w-full">
         <tbody className="w-full">
-          {alternatives.map((alternative) => <RadioTableInput id={id}>{alternative}</RadioTableInput>)}
+          {alternatives.map((alternative) => <RadioTableInput id={questionId}>{alternative}</RadioTableInput>)}
         </tbody>
       </table>
     </div>
   )
 }
+
+export function AudioAlternative({alternatives,heading}) {
+  const questionId = useUniqueId()
+  return(
+    <div className="w-full">
+      <button type="button" className="flex items-start gap-3 py-2 w-full">
+        <IdBox>{questionId}</IdBox>
+        <h1 className="text-lg text-left">{heading}</h1>
+      </button>
+      <table className="w-full">
+        <tbody className="w-full">
+          {alternatives.map((alternative) => <RadioTableInput id={questionId}>{alternative}</RadioTableInput>)}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 
 export function IdBox({children}) {
   return(
@@ -162,7 +184,7 @@ export function DropAlternative({children, id, handleclick}) {
   return (
     <>
       <IdBox>{id}</IdBox>
-      <input type='text' id={id} className="inline-block relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
+      <input type='text' id={id} className="inline field-sizing-content max-w-xl min-w-64 relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
       ref={setNodeRef}
       readOnly
       name={id}

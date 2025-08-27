@@ -1,7 +1,7 @@
-import {InlineOpen, InlineClosed, FourAlternatives, RadioTableInput, IdBox, OneQuestionAlternative, DragAlternative, DropAlternative} from './Alternatives.jsx'
+import {InlineOpen, InlineClosed, FourAlternatives, RadioTableInput, IdBox, OneQuestionAlternative, DragAlternative, DropAlternative, AudioAlternative} from './Alternatives.jsx'
 import {DndContext} from '@dnd-kit/core';
 import {DragOverlay} from '@dnd-kit/core';
-import { useState, useEffect} from 'react';
+import { useState, useEffect, createContext} from 'react';
 
 
 export function RegisterAttempt({formRef}) {
@@ -33,32 +33,19 @@ export function RegisterAttempt({formRef}) {
     </form>
   )
 }
-export function OneCollumnQuestion({formRef}) {
-  let idCount = 0
-  
-  function incrementId() {
-    idCount++
-    return idCount
-}  
+export function OneCollumnQuestion({formRef, title, children}) {
   return (
     <div className="flex flex-col gap-10 px-6 w-full max-w-5xl flex-1 mt-5" >
-        <TextTitle>Open gap fill</TextTitle>
+        <TextTitle>{title}</TextTitle>
         <form id='formQuestion' ref={formRef} className='mb-3 text-xl/loose'> 
-        <p>If you <InlineOpen id={incrementId()}></InlineOpen> ice, it melts <br></br></p> 
-        <hr />
-        If she <InlineOpen id={incrementId()}/> hard, she will pass the exam <br />
-        <hr />
-        If I <InlineOpen id={incrementId()}/> more confidente, I would speak in the meeting. <br />
-        <hr />
-        If they invite me, I <InlineOpen id={incrementId()}/> to the party <br />
-        <hr />
-        If we <InlineOpen id={incrementId()}/> earlier, we wouldn't have missed the train. <br />
-        <hr />
-        if I <InlineOpen id={incrementId()}/> the answer, I would have told you
-        <hr />
-        You will feel better if you <InlineOpen id={incrementId()}/> some rest.<br />
-        <hr />
-        If he <InlineOpen id={incrementId()}/> the meeting yesterday, he would know the plan now.
+        If you <InlineOpen></InlineOpen> ice, it melts <br/>
+        If she <InlineOpen/> hard, she will pass the exam <br />
+        If I <InlineOpen/> more confidente, I would speak in the meeting. <br />
+        If they invite me, I <InlineOpen/> to the party <br />
+        If we <InlineOpen/> earlier, we wouldn't have missed the train. <br />
+        if I <InlineOpen/> the answer, I would have told you
+        You will feel better if you <InlineOpen/> some rest.<br />
+        If he <InlineOpen/> the meeting yesterday, he would know the plan now.
         </form>
         {/* <InlineClosed id={incrementId()} alternatives={['You','have to', 'pass the alternatives','as a array prop']}></InlineClosed> */}
     </div>
@@ -66,12 +53,6 @@ export function OneCollumnQuestion({formRef}) {
   }
   
   export function TwoCollumnQuestion({formRef}) {
-    let idCount = 2
-    function incrementId() {
-      idCount++
-      return idCount
-    } 
-
     function handleToggle(e) {
       e.target.closest('button').classList.toggle('bg-blue-600')
       e.target.closest('button').classList.toggle('text-white') 
@@ -104,8 +85,8 @@ export function OneCollumnQuestion({formRef}) {
           
         </div>
         <form id='formQuestion' ref={formRef} className='p-5 overflow-y-auto'>
-          <FourAlternatives heading={'My question'} alternatives={['A','B','C','D']} id={incrementId()} handleToggle={handleToggle}></FourAlternatives>
-          <FourAlternatives heading={'My second question'} alternatives={['E','F','G','H']} id={incrementId()} handleToggle={handleToggle}></FourAlternatives>
+          <FourAlternatives heading={'My question'} alternatives={['A','B','C','D']} handleToggle={handleToggle}></FourAlternatives>
+          <FourAlternatives heading={'My second question'} alternatives={['E','F','G','H']} handleToggle={handleToggle}></FourAlternatives>
         </form> 
     </div>
   )
@@ -140,8 +121,8 @@ export function DragQuestion({formRef}) {
       return idCount
     } 
 
-    let alternativeOriginal = ['teste 1', 'teste 2', 'teste 3','teste 4','teste 5']
-    const [alternatives, setAlternatives] = useState(['teste 1', 'teste 2', 'teste 3','teste 4','teste 5'])
+    let alternativeOriginal = ['teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1', 'teste 2', 'teste 3','teste 4','teste 5']
+    const [alternatives, setAlternatives] = useState(Array.from(alternativeOriginal))
     const [draggedText, setDraggedText] = useState(null);
     // Remover alternativas já populadas
     useEffect(() => {
@@ -235,6 +216,18 @@ export function DragQuestion({formRef}) {
       </DragOverlay>
         </div>
     </DndContext>
+  )
+}
+
+export function ListeningClosed({formRef, audioPath, children}) {
+  useEffect(() => {
+    let audio = new Audio(audioPath)
+    audio.play()
+  }, [])
+  return(
+    <form ref={formRef} className='flex flex-col items-center justify-start w-4xl pt-5 pb-15 gap-5 overflow-y-scroll h-full'>
+      {children}
+    </form>
   )
 }
 // Small components

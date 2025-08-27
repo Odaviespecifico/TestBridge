@@ -1,20 +1,21 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt} from "./questions.jsx";
-import {} from "./Alternatives.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed} from "./questions.jsx";
+import {AudioAlternative} from "./Alternatives.jsx";
 import {adicionarTentativa} from './supabase.js'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-
 export default function Linguaskill() {
   let answers = Object()
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  const [currentQuestion, setCurrentQuestion] = useState(0)
   const formRef = useRef(null) 
 
   function renderContent() {
     switch (currentQuestion) {
       case 0:
-        return <Introduction title={'Linguaskill - Mock test 1'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
+        console.log('case 0')
+        return <Introduction title={'Linguaskill - Reading'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
       case 1:
         console.log('case 1')
         return <RegisterAttempt formRef={formRef}></RegisterAttempt>
@@ -25,7 +26,14 @@ export default function Linguaskill() {
         console.log('case 1.75')
         return (<Loading status='sucess'></Loading>)
       case 2:
-        return <OneCollumnQuestion formRef={formRef}></OneCollumnQuestion>;
+        return (
+        <>
+        <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
+        <OneCollumnQuestion formRef={formRef} title={'Open gap fill'}>
+          
+          </OneCollumnQuestion>;
+        </>
+        )
       case 3:
         return <TwoCollumnQuestion formRef={formRef}></TwoCollumnQuestion>;
       case 4:
@@ -33,7 +41,26 @@ export default function Linguaskill() {
       case 5: 
         return <DragQuestion formRef={formRef}></DragQuestion>
       case 6:
-        return <Introduction title='Linguaskill - Listening section'>This is the Listening section </Introduction>;
+        return (
+        <>
+        <Introduction title='Linguaskill - Listening section'>Linguaskill is an adaptive test. <br />
+          This demonstration will show you what the Listening questions look like. <br />
+          To move through the questions, click the arrows in the bottom-right corner of the screen. <br />
+          You will have time to read the questions. The audio will begin when the reading time is finished. You will hear the audio twice. <br />
+          Click <strong>Start</strong> in the  bottom-right corner of the screen to begin the demonstration. 
+        </Introduction>;
+        </>)
+      case 7:
+        return(
+        <>
+        <Instruction>For this question, choose the correct answer. <br /> You have 10 seconds to read the question. You will hear the recording twice.</Instruction>
+        <ListeningClosed formRef={formRef} audioPath={'/audios/audiotest.mp3'}>
+            <AudioAlternative heading={'Question, so nice'} alternatives={['A','B','C','D']}></AudioAlternative>
+            <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
+            <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
+          </ListeningClosed>
+        </>
+        )
       default:
         return <h1>Essa página {currentQuestion} não existe </h1>
       }
@@ -100,11 +127,6 @@ export default function Linguaskill() {
     return (
       <div className="flex items-center flex-col h-full w-screen justify-stretch">
         <Header />
-        <Instruction
-          text={[
-            "Click on each gap then type the word which you think fits best.",
-          ]}
-        />
         {renderContent()}
         <Footer
           nextQuestion={advanceQuestion}
@@ -119,24 +141,22 @@ export function Header() {
   return <div className="flex w-full h-10 bg-neutral-800"></div>;
 }
 
-export function Instruction({ text }) {
-  if (text) {
-    return text.map((line) => (
-      <div
-        className="flex items-center p-7 py-4 h-fit text-lg w-full bg-neutral-700 font-medium text-white"
-        key={line}
-      >
-        {line}
+export function Instruction({ children }) {
+  if (children) {
+    return (
+      <div className="flex items-center p-7 py-4 h-fit text-lg w-full bg-neutral-700 font-medium text-white">
+        {children}
       </div>
-    ));
-  } else {
-    <div className="hidden"></div>;
+    )  
+  }
+  else {
+    <div className="absolute hidden"></div>;
   }
 }
 
 export function Introduction({title,children}) {
   return (
-    <div className="flex flex-col gap-10 py-7 w-fit xl:-ml-48 px-6 flex-1">
+    <div className="flex flex-col gap-10 py-7 max-w-3xl xl:-ml-48 px-6 flex-1">
       <img
         src="./Logo-Linguaskill.jpg"
         alt="Linguaskill Logo"
@@ -154,7 +174,7 @@ export function Introduction({title,children}) {
 
 export function Footer({ nextQuestion, previousQuestion, currentQuestion }) {
   const renderBottomButton = () => {
-    if (currentQuestion >= 1) {
+    if (currentQuestion != 0 && currentQuestion != 6) {
       return (
         <div className="flex gap-4 justify-center items-center">
           <button
@@ -190,7 +210,7 @@ export function Footer({ nextQuestion, previousQuestion, currentQuestion }) {
   };
 
   return (
-    <div className="flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end z-2">
+    <div className="flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2">
       {renderBottomButton()}
     </div>
   );

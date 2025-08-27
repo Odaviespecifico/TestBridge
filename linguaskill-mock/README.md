@@ -1,12 +1,25 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# MockTest Linguaskill
 
-Currently, two official plugins are available:
+Uma interface modular para realizar simulados para o exame internacional de Cambridge de Linguaskill
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## FAQ
+
+#### Como adiciono questões?
+
+Dentro do arquivo Linguaskill.jsx você vai reordenar as questões e criar novas na função *Render content*
+
+#### Quais tipos de questões existem?
+
+- One collumn question: Para perguntas com lacunas dentro de um unico texto ou frase podendo ser com opções (Inline closed) ou não (Inline Open)
+
+
+## todo
+
+- Adicionar partes do Listening
+
+- Adicionar animação do hover para questões de click and drag
+
+- Concertar o contador de Id das perguntas
