@@ -1,7 +1,7 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed} from "./questions.jsx";
-import {AudioAlternative} from "./Alternatives.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap} from "./questions.jsx";
+import {AudioAlternative, InlineOpen} from "./Alternatives.jsx";
 import {adicionarTentativa} from './supabase.js'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
@@ -54,12 +54,30 @@ export default function Linguaskill() {
         return(
         <>
         <Instruction>For this question, choose the correct answer. <br /> You have 10 seconds to read the question. You will hear the recording twice.</Instruction>
-        <ListeningClosed formRef={formRef} audioPath={'/audios/audiotest.mp3'}>
+        <ListeningClosed formRef={formRef} audioPath={'/audios/audiotest.mp3'} title={'The sport of BASE jumping'}>
             <AudioAlternative heading={'Question, so nice'} alternatives={['A','B','C','D']}></AudioAlternative>
             <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
             <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
           </ListeningClosed>
         </>
+        )
+      case 8:
+        return (
+          <>
+            <Instruction>For these questions, complete the sentences with no more than three words in each gap. <br/> 
+            You have 45 seconds to read the sentences. You will hear the recording twice. <br />
+            Listen to a woman called Lucy Townsend talking about an extreme sport called BASE Jumping.
+            </Instruction>
+            <ListeningGap formRef={formRef} audioPath="/audios/audiotest.mp3" title='The sport of BASE jumping'>
+              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen /> testing</p>
+            </ListeningGap>
+          </>
         )
       default:
         return <h1>Essa página {currentQuestion} não existe </h1>
@@ -144,7 +162,7 @@ export function Header() {
 export function Instruction({ children }) {
   if (children) {
     return (
-      <div className="flex items-center p-7 py-4 h-fit text-lg w-full bg-neutral-700 font-medium text-white">
+      <div className="flex items-center p-7 py-4 h-fit text-lg/5 w-full bg-neutral-700 font-normal text-white">
         {children}
       </div>
     )  

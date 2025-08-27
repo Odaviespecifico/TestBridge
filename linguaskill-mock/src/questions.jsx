@@ -221,14 +221,41 @@ export function DragQuestion({formRef}) {
 
 export function ListeningClosed({formRef, audioPath, children}) {
   useEffect(() => {
+    console.log('rodando audio')
     let audio = new Audio(audioPath)
     audio.play()
+    return () => {
+      console.log('Pausando audio')
+      audio.currentTime = 0
+      audio.pause()
+    }
   }, [])
+
   return(
     <form ref={formRef} className='flex flex-col items-center justify-start w-4xl pt-5 pb-15 gap-5 overflow-y-scroll h-full'>
       {children}
     </form>
   )
+}
+
+export function ListeningGap({formRef, audioPath = '', children, title}) {
+  useEffect(() => {
+    console.log('rodando audio')
+    let audio = new Audio(audioPath)
+    audio.play()
+    return () => {
+      console.log('Pausando audio')
+      audio.currentTime = 0
+      audio.pause()
+    }
+  }, [])
+
+  return(
+      <form ref={formRef} className='flex flex-col items-start justify-start w-4xl pt-5 pb-5 text-xl gap-5 overflow-y-auto'>
+        <strong className='text-xl text-left'>{title}</strong>
+        {children}
+      </form>
+  )   
 }
 // Small components
 function OneCollumnParagraph({children}) {
