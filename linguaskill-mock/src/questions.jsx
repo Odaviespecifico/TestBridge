@@ -120,16 +120,40 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
     const [alternatives, setAlternatives] = useState(Array.from(propAlternatives))
     const [draggedText, setDraggedText] = useState(null);
     // Remover alternativas já populadas
+    const [ids, setIds] = useState([])
     useEffect(() => {
-          let inputs = document.querySelectorAll('input')
-          inputs.forEach((input) => {
-            let removeIndex = alternatives.indexOf(input.value)
-            if (removeIndex != -1) {
-              alternatives.splice(removeIndex,1)
-              setAlternatives([...alternatives])
-            }
-          })
-           
+      for (let index = 0; index < 4; index++) {
+          let element = getNextId()
+          ids.push(element)
+        }
+      setIds([...ids])
+
+      // Detecta todos os inputs
+      let inputs = document.querySelectorAll('input')
+      
+      // Popular os inputs com o ID
+      inputs.forEach((input,index) => input.value = localStorage.getItem(ids.at(index))) 
+      
+      // Popular o Span
+      let span = document.querySelectorAll('span.bg-blue-100')
+      console.log(span)
+      span.forEach((span,index) => {
+        span.textContent = localStorage.getItem(ids.at(index))
+        if (span.textContent) {
+          span.classList.toggle('inline')
+          span.classList.toggle('inline-block')
+        }
+      }) 
+
+      inputs.forEach((input) => {
+        // Remove das alternativas a alternativa que tiver no input (Já que ele é preenchido com LocalStorage)
+        let removeIndex = alternatives.indexOf(input.value)
+        if (removeIndex != -1) {
+          alternatives.splice(removeIndex,1)
+          setAlternatives([...alternatives])
+        }
+      }
+    )
     }, [])
 
     function handleDragStart(event) {
@@ -137,27 +161,38 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
     }
   
     function handleDragEnd (e) {
-      let over = e.over
-      let dragContent 
-      if (over) {
-         dragContent = document.querySelector(`[id="${e.over.id}"]`).value 
-      }
-      let text = document.querySelector(`#${e.active.id}`).innerHTML
+      // Muda o estilo do span para ser inline
       
-      if (over != null) {
-        document.querySelector(`[id="${over.id}"]`).value = text
-        if (alternatives.indexOf(text) != -1) {
-          let removeIndex = alternatives.indexOf(text)
-          alternatives.splice(removeIndex,1)
-          setAlternatives([...alternatives])
+      // e.active.classList.toggle
+      let overDropElement = e.over
+      let dropPreviousContent
+      let grabbedText = e.active.data.current 
+      if (overDropElement || e.collisions[1]) {
+        let dropId
+        try {
+          dropId = e.over.id
+        } catch (error) {
+          dropId = e.collisions[1].id
         }
-        if (dragContent != '') {
-          alternatives.push(dragContent)
-          alternatives.sort((a, b) => {return propAlternatives.indexOf(a) - propAlternatives.indexOf(b)})
-          setAlternatives([...alternatives])
-        }
+        // Muda o estilo
+        const span = document.querySelector(`span[id="${dropId}"]`)
+        span.classList.toggle('inline')
+        span.classList.toggle('inline-block')
+
+        dropPreviousContent = document.querySelector(`[id="${dropId}"]`).innerHTML 
+        // Modifica o input para ter o valor do grabbedText
+        document.querySelector(`[id="${dropId}"]`).textContent = grabbedText
+        // Remove das alternativas o que tiver o mesmo texto
+        let removeIndex = alternatives.indexOf(grabbedText)
+        alternatives.splice(removeIndex,1)
+        setAlternatives([...alternatives])
+
+        // Atualiza o input para condizer com o span
+        document.querySelector(`input[name="${dropId}"`).value = grabbedText
       }
-      if (!over) {
+      
+    // Animação de voltar se não estiver sobre algum elemento
+      else if (!overDropElement) {
         const draggedElement = document.getElementById(e.active.id);
         if (draggedElement) {
           draggedElement.style.transition = 'all 0.3s ease-in-out';
@@ -175,13 +210,20 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
     
     function handleAlternativeRemoval(e) {
       if (e.target.value != '') {
-        alternatives.push(e.target.value)
+        // Change it back to inline-Block
+        const span = document.querySelector(`span[id="${e.target.id}"]`)
+        span.classList.toggle('inline')
+        span.classList.toggle('inline-block')
+        // Add back to alternatives
+        alternatives.push(e.target.textContent)
         alternatives.sort((a, b) => {return propAlternatives.indexOf(a) - propAlternatives.indexOf(b)})
         setAlternatives([...alternatives])
-        e.target.value = ''
+
+        // Remove os valores
+        e.target.textContent = ''
+        document.querySelector(`input[name="${e.target.id}"`).value = ''
       }
 }
-
     return (
       <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)} onDragStart={(e) => handleDragStart(e)}>
         <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12'>
@@ -191,13 +233,15 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
               <em className='text-[18px]'>{subtitle}</em>
             </div>
             <form action="" ref={formRef}>
-              <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id={getNextId()} handleclick={handleAlternativeRemoval}/>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
-              <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id={getNextId()} handleclick={handleAlternativeRemoval}/>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
-              <OneCollumnParagraph>Lorem ipsum dolor <DropAlternative id={getNextId()} handleclick={handleAlternativeRemoval}/> sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+              <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id={ids.at(0)} handleclick={handleAlternativeRemoval}/>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+              <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id={ids.at(1)} handleclick={handleAlternativeRemoval}/>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+              <OneCollumnParagraph>Lorem ipsum dolor <DropAlternative id={ids.at(2)} handleclick={handleAlternativeRemoval}/> sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
             </form>
           </div>
           <div className='flex flex-col gap-2'>
-            {alternatives.length >= 1 ? alternatives.map((alt) => <DragAlternative id={alt.replaceAll(' ','')} key={alt.replaceAll(' ','')}>{alt}</DragAlternative>) : 'vazio'}
+            {console.log(alternatives)}
+            {/* {alternatives.length >= 1 ? alternatives.map((alt) => <DragAlternative id={alt.replaceAll(' ','')} key={alt.replaceAll(' ','')}>{alt}</DragAlternative>) : 'No alternatives left'} */}
+            {alternatives.map((alt) => <DragAlternative id={alt} key={alt}>{alt}</DragAlternative>)}
           </div>
 
           <DragOverlay dropAnimation={{
@@ -248,7 +292,7 @@ export function ListeningGap({formRef, audioPath = '', children, title}) {
   }, [])
 
   return(
-      <form ref={formRef} className='flex flex-col items-start justify-start w-5xl pt-5 pb-5 text-xl gap-10 overflow-y-auto'>
+      <form ref={formRef} className='flex flex-col items-start justify-start w-5xl pt-5 pb-5 px-10 text-xl gap-10 overflow-y-auto'>
         <strong className='text-xl text-left'>{title}</strong>
         {children}
       </form>

@@ -78,11 +78,11 @@ export function FourAlternatives({alternatives,heading, handleToggle}) {
         <IdBox>{questionId}</IdBox>
         <h1 className="text-lg text-left">{heading}</h1>
       </button>
-      <table className="hidden w-full">
-        <tbody className="w-full">
+      <div className="hidden w-full">
+        <div className="w-full">
           {alternatives.map((alternative) => <RadioTableInput id={questionId}>{alternative}</RadioTableInput>)}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   )
 }
@@ -127,12 +127,10 @@ export function RadioTableInput({children, id}) {
   }, [])
 
   return (
-    <tr className=' p-8 odd:bg-gray-100 h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
-      <td className="flex gap-8 items-center">
-        <input type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 hover:cursor-pointer"/>
-        <label htmlFor={"input-"+id+children+'id'} className="hover:cursor-pointer">{children}</label>
-      </td>
-    </tr>
+    <div className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
+      <input type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 hover:cursor-pointer"/>
+      <label htmlFor={"input-"+id+children+'id'} className="hover:cursor-pointer">{children}</label>
+    </div>
   )
 }
 
@@ -149,10 +147,10 @@ export function OneQuestionAlternative({children,id}) {
     }) 
   }, [])
   return(
-    <tr className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full'>
+    <div className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full'>
           <input type="radio" name={id} id={id+children} className="size-6 hover:cursor-pointer" value={children}/>
           <label htmlFor={id+children} className="hover:cursor-pointer">{children}</label>
-    </tr>
+    </div>
   )
 }
 
@@ -178,20 +176,26 @@ export function DropAlternative({children, id, handleclick}) {
   const {isOver, setNodeRef} = useDroppable({
     id: id,
   });
-  useEffect(() => {
-      let inputs = document.querySelectorAll('input')
-      inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
-  }, [])
   
+  function handleChange(e) {
+    console.log('mudou')
+  }
   return (
     <>
       <IdBox>{id}</IdBox>
-      <input type='text' id={id} className="inline field-sizing-content max-w-xl min-w-64 relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
+      <span type='text' id={id} className="inline-block field-sizing-content w-45 relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
       ref={setNodeRef}
       readOnly
+      onClick={(e) => handleclick(e)}
+      onChange={(e) => handleChange(e)}
+      >
+      </span>
+
+      <input type="text" 
       name={id}
-      onClick={(e) => handleclick(e)}>
-      </input>
+      hidden
+      />
+      
     </>
   );
 }

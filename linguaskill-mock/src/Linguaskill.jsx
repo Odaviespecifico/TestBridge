@@ -163,7 +163,9 @@ export default function Linguaskill() {
       console.log(formRef.current)
       let myform = new FormData(formRef.current)
       let myformObj = Object.fromEntries(myform.entries())
+      console.log(myformObj)
       myform.entries().forEach((pair) => {
+        console.log(pair)
         localStorage.setItem(pair[0],pair[1])
       })
       answers = localStorage
@@ -172,7 +174,6 @@ export default function Linguaskill() {
     else {
       setCurrentQuestion((prevState) => prevState + 1);
     }
-    console.log(historicoId)
   };
 
   const goToPreviousQuestion = () => {
@@ -183,6 +184,9 @@ export default function Linguaskill() {
 
     // Caso tenha o ID pular a de cadastro de tentativa
     if (localStorage.getItem('id') != null && currentQuestion == 2) {
+      // Reinicia o contador
+      setQuestionId(1)
+      historicoId = []
       setCurrentQuestion((prevState) => prevState - 1);
     }
   };
