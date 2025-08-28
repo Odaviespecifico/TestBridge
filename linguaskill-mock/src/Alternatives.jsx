@@ -3,7 +3,7 @@ import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
 import { getNextId } from "./Linguaskill";
 
-export function InlineOpen() {
+export function InlineOpen({removeSpace = 'true'}) {
   // Get the previous answer
   const questionId = getNextId();
   useEffect(() => {
@@ -12,7 +12,9 @@ export function InlineOpen() {
   }, [])
   
   function removeSpace(e) { 
-    e.target.value = e.target.value.replaceAll(' ', '')
+    if (removeSpace == 'true') {
+      e.target.value = e.target.value.replaceAll(' ', '')
+    }
   } 
 
   return (
@@ -107,7 +109,7 @@ export function AudioAlternative({alternatives,heading}) {
 
 export function IdBox({children}) {
   return(
-  <span className="min-w-8 min-h-8 bg-neutral-900 text-white text-base inline-flex justify-center items-center font-bold group-has-focus:bg-blue-700">
+  <span className="size-8 bg-neutral-900 text-white text-base inline-flex justify-center items-center font-bold group-has-focus:bg-blue-700">
     {children}  
   </span>
   )

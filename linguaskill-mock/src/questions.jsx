@@ -338,40 +338,36 @@ export function ListeningTable({formRef, audioPath, children}) {
   )
 }
 
-export function WritingTask({formRef,children}) {
-  const questionId = getNextId()
+export function WritingTask({formRef,children, propQuestionId}) {
+  const questionId = propQuestionId
+  const [wordCount, setWordCount] = useState(0)
+  function handleTextInput(e) {
+    let content = new String(e.target.value)
+    let ammountSpaces = content.trim().split(/\s+/).length
+    if (e.target.value == '') {
+      setWordCount(0)
+    }
+    else {
+      setWordCount(ammountSpaces)
+    }
+  } 
 
+  function handleKeyDown(e) {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      // Insert a tab character (e.g., 4 spaces)
+      e.target.value = e.target.value.substring(0, start) + '        ' + e.target.value.substring(end);
+
+      // Move cursor to the end of the inserted tab
+      e.target.selectionStart = e.target.selectionEnd = start + 8;
+    }
+  }
   return (
     <div className="grid grid-cols-2 w-full h-10/12 p-5 pt-2">
-      <div className='text-lg/loose overflow-y-auto h-full scroll-pt-5'>
-      Read the following statement: <br />
-
-The attention paid to celebrities these days has a negative effect on society. <br /> <br />
-
-Write an essay in which you: <br />
-
-•    discuss and evaluate arguments both for and against the statement above <br />
-
-•    indicate to what extent you agree or disagree with the statement. <br />
-
-
-Below are some different views you may wish to consider in your essay: <br />
-
-    	 	"Celebrity success inspires young people to aim high in their own lives." <br />
- 
- 	 	 	 
-
- 	"Celebrity culture encourages the idea that success is usually instant." <br />
- 
- 	 	 	 
- 	 	"Even when promoting good causes, celebrities are only promoting themselves." <br />
-
-
-You can also include any other ideas you think are relevant. <br />
-
-Write at least 250 words.  <br />
-
-Use your own words as far as possible.
+      <div className='text-lg/loose overflow-y-auto h-full p-3'>
+      {children}
       </div>
       <div className='flex flex-col text-lg gap-3'>
         <div className='flex gap-10'>
@@ -383,10 +379,10 @@ Use your own words as far as possible.
           </div>
         </div>
         <form ref={formRef} className='h-full w-11/12 ml-auto'>
-          <textarea name={questionId} id={questionId} className='resize-none w-full h-full border-x-blue-200 border-x-2 focus:bg-blue-50'></textarea>
+          <textarea name={questionId} id={questionId} className='resize-none w-full h-full border-x-blue-200 border-x-2 focus:bg-blue-50 p-1' onInput={(e) => handleTextInput(e)} onKeyDown={(e) => handleKeyDown(e)}></textarea>
         </form>
         <div className='text-center'>
-          Word count: count
+          Word count: {wordCount}
         </div>
       </div>
     </div>
@@ -414,10 +410,17 @@ function TextTitle({children, center=true}) {
 
 export function BoxText({children, title}) {
   return(
-    <div className="border-2 mb-10 p-2">
-      <h2 className='font-bold text-xl text-left'> {title}</h2>
-      <p className='mt-5'>{children}</p>
+    <div className="border-2 p-2 w-fit">
+      {title ? <h2 className='font-bold text-xl text-left mb-5'> {title}</h2> : '' }
+      <p className='w-fit'>{children}</p>
     </div>
   )
 }
 
+export function IndentedItem({children, decorator}) {
+    {if (decorator) {
+      return(<li className='ml-5 list-disc'>{children}</li>)}
+    if (!decorator) {
+      return(<li className='ml-5 list-none'>{children}</li>)}
+    }
+}

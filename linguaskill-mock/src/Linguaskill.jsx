@@ -1,6 +1,6 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap, ListeningTable, BoxText, OneCollumnParagraph, WritingTask} from "./questions.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap, ListeningTable, BoxText, OneCollumnParagraph, WritingTask, IndentedItem} from "./questions.jsx";
 import {AudioAlternative, InlineOpen,DropAlternative,} from "./Alternatives.jsx";
 import {adicionarTentativa} from './supabase.js'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
@@ -102,9 +102,9 @@ export default function Linguaskill() {
             Listen to a woman called Lucy Townsend talking about an extreme sport called BASE Jumping.
             </Instruction>
             <ListeningGap formRef={formRef} audioPath="/audios/audiotest.mp3" title='The sport of BASE jumping'>
-              <p>test beforehand <InlineOpen /> testing</p>
-              <p>test beforehand <InlineOpen /> testing</p>
-              <p>test beforehand <InlineOpen /> testing</p>
+              <p>test beforehand <InlineOpen removeSpace="false" /> testing</p>
+              <p>test beforehand <InlineOpen removeSpace="false"/> testing</p>
+              <p>test beforehand <InlineOpen removeSpace="false"/> testing</p>
             </ListeningGap>
           </>
         )
@@ -132,7 +132,26 @@ export default function Linguaskill() {
         return (
           <>
           <Instruction>You have 45 minutes for this task.</Instruction>
-          <WritingTask></WritingTask>
+          <WritingTask propQuestionId={getNextId()}>
+            Read the following statement: <br />
+            <BoxText>
+            <strong>The attention paid to celebrities these days has a negative effect on society.</strong>
+            </BoxText>
+            <br />
+            Write an <strong>essay</strong> in which you: <br />
+              <IndentedItem decorator={'disk'}>discuss and evaluate arguments both for and against the statement above.</IndentedItem>
+              <IndentedItem decorator={'disk'}>indicate to what extent you agree or disagree with the statement.</IndentedItem>
+              <IndentedItem decorator={'disk'}>indicate to what extent you agree or disagree with the statement.</IndentedItem>
+              <br />
+            Below are some different views you may wish to consider in your essay: <br />
+              <IndentedItem>"Celebrity success inspires young people to aim high in their own lives." </IndentedItem>
+              <IndentedItem>"Celebrity culture encourages the idea that success is usually instant." </IndentedItem>
+              <IndentedItem>"Even when promoting good causes, celebrities are only promoting themselves."</IndentedItem> 
+              <br />
+            You can also include any other ideas you think are relevant. <br />
+            Write <strong>at least 250 words.</strong>  <br />
+            Use your own words as far as possible.
+          </WritingTask>
           </>
         )
       default:
