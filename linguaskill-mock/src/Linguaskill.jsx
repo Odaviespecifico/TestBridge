@@ -1,6 +1,6 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap, ListeningTable, BoxText, OneCollumnParagraph} from "./questions.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap, ListeningTable, BoxText, OneCollumnParagraph, WritingTask} from "./questions.jsx";
 import {AudioAlternative, InlineOpen,DropAlternative,} from "./Alternatives.jsx";
 import {adicionarTentativa} from './supabase.js'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
@@ -118,6 +118,21 @@ export default function Linguaskill() {
           <ListeningTable audioPath='/audios/audiotest.mp3'>
             Testing
           </ListeningTable>
+          </>
+        )
+      case 10:
+        return(
+        <Introduction title='Linguaskill - Writing Section'>Linguaskill is an adaptive test. <br />
+          There are two questions in this test. <br />
+          You have 55 minutes. <br />
+          Click <strong>Start</strong> in the bottom-right corner of the screen to continue. 
+        </Introduction>
+        )
+      case 11:
+        return (
+          <>
+          <Instruction>You have 45 minutes for this task.</Instruction>
+          <WritingTask></WritingTask>
           </>
         )
       default:

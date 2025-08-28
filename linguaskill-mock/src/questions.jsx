@@ -337,6 +337,61 @@ export function ListeningTable({formRef, audioPath, children}) {
     </form>
   )
 }
+
+export function WritingTask({formRef,children}) {
+  const questionId = getNextId()
+
+  return (
+    <div className="grid grid-cols-2 w-full h-10/12 p-5 pt-2">
+      <div className='text-lg/loose overflow-y-auto h-full scroll-pt-5'>
+      Read the following statement: <br />
+
+The attention paid to celebrities these days has a negative effect on society. <br /> <br />
+
+Write an essay in which you: <br />
+
+•    discuss and evaluate arguments both for and against the statement above <br />
+
+•    indicate to what extent you agree or disagree with the statement. <br />
+
+
+Below are some different views you may wish to consider in your essay: <br />
+
+    	 	"Celebrity success inspires young people to aim high in their own lives." <br />
+ 
+ 	 	 	 
+
+ 	"Celebrity culture encourages the idea that success is usually instant." <br />
+ 
+ 	 	 	 
+ 	 	"Even when promoting good causes, celebrities are only promoting themselves." <br />
+
+
+You can also include any other ideas you think are relevant. <br />
+
+Write at least 250 words.  <br />
+
+Use your own words as far as possible.
+      </div>
+      <div className='flex flex-col text-lg gap-3'>
+        <div className='flex gap-10'>
+          <IdBox>{questionId}</IdBox>
+          <div className='flex gap-2'>
+            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200'>Cut</button>
+            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200'>Copy</button>
+            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200'>Paste</button>
+          </div>
+        </div>
+        <form ref={formRef} className='h-full w-11/12 ml-auto'>
+          <textarea name={questionId} id={questionId} className='resize-none w-full h-full border-x-blue-200 border-x-2 focus:bg-blue-50'></textarea>
+        </form>
+        <div className='text-center'>
+          Word count: count
+        </div>
+      </div>
+    </div>
+  )
+}
 // Small components
 export function OneCollumnParagraph({children}) {
     return(
