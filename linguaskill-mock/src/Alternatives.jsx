@@ -1,11 +1,11 @@
 import { useId, useRef, useState, useEffect, use } from "react";
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
-import useUniqueId from './hooks.jsx'
+import { getNextId } from "./Linguaskill";
 
 export function InlineOpen() {
   // Get the previous answer
-  const questionId = useUniqueId();
+  const questionId = getNextId();
   useEffect(() => {
     let inputs = document.querySelectorAll('input')
     inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
@@ -30,7 +30,7 @@ export function InlineOpen() {
 
 export function InlineClosed({alternatives}) {
   // Get the previous answer
-  const questionId = useUniqueId()
+  const questionId = getNextId()
   useEffect(() => {
     let inputs = document.querySelectorAll('input')
     inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
@@ -70,7 +70,7 @@ export function InlineClosed({alternatives}) {
 }
 
 export function FourAlternatives({alternatives,heading, handleToggle}) {
-  const questionId = useUniqueId()
+  const questionId = getNextId()
   return(
     <div className="w-full">
       <button type="button" className="flex items-start gap-1 py-2 w-full transition all duration-300" onClick={(e) => handleToggle(e)} id={questionId}>
@@ -88,7 +88,7 @@ export function FourAlternatives({alternatives,heading, handleToggle}) {
 }
 
 export function AudioAlternative({alternatives,heading}) {
-  const questionId = useUniqueId()
+  const questionId = getNextId()
   return(
     <div className="w-full">
       <button type="button" className="flex items-start gap-3 py-2 w-full">
@@ -127,9 +127,11 @@ export function RadioTableInput({children, id}) {
   }, [])
 
   return (
-    <tr className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
-      <input type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 hover:cursor-pointer"/>
-      <label htmlFor={"input-"+id+children+'id'} className="hover:cursor-pointer">{children}</label>
+    <tr className=' p-8 odd:bg-gray-100 h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
+      <td className="flex gap-8 items-center">
+        <input type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 hover:cursor-pointer"/>
+        <label htmlFor={"input-"+id+children+'id'} className="hover:cursor-pointer">{children}</label>
+      </td>
     </tr>
   )
 }

@@ -3,11 +3,11 @@ const supabaseUrl = 'https://lwxhswosqyfujmjspryh.supabase.co'
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-export async function adicionarTentativa(nomeAluno, nomeProfessor) {
+export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId) {
     const { data, error } = await supabase
   .from('Tentativa')
   .insert([
-    { nome_aluno: nomeAluno, nome_professor: nomeProfessor , versão: '1.0.1' },
+    { nome_aluno: nomeAluno, nome_professor: nomeProfessor , versão: '1.0.1',  session_id: attemptId},
   ])
   .select('id')
   .single()

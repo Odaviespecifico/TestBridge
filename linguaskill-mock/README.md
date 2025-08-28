@@ -18,8 +18,10 @@ Dentro do arquivo Linguaskill.jsx você vai reordenar as questões e criar novas
 
 ## todo
 
-- Adicionar partes do Listening
+- Concertar o contador de Id das perguntas
+
+- Adicionar tabela de Listening
 
 - Adicionar animação do hover para questões de click and drag
 
-- Concertar o contador de Id das perguntas
+- Adicionar partes do Listening

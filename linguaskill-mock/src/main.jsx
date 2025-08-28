@@ -4,7 +4,5 @@ import './index.css'
 import Linguaskill from './Linguaskill.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Linguaskill />
-  </StrictMode>,
+  <Linguaskill />
 )
