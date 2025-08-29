@@ -401,6 +401,9 @@ export function WritingTask({formRef,children, propQuestionId}) {
       let ammountSpaces = textarea.value.trim().split(/\s+/).length
       setWordCount(ammountSpaces)
     }
+    else {
+      setWordCount(0)
+    }
   }, [])
   const [wordCount, setWordCount] = useState(0)
   function handleTextInput(e) {
