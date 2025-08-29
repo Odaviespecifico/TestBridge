@@ -337,8 +337,6 @@ export function Footer({ nextQuestion, previousQuestion, currentQuestion }) {
 }
 
 // Small components
-export function QuestionTitle() {}
-
 
 export function Loading({status}) {
   if (status == 'sucess') {

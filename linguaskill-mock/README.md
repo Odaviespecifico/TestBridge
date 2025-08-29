@@ -17,11 +17,15 @@ Dentro do arquivo Linguaskill.jsx você vai reordenar as questões e criar novas
 
 
 ## todo
-
-- Concertar o contador de Id das perguntas
-
-- Adicionar tabela de Listening
-
 - Adicionar animação do hover para questões de click and drag
 
-- Adicionar partes do Listening
+- Fazer o Click and Drag ficar modular
+
+- Adicionar instrução para cada tipo de questão
+
+- Separar as questões em um outro arquivo para facilitar a importação na base de dados
+
+- Adicionar Integração de pagamento e sistema de chaves de acesso para prova
+
+#### Implementação
+- 

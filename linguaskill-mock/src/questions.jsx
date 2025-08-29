@@ -380,7 +380,7 @@ export function ListeningTable({formRef, audioPath, rows, columns, question}) {
             <>
             <tr>
               <td>{row}</td>
-              {columns.map((column,colIndex) => (<td onClick={(e) => handleTdClick(e)} data-row={rowIndex} data-column={colIndex}><input type="radio" disabled name={`${questionId}.${colIndex}`}  id="" /><img src="/check.svg" alt="check" height='30px' width='30px' className='m-auto invert'/></td>))}
+              {columns.map((column,colIndex) => (<td readonly onClick={(e) => handleTdClick(e)} data-row={rowIndex} data-column={colIndex}><input type="radio" disabled name={`${questionId}.${colIndex}`}  id="" /><img src="/check.svg" alt="check" height='30px' width='30px' className='m-auto invert'/></td>))}
             </tr>
             </>
           ))}

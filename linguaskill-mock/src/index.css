@@ -18,6 +18,7 @@
   td {
     padding: 5px;
     border: solid 1px;
+    user-select: none;
   }
   th {
     padding: 10px;
