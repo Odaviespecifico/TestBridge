@@ -118,7 +118,6 @@ export function IdBox({children}) {
 export function RadioTableInput({children, id}) {
   // Get the previous answer
   useEffect(() => {
-    console.log('test')
     let inputs = document.querySelectorAll('input[type=radio]')
     inputs.forEach((input) => {
       let correct = localStorage.getItem(input.getAttribute('name'))
@@ -139,7 +138,6 @@ export function RadioTableInput({children, id}) {
 export function OneQuestionAlternative({children,id}) {
   // get previous values 
   useEffect(() => {
-    console.log('test')
     let inputs = document.querySelectorAll('input[type=radio]')
     inputs.forEach((input) => {
       let correct = localStorage.getItem(input.getAttribute('name'))

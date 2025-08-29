@@ -3,6 +3,7 @@ import {DndContext} from '@dnd-kit/core';
 import {DragOverlay} from '@dnd-kit/core';
 import { useState, useEffect, createContext, useId} from 'react';
 import { getNextId } from "./Linguaskill";
+import { useFormState } from 'react-dom';
 
 
 export function RegisterAttempt({formRef}) {
@@ -136,7 +137,6 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
       
       // Popular o Span
       let span = document.querySelectorAll('span.bg-blue-100')
-      console.log(span)
       span.forEach((span,index) => {
         span.textContent = localStorage.getItem(ids.at(index))
         if (span.textContent) {
@@ -239,7 +239,6 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
             </form>
           </div>
           <div className='flex flex-col gap-2'>
-            {console.log(alternatives)}
             {/* {alternatives.length >= 1 ? alternatives.map((alt) => <DragAlternative id={alt.replaceAll(' ','')} key={alt.replaceAll(' ','')}>{alt}</DragAlternative>) : 'No alternatives left'} */}
             {alternatives.map((alt) => <DragAlternative id={alt} key={alt}>{alt}</DragAlternative>)}
           </div>
@@ -262,11 +261,9 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
 
 export function ListeningClosed({formRef, audioPath, children}) {
   useEffect(() => {
-    console.log('rodando audio')
     let audio = new Audio(audioPath)
     audio.play()
     return () => {
-      console.log('Pausando audio')
       audio.currentTime = 0
       audio.pause()
     }
@@ -281,11 +278,9 @@ export function ListeningClosed({formRef, audioPath, children}) {
 
 export function ListeningGap({formRef, audioPath = '', children, title}) {
   useEffect(() => {
-    console.log('rodando audio')
     let audio = new Audio(audioPath)
     audio.play()
     return () => {
-      console.log('Pausando audio')
       audio.currentTime = 0
       audio.pause()
     }
@@ -299,47 +294,114 @@ export function ListeningGap({formRef, audioPath = '', children, title}) {
   )   
 }
 
-export function ListeningTable({formRef, audioPath, children}) {
+export function ListeningTable({formRef, audioPath, rows, columns, question}) {
+  const questionId = getNextId()
   useEffect(() => {
-    console.log('rodando audio')
+    // Check the correct inputs
+    let inputs = document.querySelectorAll(`input[type=radio][name^='${questionId}']`)
+    let answer = []
+    columns.forEach((col, index) => {
+      answer.push(localStorage.getItem(`${questionId}.${index}`))
+    })
+    // Check all the ones that were checked in the localStorage
+    inputs.forEach((input) => {
+      let inputText = input.parentElement.parentElement.children[0].textContent
+      let inputCol = input.parentElement.dataset.column
+      if (answer[inputCol] == inputText) {
+        input.parentElement.classList.add('bg-blue-500')
+        input.checked = true
+      }
+    }) 
+    // Change the textinput to reflect what is seen
+    let textInput = document.querySelectorAll(`input[type=text][name^='${questionId}']`)
+    textInput.forEach((input, index) => {
+      input.value = answer.at(index)
+    })
+
+    // Play audio
     let audio = new Audio(audioPath)
     audio.play()
     return () => {
-      console.log('Pausando audio')
       audio.currentTime = 0
       audio.pause()
     }
   }, [])
 
+  function handleTdClick(e) {
+    // Remove o fundo azul de todos os td
+    let tds = document.querySelectorAll('td')
+    tds.forEach((td) => td.classList.remove('bg-blue-500'))
+
+    
+    // Selecionar os elementos
+    let td = e.target.closest('td')
+    let radio = td.children[0]
+    let col = td.dataset.column
+
+    // Adiciona o texto no input da resposta
+    let textInput = document.querySelector(`input[type='text'][name='${questionId}.${col}']`)
+    let texto = td.parentElement.children[0].textContent
+    textInput.value = texto
+    
+    if (radio.checked) {
+      radio.checked = false
+    }
+    else {
+      radio.checked = true
+    }
+
+    // Adiciona a cor se tiver um check selecionado
+    tds.forEach((td) => {
+      try {
+        if (td.children[0].checked) {
+          td.classList.add('bg-blue-500')
+        }
+      } catch (error) {}
+    })
+
+    
+  }
+
   return (
-    <form ref={formRef}>
-      <table>
+    <div>
+    <p className='my-5 text-lg'>{question}</p>
+    <div className="flex justify-start">
+      <table className="table-auto">
         <thead>
           <tr>
-            <th>Teste1</th>
-            <th>Teste2</th>
-            <th>Teste3</th>
+            <th></th>
+            {columns.map((column,index) => (<th>Speaker {index + 1}
+              <input type="text" name={`${questionId}.${index}`}className='hidden'/>
+            </th>))}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>Speaker 1</th>
-            <th>Speaker 2</th>
-            <th>Speaker 3</th>
-          </tr>
-            <th>Speaker 1</th>
-            <th>Speaker 2</th>
-            <th>Speaker 3</th>
-          <tr>
-          </tr>
+          {rows.map((row,rowIndex) => (
+            <>
+            <tr>
+              <td>{row}</td>
+              {columns.map((column,colIndex) => (<td onClick={(e) => handleTdClick(e)} data-row={rowIndex} data-column={colIndex}><input type="radio" disabled name={`${questionId}.${colIndex}`}  id="" /><img src="/check.svg" alt="check" height='30px' width='30px' className='m-auto invert'/></td>))}
+            </tr>
+            </>
+          ))}
         </tbody>
       </table>
-    </form>
-  )
+    </div>
+    </div>
+  );
 }
 
 export function WritingTask({formRef,children, propQuestionId}) {
   const questionId = propQuestionId
+  useEffect(() => {
+    let textarea = document.querySelector('textarea')
+    let localText = localStorage.getItem(`${questionId}`)
+    if (localText != '') {
+      textarea.value = localText
+      let ammountSpaces = textarea.value.trim().split(/\s+/).length
+      setWordCount(ammountSpaces)
+    }
+  }, [])
   const [wordCount, setWordCount] = useState(0)
   function handleTextInput(e) {
     let content = new String(e.target.value)
@@ -355,15 +417,58 @@ export function WritingTask({formRef,children, propQuestionId}) {
   function handleKeyDown(e) {
     if (e.key === 'Tab') {
       e.preventDefault()
-      const start = e.target.selectionStart;
-      const end = e.target.selectionEnd;
-      // Insert a tab character (e.g., 4 spaces)
+      let start = e.target.selectionStart;
+      let end = e.target.selectionEnd;
       e.target.value = e.target.value.substring(0, start) + '        ' + e.target.value.substring(end);
 
-      // Move cursor to the end of the inserted tab
       e.target.selectionStart = e.target.selectionEnd = start + 8;
     }
   }
+
+  function handleCut() {
+  let textarea = document.querySelector('textarea');
+  let selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+  if (selectedText) {
+    navigator.clipboard.writeText(selectedText).then(() => {
+      let start = textarea.selectionStart;
+      let end = textarea.selectionEnd;
+      textarea.value = textarea.value.substring(0, start) + textarea.value.substring(end);
+      textarea.selectionStart = textarea.selectionEnd = start;
+
+      handleTextInput({ target: textarea });
+      localStorage.setItem(`${questionId}`, textarea.value);
+    });
+  }
+  textarea.focus();
+}
+
+function handleCopy() {
+  let textarea = document.querySelector('textarea');
+  let selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+  if (selectedText) {
+    navigator.clipboard.writeText(selectedText);
+  }
+  textarea.focus();
+}
+
+function handlePaste() {
+  let textarea = document.querySelector('textarea');
+
+  navigator.clipboard.readText().then((clipText) => {
+    let start = textarea.selectionStart;
+    let end = textarea.selectionEnd;
+
+    textarea.value = textarea.value.substring(0, start) + clipText + textarea.value.substring(end);
+    textarea.selectionStart = textarea.selectionEnd = start + clipText.length;
+
+    handleTextInput({ target: textarea });
+    localStorage.setItem(`${questionId}`, textarea.value);
+  });
+  textarea.focus();
+}
+
   return (
     <div className="grid grid-cols-2 w-full h-10/12 p-5 pt-2">
       <div className='text-lg/loose overflow-y-auto h-full p-3'>
@@ -373,9 +478,9 @@ export function WritingTask({formRef,children, propQuestionId}) {
         <div className='flex gap-10'>
           <IdBox>{questionId}</IdBox>
           <div className='flex gap-2'>
-            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200'>Cut</button>
-            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200'>Copy</button>
-            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200'>Paste</button>
+            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200 active:bg-gray-300' onClick={handleCut}>Cut</button>
+            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200 active:bg-gray-300' onClick={handleCopy}>Copy</button>
+            <button type='button' className='bg-neutral-100 border-2 border-neutral-200 px-2 py-1 rounded-md w-15 hover:bg-gray-200 active:bg-gray-300' onClick={handlePaste}>Paste</button>
           </div>
         </div>
         <form ref={formRef} className='h-full w-11/12 ml-auto'>

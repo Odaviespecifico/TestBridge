@@ -15,16 +15,12 @@ export default function Linguaskill() {
   function renderQuestions() {
     switch (currentQuestion) {
       case 0:
-        console.log('case 0')
         return <Introduction title={'Linguaskill - Reading'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
       case 1:
-        console.log('case 1')
         return <RegisterAttempt formRef={formRef}></RegisterAttempt>
       case 1.5:
-        console.log('case 1.5')
         return (<Loading status='loading'></Loading>)
       case 1.75:
-        console.log('case 1.75')
         return (<Loading status='sucess'></Loading>)
       case 2:
         return (
@@ -115,9 +111,40 @@ export default function Linguaskill() {
             You have 45 seconds to read the sentences. You will hear the recording twice. <br /> <br />
             Listen to a woman called Lucy Townsend talking about an extreme sport called BASE Jumping.
           </Instruction>
-          <ListeningTable audioPath='/audios/audiotest.mp3'>
-            Testing
-          </ListeningTable>
+          <form className="w-10/12 h-full overflow-y-auto pt-0 pb-8" ref={formRef}>
+            <ListeningTable audioPath='/audios/audiotest.mp3' question='What does each person say was the main benefit to them of studying literature?'
+            rows={[
+              'I learnt to detect what was hidden beneath the surface.',
+              'It impressed a number of different employers.',
+              'It helped me to bring ideas together and express them clearly.',
+              'I gained the confidence to challenge established writers’ work.',
+              'It made me reconsider what to do with my life.',
+              'I became completely objective in my approach.',
+              'It revealed some solutions to common problems.',
+              'It led me to a greater understanding of other people.',
+            ]}
+            columns={[
+              'Speaker 1',
+              'Speaker 2',
+              'Speaker 3',
+              'Speaker 4',
+              'Speaker 5',]}
+            >
+            </ListeningTable>
+            <ListeningTable audioPath='/audios/audiotest.mp3' question='What does each person say was the main benefit to them of studying literature?'
+            rows={[
+              "parental disapproval", "a persistent injury", "the negative attitude of friends", "inconveniently located sports facilities", "maintaining a strict diet"
+            ]}
+            columns={[
+              'Speaker 1',
+              'Speaker 2',
+              'Speaker 3',
+              'Speaker 4',
+              'Speaker 5',
+            ]}
+            >
+            </ListeningTable>
+          </form>
           </>
         )
       case 10:
@@ -132,7 +159,7 @@ export default function Linguaskill() {
         return (
           <>
           <Instruction>You have 45 minutes for this task.</Instruction>
-          <WritingTask propQuestionId={getNextId()}>
+          <WritingTask propQuestionId={getNextId()} formRef={formRef}>
             Read the following statement: <br />
             <BoxText>
             <strong>The attention paid to celebrities these days has a negative effect on society.</strong>
@@ -164,12 +191,9 @@ export default function Linguaskill() {
     // Verifica se o local Storage não tem o ID da tentativa e verifica o registro de tentativa
     if (currentQuestion >= 1 && currentQuestion < 2 && localStorage.getItem('id') == null) {
       if (formRef.current.reportValidity()) {
-        console.log('Validando formulário')
         let myform = new FormData(formRef.current)
         let myformObj = Object.fromEntries(myform.entries())
-        console.log(myformObj)
         setCurrentQuestion(1.5)
-        console.log('Registrando tentativa')
         let id = await adicionarTentativa(myformObj.studentName,myformObj.teacherName,myformObj.sessionId)
         if (id.error != null) {
           console.log('erro')
@@ -193,13 +217,9 @@ export default function Linguaskill() {
 
     // Parse do formulário
     else if (formRef.current) {
-      console.log('Salvando as respostas de...')
-      console.log(formRef.current)
       let myform = new FormData(formRef.current)
       let myformObj = Object.fromEntries(myform.entries())
-      console.log(myformObj)
       myform.entries().forEach((pair) => {
-        console.log(pair)
         localStorage.setItem(pair[0],pair[1])
       })
       answers = localStorage
@@ -321,7 +341,6 @@ export function QuestionTitle() {}
 
 
 export function Loading({status}) {
-  console.log(status)
   if (status == 'sucess') {
     return (
       <div className="flex justify-center items-center h-full">
