@@ -1,5 +1,5 @@
 import {InlineOpen, InlineClosed, FourAlternatives, RadioTableInput, IdBox, OneQuestionAlternative, DragAlternative, DropAlternative, AudioAlternative} from './Alternatives.jsx'
-import {DndContext} from '@dnd-kit/core';
+import {DndContext, pointerWithin} from '@dnd-kit/core';
 import {DragOverlay} from '@dnd-kit/core';
 import { useState, useEffect, createContext, useId, useRef} from 'react';
 import { getNextId } from "./Linguaskill";
@@ -158,12 +158,35 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
     )
     }, [])
 
-    function handleDragStart(event) {
-      setDraggedText(event.active.data.current)
+    function handleDragStart(e) {
+      setDraggedText(e.active.data.current)
     }
-  
+
+    function handleOver(e) {
+      clearSpanShadows()
+      try {
+        const dropElement = document.getElementById(e.over.id)
+        if (dropElement) {
+          dropElement.classList.add('shadow-xl','shadow-yellow-300','z-20')
+          // Adicionar caso para colision.length == 2
+        }
+      } catch (error) {
+        try {
+          document.getElementById(e.collisions[1].id).classList.add('shadow-xl','shadow-yellow-300','z-20')
+        } catch (error) {
+          console.log('nenhum elemento')
+        }
+      }
+    }
+    
+    function clearSpanShadows() {
+      const textSpans = document.querySelectorAll('span')
+      textSpans.forEach((span) => span.classList.remove('shadow-xl','shadow-yellow-300','z-20'))
+    }
+
     function handleDragEnd (e) {
-      // e.active.classList.toggle
+      clearSpanShadows()
+
       let overDropElement = e.over
       let dropPreviousContent
       let grabbedText = e.active.data.current 
@@ -237,7 +260,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
     }
 
     return (
-      <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)} onDragStart={(e) => handleDragStart(e)}>
+      <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)} onDragStart={(e) => handleDragStart(e)} onDragOver={(e) => handleOver(e)} collisionDetection={pointerWithin} readOnly>
         <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12'>
           <div className='flex flex-col relative gap-5 overflow-y-scroll z-0'>
             <div>
@@ -274,7 +297,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
               transformOrigin: '0 0',
               boxShadow: '0 0 10px rgba(0, 0, 0, 0.15)',
             }}
-            className="opacity-70 scale-100 rotate-1 bg-blue-500 text-lg text-white p-2 rounded-xl">
+            className="opacity-50 scale-100 rotate-1 bg-blue-500 text-lg text-white p-2 rounded-xl">
           {draggedText}
       </DragOverlay>
         </div>
@@ -529,7 +552,7 @@ function handlePaste() {
 // Small components
 export function OneCollumnParagraph({children}) {
     return(
-        <p className='relative mb-5 text-lg/relaxed text-justify pr-5 select-none' readonly>{children}</p>
+        <p className='relative mb-5 text-lg/relaxed text-justify pr-5 select-none' readOnly>{children}</p>
     )
 }
 

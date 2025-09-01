@@ -188,7 +188,7 @@ export function DropAlternative({children, id, handleclick, inlineStyle}) {
   return (
     <span className=""> 
       <IdBox>{id}</IdBox>
-      <span type='text' id={id} className="inline-block field-sizing-content w-32 relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base ml-2 p-1  border-white box-border text-center hover:cursor-pointer"
+      <span type='text' id={id} className="inline-block field-sizing-content w-32 relative align-middle h-9 bg-blue-100 outline-0 mr-2 font-base ml-2 p-1  border-white box-border text-center hover:cursor-pointer"
       ref={setNodeRef}
       readOnly
       onClick={(e) => handleclick(e)}
