@@ -1,7 +1,7 @@
 import {InlineOpen, InlineClosed, FourAlternatives, RadioTableInput, IdBox, OneQuestionAlternative, DragAlternative, DropAlternative, AudioAlternative} from './Alternatives.jsx'
 import {DndContext} from '@dnd-kit/core';
 import {DragOverlay} from '@dnd-kit/core';
-import { useState, useEffect, createContext, useId} from 'react';
+import { useState, useEffect, createContext, useId, useRef} from 'react';
 import { getNextId } from "./Linguaskill";
 import { useFormState } from 'react-dom';
 
@@ -94,6 +94,7 @@ export function OneCollumnQuestion({formRef, title, children}) {
               heading={question.heading}
               alternatives={question.alternatives}
               handleToggle={handleToggle}
+              key={question.heading + question.alternatives}
               ></FourAlternatives>
             )
           })}
@@ -110,20 +111,22 @@ export function OneQuestionMultipleChoice({formRef, children, alternatives}) {
       <div className='border-4 rounded-2xl p-2 max-w-96 text-base'>{children}</div>
       <form ref={formRef} className='flex-1'>
         {alternatives.map((alternative) => {
-          return (<OneQuestionAlternative id={questionId}>{alternative}</OneQuestionAlternative>)
+          return (<OneQuestionAlternative id={questionId} key={questionId + alternative}>{alternative}</OneQuestionAlternative>)
         })}
       </form>
     </div>
   )
 }
 
-export function DragQuestion({formRef, propAlternatives, title, subtitle, content}) {
+export function DragQuestion({formRef, propAlternatives, title, subtitle, paragraphs}) {
     const [alternatives, setAlternatives] = useState(Array.from(propAlternatives))
     const [draggedText, setDraggedText] = useState(null);
+    let dragId = 0
     // Remover alternativas já populadas
     const [ids, setIds] = useState([])
     useEffect(() => {
-      for (let index = 0; index < 4; index++) {
+      let ammountDrop = Math.floor(paragraphs.reduce((total, arr) => total + arr.length, 0)/2)
+      for (let index = 0; index < ammountDrop; index++) {
           let element = getNextId()
           ids.push(element)
         }
@@ -140,8 +143,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
       span.forEach((span,index) => {
         span.textContent = localStorage.getItem(ids.at(index))
         if (span.textContent) {
-          span.classList.toggle('inline')
-          span.classList.toggle('inline-block')
+          toggleSpanDisplay(span)
         }
       }) 
 
@@ -161,8 +163,6 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
     }
   
     function handleDragEnd (e) {
-      // Muda o estilo do span para ser inline
-      
       // e.active.classList.toggle
       let overDropElement = e.over
       let dropPreviousContent
@@ -174,10 +174,10 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
         } catch (error) {
           dropId = e.collisions[1].id
         }
+
         // Muda o estilo
         const span = document.querySelector(`span[id="${dropId}"]`)
-        span.classList.toggle('inline')
-        span.classList.toggle('inline-block')
+        toggleSpanDisplay(span)
 
         dropPreviousContent = document.querySelector(`[id="${dropId}"]`).innerHTML 
         // Modifica o input para ter o valor do grabbedText
@@ -186,6 +186,13 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
         let removeIndex = alternatives.indexOf(grabbedText)
         alternatives.splice(removeIndex,1)
         setAlternatives([...alternatives])
+        // If there was already one answer in the box
+        if (dropPreviousContent) {
+          alternatives.push(dropPreviousContent)
+          alternatives.sort((a, b) => {return propAlternatives.indexOf(a) - propAlternatives.indexOf(b)})
+          setAlternatives([...alternatives])
+          toggleSpanDisplay(span)
+        }
 
         // Atualiza o input para condizer com o span
         document.querySelector(`input[name="${dropId}"`).value = grabbedText
@@ -209,11 +216,11 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
     }
     
     function handleAlternativeRemoval(e) {
-      if (e.target.value != '') {
-        // Change it back to inline-Block
+      if (e.target.textContent != '') {
+        console.log(e.target.value)
+        // Change it back to inline-Block TODO: Change it to depend only on the content of the span
         const span = document.querySelector(`span[id="${e.target.id}"]`)
-        span.classList.toggle('inline')
-        span.classList.toggle('inline-block')
+        toggleSpanDisplay(span)
         // Add back to alternatives
         alternatives.push(e.target.textContent)
         alternatives.sort((a, b) => {return propAlternatives.indexOf(a) - propAlternatives.indexOf(b)})
@@ -224,6 +231,11 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
         document.querySelector(`input[name="${e.target.id}"`).value = ''
       }
 }
+
+    function getDragId() {
+      return dragId++
+    }
+
     return (
       <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)} onDragStart={(e) => handleDragStart(e)}>
         <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12'>
@@ -233,9 +245,20 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
               <em className='text-[18px]'>{subtitle}</em>
             </div>
             <form action="" ref={formRef}>
-              <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id={ids.at(0)} handleclick={handleAlternativeRemoval}/>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
-              <OneCollumnParagraph>Lorem ipsum dolor sit amet, <DropAlternative id={ids.at(1)} handleclick={handleAlternativeRemoval}/>consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
-              <OneCollumnParagraph>Lorem ipsum dolor <DropAlternative id={ids.at(2)} handleclick={handleAlternativeRemoval}/> sit amet, consectetur adipisicing elit. Ducimus veniam ipsum sint necessitatibus blanditiis voluptate aperiam illo. Qui voluptate similique omnis aliquid, minus veritatis ratione error beatae ex repellendus quas?</OneCollumnParagraph>
+              {paragraphs.map((paragraph, pIndex) => {
+                return(
+                  <OneCollumnParagraph>
+                  {paragraph.map((element, eIndex) => {
+                    if ((eIndex % 2) == 0) {
+                      return(<span className='pr-2'>{element}</span>)
+                    }
+                    else {
+                      return(<DropAlternative id={ids.at(getDragId())} handleclick={handleAlternativeRemoval}/>)
+                    }
+                  })}
+                </OneCollumnParagraph>
+                )
+              })}
             </form>
           </div>
           <div className='flex flex-col gap-2'>
@@ -257,6 +280,10 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, conten
         </div>
     </DndContext>
   )
+  function toggleSpanDisplay(span) {
+    span.classList.toggle('inline')
+    span.classList.toggle('inline-block')
+  }
 }
 
 export function ListeningClosed({formRef, audioPath, children}) {
@@ -396,7 +423,7 @@ export function WritingTask({formRef,children, propQuestionId}) {
   useEffect(() => {
     let textarea = document.querySelector('textarea')
     let localText = localStorage.getItem(`${questionId}`)
-    if (localText != '') {
+    if (localText) {
       textarea.value = localText
       let ammountSpaces = textarea.value.trim().split(/\s+/).length
       setWordCount(ammountSpaces)
@@ -404,6 +431,10 @@ export function WritingTask({formRef,children, propQuestionId}) {
     else {
       setWordCount(0)
     }
+    let saveLoop = setInterval(() => {
+      let textarea = document.querySelector('textarea')
+      localStorage.setItem(`${questionId}`,textarea.value)
+    }, 15000);
   }, [])
   const [wordCount, setWordCount] = useState(0)
   function handleTextInput(e) {
@@ -467,7 +498,6 @@ function handlePaste() {
     textarea.selectionStart = textarea.selectionEnd = start + clipText.length;
 
     handleTextInput({ target: textarea });
-    localStorage.setItem(`${questionId}`, textarea.value);
   });
   textarea.focus();
 }
@@ -487,7 +517,7 @@ function handlePaste() {
           </div>
         </div>
         <form ref={formRef} className='h-full w-11/12 ml-auto'>
-          <textarea name={questionId} id={questionId} className='resize-none w-full h-full border-x-blue-200 border-x-2 focus:bg-blue-50 p-1' onInput={(e) => handleTextInput(e)} onKeyDown={(e) => handleKeyDown(e)}></textarea>
+          <textarea name={questionId} id={questionId} spellCheck="false" className='resize-none w-full h-full border-x-blue-200 border-x-2 focus:bg-blue-50 p-1' onInput={(e) => handleTextInput(e)} onKeyDown={(e) => handleKeyDown(e)}></textarea>
         </form>
         <div className='text-center'>
           Word count: {wordCount}
@@ -499,7 +529,7 @@ function handlePaste() {
 // Small components
 export function OneCollumnParagraph({children}) {
     return(
-        <p className='relative mb-3 text-lg '>{children}</p>
+        <p className='relative mb-5 text-lg/relaxed text-justify pr-5 select-none' readonly>{children}</p>
     )
 }
 

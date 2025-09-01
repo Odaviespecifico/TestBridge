@@ -18,7 +18,7 @@ export function InlineOpen({removeSpace = 'true'}) {
   } 
 
   return (
-    <span className="group inline-flex gap-1 items-center">
+    <span className="group inline-flex gap-0.5 items-center">
       <IdBox>{questionId}</IdBox>
       <input
         className="h-9 bg-blue-100 lg:w-64 sm:w-40 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
@@ -82,7 +82,7 @@ export function FourAlternatives({alternatives,heading, handleToggle}) {
       </button>
       <div className="hidden w-full">
         <div className="w-full">
-          {alternatives.map((alternative) => <RadioTableInput id={questionId}>{alternative}</RadioTableInput>)}
+          {alternatives.map((alternative) => <RadioTableInput id={questionId} key={questionId + alternative}>{alternative}</RadioTableInput>)}
         </div>
       </div>
     </div>
@@ -109,8 +109,8 @@ export function AudioAlternative({alternatives,heading}) {
 
 export function IdBox({children}) {
   return(
-  <span className="size-8 bg-neutral-900 text-white text-base inline-flex justify-center items-center font-bold group-has-focus:bg-blue-700">
-    {children}  
+  <span className="h-8 w-8 bg-neutral-900 border-white border-2 p-0.5 text-white justify-center items-center inline-flex font-bold text-lg group-has-focus:bg-blue-700">
+    {children}      
   </span>
   )
 }
@@ -146,8 +146,13 @@ export function OneQuestionAlternative({children,id}) {
       }
     }) 
   }, [])
+
+  function handleClick(e) {
+    let div = e.target.closest('div')
+    div.children[0].click()
+  }
   return(
-    <div className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full'>
+    <div className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full select-none' readOnly onClick={(e) => handleClick(e)}>
           <input type="radio" name={id} id={id+children} className="size-6 hover:cursor-pointer" value={children}/>
           <label htmlFor={id+children} className="hover:cursor-pointer">{children}</label>
     </div>
@@ -172,7 +177,7 @@ export function DragAlternative({children, id,}) {
   )
 }
 
-export function DropAlternative({children, id, handleclick}) {
+export function DropAlternative({children, id, handleclick, inlineStyle}) {
   const {isOver, setNodeRef} = useDroppable({
     id: id,
   });
@@ -181,9 +186,9 @@ export function DropAlternative({children, id, handleclick}) {
     console.log('mudou')
   }
   return (
-    <>
+    <span className=""> 
       <IdBox>{id}</IdBox>
-      <span type='text' id={id} className="inline-block field-sizing-content w-45 relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base mx-2 p-1 border-white box-border text-center hover:cursor-pointer"
+      <span type='text' id={id} className="inline-block field-sizing-content w-32 relative align-middle h-9 bg-blue-100 outline-0 border-2 font-base ml-2 p-1  border-white box-border text-center hover:cursor-pointer"
       ref={setNodeRef}
       readOnly
       onClick={(e) => handleclick(e)}
@@ -196,6 +201,6 @@ export function DropAlternative({children, id, handleclick}) {
       hidden
       />
       
-    </>
+    </span>
   );
 }

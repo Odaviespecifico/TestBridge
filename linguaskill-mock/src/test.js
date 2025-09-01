@@ -1,106 +1,4 @@
-import { useState, useRef, Children } from "react";
-import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap, ListeningTable, BoxText, OneCollumnParagraph, WritingTask, IndentedItem} from "./questions.jsx";
-import {AudioAlternative, InlineOpen,DropAlternative,} from "./Alternatives.jsx";
-import {adicionarTentativa} from './supabase.js'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import {Header, Instruction, Introduction, Footer, Loading} from './utils.jsx'
-// import {questions} from './test.jsx'
-
-export default function Linguaskill() {
-  let answers = Object()
-
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  
-  const formRef = useRef(null) 
-  const goToNextQuestion = async () => {
-    // Desativa os botões durante carregamento
-    if (currentQuestion < 2 && currentQuestion >1) {
-      return('')
-    }
-    historicoId.push(questionId)
-    // Verifica se o local Storage não tem o ID da tentativa e verifica o registro de tentativa
-    if (currentQuestion >= 1 && currentQuestion < 2 && localStorage.getItem('id') == null) {
-      if (formRef.current.reportValidity()) {
-        let myform = new FormData(formRef.current)
-        let myformObj = Object.fromEntries(myform.entries())
-        setCurrentQuestion(1.5)
-        let id = await adicionarTentativa(myformObj.studentName,myformObj.teacherName,myformObj.sessionId)
-        if (id.error != null) {
-          alert('Ocorreu um erro. Reiniciando a pagina')
-          setTimeout(() => {
-            localStorage.clear()
-            window.location.reload(true);
-          }, 1500);
-        }
-        else {
-          setTimeout(() => {
-            setCurrentQuestion(1.75)
-          }, 500);
-          localStorage.setItem('id',id.data.id)
-          setTimeout(() => {
-            setCurrentQuestion(2)
-          }, 2500);
-        }
-      }
-    }
-    
-    // Caso tenha o ID, pular o registro de tentativa
-    else if (localStorage.getItem('id') != null && currentQuestion == 0) {
-      setCurrentQuestion((prevState) => prevState + 2);
-    }
-
-    // Parse do formulário
-    else if (formRef.current) {
-      let myform = new FormData(formRef.current)
-      let myformObj = Object.fromEntries(myform.entries())
-      myform.entries().forEach((pair) => {
-        localStorage.setItem(pair[0],pair[1])
-      })
-      answers = localStorage
-      setCurrentQuestion((prevState) => prevState + 1);
-    }
-    else {
-      setCurrentQuestion((prevState) => prevState + 1);
-    }
-  };
-
-  const goToPreviousQuestion = () => {
-    // Desativa os botões durante carregamento
-    if (currentQuestion < 2 && currentQuestion >1) {
-      return('')
-    }
-    setCurrentQuestion((prevState) => prevState - 1);
-    // Atualiza o valor da questão com base
-    setQuestionId(historicoId.at(-2))
-    historicoId.pop()
-
-    // Caso tenha o ID pular a de cadastro de tentativa
-    if (localStorage.getItem('id') != null && currentQuestion == 2) {
-      // Reinicia o contador
-      setQuestionId(1)
-      historicoId = []
-      setCurrentQuestion((prevState) => prevState - 1);
-    } 
-  };
-
-  function renderQuestions() {
-    if (currentQuestion == 0) {
-      return <Introduction title={'Linguaskill - Reading'}>Linguaskill is an adaptive test <br/>This demonstration will show you what the Reading questions look like. <br/>To move through the questions, click the arrows in the bottom-right corner of the screen <br/>Click <strong>start</strong> in the bottom-right corner of the screen to begin the demonstration.</Introduction>;
-    }
-    if (currentQuestion == 1) {
-      return <RegisterAttempt formRef={formRef}></RegisterAttempt>
-    }
-    if (currentQuestion == 1.5) {
-      return (<Loading status='loading'></Loading>)
-    }
-    if (currentQuestion == 1.75) {
-      return (<Loading status='sucess'></Loading>)
-    }
-    
-    switch (currentQuestion) {
-      case 2:
-        return (
+export const questions = [
         <>
         <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
         <OneCollumnQuestion formRef={formRef} title={'Open gap fill'}>
@@ -113,11 +11,8 @@ export default function Linguaskill() {
           You will feel better if you <InlineOpen/> some rest.<br />
           If he <InlineOpen/> the meeting yesterday, he would know the plan now.  
         </OneCollumnQuestion>;
-        </>
-        )
-      case 3:
-        return (
-          <>
+        </>, 
+        <>
           <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
           <TwoCollumnQuestion formRef={formRef}
           title='Question Title'
@@ -130,19 +25,19 @@ export default function Linguaskill() {
             <BoxText title='title'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore ad explicabo quidem quo similique rem nulla aut impedit accusantium. Accusantium iste aliquam illo culpa dolorum quia totam aperiam nihil accusamus.</BoxText>
             <BoxText title='title 2'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid asperiores nobis dolorum fugit velit sed, accusantium iste nam iusto debitis voluptatibus! Aliquam voluptate amet fugiat quasi quia deleniti cupiditate cumque?</BoxText>
           </TwoCollumnQuestion>
-          </>
-        )
-      case 4:
-        return (
-          <>
+        </>,
+
+
+        <>
           <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
           <OneQuestionMultipleChoice formRef={formRef} alternatives={['Test1','test2','test3','test4']}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo ratione quaerat quae dolores cupiditate aut sint corrupti, ullam facere aperiam impedit quisquam libero nulla nihil officiis saepe? Autem, veniam praesentium.
           </OneQuestionMultipleChoice>
-          </>
-        ) 
-      case 5: 
-        return <DragQuestion formRef={formRef}
+        </>,
+
+
+        <>
+        <DragQuestion formRef={formRef}
         propAlternatives={[
           'teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1',
           'teste 2',
@@ -156,8 +51,9 @@ export default function Linguaskill() {
         ]}
         title='Question Title'
         subtitle='Sub-title'/>
-      case 6:
-        return (
+        </>,
+
+
         <>
         <Introduction title='Linguaskill - Listening section'>Linguaskill is an adaptive test. <br />
           This demonstration will show you what the Listening questions look like. <br />
@@ -165,9 +61,9 @@ export default function Linguaskill() {
           You will have time to read the questions. The audio will begin when the reading time is finished. You will hear the audio twice. <br />
           Click <strong>Start</strong> in the  bottom-right corner of the screen to begin the demonstration. 
         </Introduction>;
-        </>)
-      case 7:
-        return(
+        </>,
+
+
         <>
         <Instruction>For this question, choose the correct answer. <br /> You have 10 seconds to read the question. You will hear the recording twice.</Instruction>
         <ListeningClosed formRef={formRef} audioPath={'/audios/audiotest.mp3'} title={'The sport of BASE jumping'}>
@@ -175,11 +71,10 @@ export default function Linguaskill() {
             <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
             <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
           </ListeningClosed>
-        </>
-        )
-      case 8:
-        return (
-          <>
+        </>,
+
+
+        <>
             <Instruction>For these questions, complete the sentences with no more than three words in each gap. <br/> 
             You have 45 seconds to read the sentences. You will hear the recording twice. <br /> <br />
             Listen to a woman called Lucy Townsend talking about an extreme sport called BASE Jumping.
@@ -189,11 +84,10 @@ export default function Linguaskill() {
               <p>test beforehand <InlineOpen removeSpace="false"/> testing</p>
               <p>test beforehand <InlineOpen removeSpace="false"/> testing</p>
             </ListeningGap>
-          </>
-        )
-      case 9: 
-        return (
-          <>
+        </>,
+
+
+        <>
           <Instruction>For these questions, complete the sentences with no more than three words in each gap. <br/> 
             You have 45 seconds to read the sentences. You will hear the recording twice. <br /> <br />
             Listen to a woman called Lucy Townsend talking about an extreme sport called BASE Jumping.
@@ -232,19 +126,19 @@ export default function Linguaskill() {
             >
             </ListeningTable>
           </form>
-          </>
-        )
-      case 10:
-        return(
-        <Introduction title='Linguaskill - Writing Section'>Linguaskill is an adaptive test. <br />
+        </>,
+
+
+        <>
+          <Introduction title='Linguaskill - Writing Section'>Linguaskill is an adaptive test. <br />
           There are two questions in this test. <br />
           You have 55 minutes. <br />
           Click <strong>Start</strong> in the bottom-right corner of the screen to continue. 
-        </Introduction>
-        )
-      case 11:
-        return (
-          <>
+          </Introduction>
+        </>,
+
+
+        <>
           <Instruction>You have 45 minutes for this task.</Instruction>
           <WritingTask propQuestionId={getNextId()} formRef={formRef}>
             Read the following statement: <br />
@@ -267,36 +161,4 @@ export default function Linguaskill() {
             Use your own words as far as possible.
           </WritingTask>
           </>
-        )
-      default:
-        return (goToPreviousQuestion())
-      }
-  }
-
-    return (
-      <div className="flex items-center flex-col h-full w-screen justify-stretch">
-        <Header />
-        {renderQuestions()}
-        <Footer
-          nextQuestion={goToNextQuestion}
-          previousQuestion={goToPreviousQuestion}
-          currentQuestion={currentQuestion}
-        ></Footer>
-      </div>
-    );
-  }
-
-
-
-// Util functions
-
-let questionId = 1
-let historicoId = []
-
-export function getNextId() {
-  return questionId++
-};
-
-function setQuestionId(value) {
-  questionId = value
-}
+]
