@@ -1,7 +1,7 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
 import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion, RegisterAttempt, ListeningClosed, ListeningGap, ListeningTable, BoxText, OneCollumnParagraph, WritingTask, IndentedItem} from "./questions.jsx";
-import {AudioAlternative, InlineOpen,DropAlternative,} from "./Alternatives.jsx";
+import {AudioAlternative, InlineOpen,DropAlternative, InlineClosed,} from "./Alternatives.jsx";
 import {adicionarTentativa} from './supabase.js'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import {Header, Instruction, Introduction, Footer, Loading} from './utils.jsx'
@@ -102,7 +102,7 @@ export default function Linguaskill() {
       case 2:
         return (
         <>
-        <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
+        <Instruction>Click on each gap then type the word which you think fits best. Type only one word in each gap.</Instruction>
         <OneCollumnQuestion formRef={formRef} title={'Open gap fill'}>
           If you <InlineOpen></InlineOpen> ice, it melts <br/>
           If she <InlineOpen/> hard, she will pass the exam <br />
@@ -111,14 +111,14 @@ export default function Linguaskill() {
           If we <InlineOpen/> earlier, we wouldn't have missed the train. <br />
           if I <InlineOpen/> the answer, I would have told you
           You will feel better if you <InlineOpen/> some rest.<br />
-          If he <InlineOpen/> the meeting yesterday, he would know the plan now.  
+          If he <InlineClosed alternatives={['alternativa 1', 'alternativa 2', 'alternativa 3', 'alternativa 4']}/> the meeting yesterday, he would know the plan now.  
         </OneCollumnQuestion>;
         </>
         )
       case 3:
         return (
           <>
-          <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
+          <Instruction>Click on each gap then choose the correct answer.</Instruction>
           <TwoCollumnQuestion formRef={formRef}
           title='Question Title'
           subtitle='Sub-title'
@@ -136,7 +136,8 @@ export default function Linguaskill() {
         return (
           <>
           <Instruction>Click on each gap then type the word which you think fits best.</Instruction>
-          <OneQuestionMultipleChoice formRef={formRef} alternatives={['Test1','test2','test3','test4']}>
+          <OneQuestionMultipleChoice formRef={formRef}
+          alternatives={['Test1','test2','test3','test4']}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo ratione quaerat quae dolores cupiditate aut sint corrupti, ullam facere aperiam impedit quisquam libero nulla nihil officiis saepe? Autem, veniam praesentium.
           </OneQuestionMultipleChoice>
           </>
@@ -171,10 +172,10 @@ export default function Linguaskill() {
         <>
         <Instruction>For this question, choose the correct answer. <br /> You have 10 seconds to read the question. You will hear the recording twice.</Instruction>
         <ListeningClosed formRef={formRef} audioPath={'/audios/audiotest.mp3'} title={'The sport of BASE jumping'}>
-            <AudioAlternative heading={'Question, so nice'} alternatives={['A','B','C','D']}></AudioAlternative>
-            <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
-            <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
-          </ListeningClosed>
+          <AudioAlternative heading={'Question, so nice'} alternatives={['A','B','C','D']}></AudioAlternative>
+          <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
+          <AudioAlternative heading={'My question'} alternatives={['A','B','C','D']}></AudioAlternative>
+        </ListeningClosed>
         </>
         )
       case 8:
@@ -289,7 +290,6 @@ export default function Linguaskill() {
 
 
 // Util functions
-
 let questionId = 1
 let historicoId = []
 
