@@ -3,50 +3,117 @@ import {DndContext, pointerWithin} from '@dnd-kit/core';
 import {DragOverlay} from '@dnd-kit/core';
 import { useState, useEffect, createContext, useId, useRef} from 'react';
 import { getNextId } from "./Linguaskill";
+import { adicionarTentativa } from "./supabase.js";
 import { useFormState } from 'react-dom';
-import {
-  Instruction,
-} from "./utils.jsx";
+import { useNavigate } from "react-router";
+import {  Header,  Footer,  Loading,} from "./utils.jsx";
 
 
-export function RegisterAttempt({formRef}) {
+export function RegisterAttempt() {
+  const formRef = useRef()
+  const [state, setState] = useState('form')
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (localStorage.getItem('id')) {
+      navigate("/test")
+    }
+  },[])
+  async function handleClick() {
+    console.log('click')
+    if (formRef.current.reportValidity()) {
+      console.log('registering attempt')
+      let myform = new FormData(formRef.current);
+      let myformObj = Object.fromEntries(myform.entries());
+      setState('loading')
+      let id = await adicionarTentativa(
+        myformObj.studentName,
+        myformObj.teacherName,
+        myformObj.sessionId
+      );
+      if (id.error != null) {
+        alert("Ocorreu um erro. Reiniciando a pagina");
+        setTimeout(() => {
+          localStorage.clear();
+          window.location.reload(true);
+        }, 1500);
+      } else {
+        setTimeout(() => {
+          setState('success')
+        }, 500);
+        localStorage.setItem("id", id.data.id);
+        setTimeout(() => {
+          navigate("/test")
+        }, 3000);
+      }
+    }
+  }
+
+  function renderContent() {
+    switch (state) {
+      case 'form':
+        return (<RegisterForm formRef={formRef}></RegisterForm>)
+      case 'loading':
+        return(<Loading></Loading>)
+      case 'success':
+        return(<Loading status="sucess"></Loading>)
+      default:
+        break;
+    }
+  }
   return (
+    <div className='flex items-center flex-col h-full w-screen justify-stretch'>
+      <Header></Header>
+      {renderContent(formRef)}
+      <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'>
+        <button
+          type="button"
+          className="text-gray-100 font-medium text-2xl hover:text-gray-300"
+          onClick={handleClick}>
+          Start
+        </button>
+      </div>
+  </div>
+  )
+}
+
+function RegisterForm({formRef}) {
+  return(
     <form ref={formRef} className="flex flex-col gap-4 p-4 max-w-md mx-auto h-full justify-center -mt-35">
-      <h1 className="text-2xl font-bold text-center mb-4">Register attempt</h1>
-      <label className="flex flex-col font-semibold text-lg">
-        Your name
-        <input
-          required
-          minLength='3'
-          type="text"
-          name="studentName"
-          className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-          placeholder="Digite seu nome"
-        />
-      </label>
-      <label className="flex flex-col font-semibold text-lg">
-        Your English Teacher
-        <input
-          required
-          minLength='3'
-          type="text"
-          name="teacherName"
-          className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-          placeholder="Digite o nome do professor"
-        />
-      </label>
-      <label className="flex flex-col font-semibold text-lg">
-        Session ID
-        <input
-          required
-          minLength='5'
-          type="text"
-          name="sessionId"
-          className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-          placeholder="Digite o nome do professor"
-        />
-      </label>
-    </form>
+        <h1 className="text-2xl font-bold text-center mb-4">Register attempt</h1>
+        <label className="flex flex-col font-semibold text-lg">
+          Your name
+          <input
+            required
+            minLength='3'
+            type="text"
+            name="studentName"
+            className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            placeholder="Digite seu nome"
+          />
+        </label>
+        <label className="flex flex-col font-semibold text-lg">
+          Your English Teacher
+          <input
+            required
+            minLength='3'
+            type="text"
+            name="teacherName"
+            className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            placeholder="Digite o nome do professor"
+            />
+        </label>
+        <label className="flex flex-col font-semibold text-lg">
+          Session ID
+          <input
+            required
+            minLength='5'
+            type="text"
+            name="sessionId"
+            className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            placeholder="Digite o nome do professor"
+          />
+        </label>
+      </form>
   )
 }
 export function OneCollumnQuestion({formRef, title, children}) {

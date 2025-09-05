@@ -2,8 +2,8 @@ import { useState, useRef, Children } from "react";
 import "./index.css";
 import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion,RegisterAttempt,ListeningClosed,ListeningGap,ListeningTable,BoxText,OneCollumnParagraph,WritingTask,IndentedItem,} from "./questions.jsx";
 import { AudioAlternative,InlineOpen,  DropAlternative,  InlineClosed,} from "./Alternatives.jsx";
-import { adicionarTentativa } from "./supabase.js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { Outlet } from "react-router";
 import {  Header,  Instruction,  Introduction,  Footer,  Loading,} from "./utils.jsx";
 
 export default function Linguaskill() {
@@ -18,7 +18,7 @@ export default function Linguaskill() {
       return "";
     }
     historicoId.push(questionId);
-    
+
     // Verifica se o local Storage não tem o ID da tentativa e verifica o registro de tentativa
     if (
       currentQuestion >= 1 &&
@@ -500,7 +500,7 @@ export default function Linguaskill() {
       return <Loading status="loading"></Loading>;
     }
     if (currentQuestion == 1.75) {
-      return <Loading status="sucess"></Loading>;
+      
     }
 
     if (currentQuestion >= 2 && currentQuestion < questions.length+2) {
@@ -517,12 +517,15 @@ export default function Linguaskill() {
   return (
     <div className="flex items-center flex-col h-full w-screen justify-stretch">
       <Header />
+      
       {renderQuestions()}
+      {/* <Outlet formRef={formRef}></Outlet> */}
       <Footer
         nextQuestion={goToNextQuestion}
         previousQuestion={goToPreviousQuestion}
         currentQuestion={currentQuestion}
-      ></Footer>
+      >
+      </Footer>
     </div>
   );
 }
