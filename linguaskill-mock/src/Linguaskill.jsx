@@ -13,54 +13,11 @@ export default function Linguaskill() {
 
   const formRef = useRef(null);
   const goToNextQuestion = async () => {
-    // Desativa os botões durante carregamento
-    if (currentQuestion < 2 && currentQuestion > 1) {
-      return "";
-    }
     historicoId.push(questionId);
 
-    // Verifica se o local Storage não tem o ID da tentativa e verifica o registro de tentativa
-    if (
-      currentQuestion >= 1 &&
-      currentQuestion < 2 &&
-      localStorage.getItem("id") == null
-    ) {
-      if (formRef.current.reportValidity()) {
-        let myform = new FormData(formRef.current);
-        let myformObj = Object.fromEntries(myform.entries());
-        setCurrentQuestion(1.5);
-        let id = await adicionarTentativa(
-          myformObj.studentName,
-          myformObj.teacherName,
-          myformObj.sessionId
-        );
-        if (id.error != null) {
-          alert("Ocorreu um erro. Reiniciando a pagina");
-          setTimeout(() => {
-            localStorage.clear();
-            window.location.reload(true);
-          }, 1500);
-        } else {
-          setTimeout(() => {
-            setCurrentQuestion(1.75);
-          }, 500);
-          localStorage.setItem("id", id.data.id);
-          setTimeout(() => {
-            setCurrentQuestion(2);
-          }, 2500);
-        }
-      }
-    }
-
-    // Caso tenha o ID, pular o registro de tentativa
-    else if (localStorage.getItem("id") != null && currentQuestion == 0) {
-      setCurrentQuestion((prevState) => prevState + 2);
-    }
-
     // Parse do formulário
-    else if (formRef.current) {
+     if (formRef.current) {
       let myform = new FormData(formRef.current);
-      let myformObj = Object.fromEntries(myform.entries());
       myform.entries().forEach((pair) => {
         localStorage.setItem(pair[0], pair[1]);
       });
@@ -91,6 +48,15 @@ export default function Linguaskill() {
   };
 
   const questions = [
+    <Introduction title={"Linguaskill - Reading"}>
+      Linguaskill is an adaptive test <br />
+      This demonstration will show you what the Reading questions look like.{" "}
+      <br />
+      To move through the questions, click the arrows in the bottom-right
+      corner of the screen <br />
+      Click <strong>start</strong> in the bottom-right corner of the screen
+      to begin the demonstration.
+    </Introduction>,
     <>
       <Instruction>
               Click on each gap then choose the correct answer.
@@ -480,34 +446,10 @@ export default function Linguaskill() {
   ]
   
   function renderQuestions() {
-    if (currentQuestion == 0) {
-      return (
-        <Introduction title={"Linguaskill - Reading"}>
-          Linguaskill is an adaptive test <br />
-          This demonstration will show you what the Reading questions look like.{" "}
-          <br />
-          To move through the questions, click the arrows in the bottom-right
-          corner of the screen <br />
-          Click <strong>start</strong> in the bottom-right corner of the screen
-          to begin the demonstration.
-        </Introduction>
-      );
-    }
-    if (currentQuestion == 1) {
-      return <RegisterAttempt formRef={formRef}></RegisterAttempt>;
-    }
-    if (currentQuestion == 1.5) {
-      return <Loading status="loading"></Loading>;
-    }
-    if (currentQuestion == 1.75) {
-      
-    }
-
-    if (currentQuestion >= 2 && currentQuestion < questions.length+2) {
-      return(questions[currentQuestion-2])
+    if (currentQuestion < questions.length) {
+      return(questions[currentQuestion])
     }
     else {
-      // goToPreviousQuestion()
       return (
         <h1>Essa página {currentQuestion} não existe</h1>
       );
@@ -519,7 +461,6 @@ export default function Linguaskill() {
       <Header />
       
       {renderQuestions()}
-      {/* <Outlet formRef={formRef}></Outlet> */}
       <Footer
         nextQuestion={goToNextQuestion}
         previousQuestion={goToPreviousQuestion}

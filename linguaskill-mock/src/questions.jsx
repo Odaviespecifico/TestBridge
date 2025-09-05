@@ -19,8 +19,7 @@ export function RegisterAttempt() {
     }
   },[])
   async function handleClick() {
-    console.log('click')
-    if (formRef.current.reportValidity()) {
+    if (state == 'form' && formRef.current.reportValidity()) {
       console.log('registering attempt')
       let myform = new FormData(formRef.current);
       let myformObj = Object.fromEntries(myform.entries());
