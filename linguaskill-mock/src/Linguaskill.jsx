@@ -459,7 +459,6 @@ export default function Linguaskill() {
   return (
     <div className="flex items-center flex-col h-full w-screen justify-stretch">
       <Header />
-      
       {renderQuestions()}
       <Footer
         nextQuestion={goToNextQuestion}

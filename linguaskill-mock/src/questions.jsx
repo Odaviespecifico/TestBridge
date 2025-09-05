@@ -513,7 +513,7 @@ export function ListeningTable({formRef, audioPath, rows, columns, question}) {
 }
 
 export function WritingTask({formRef,children}) {
-  const questionId = getNextId()
+  const questionId = useRef(getNextId()).current
   useEffect(() => {
     let textarea = document.querySelector('textarea')
     let localText = localStorage.getItem(`${questionId}`)
@@ -529,6 +529,7 @@ export function WritingTask({formRef,children}) {
       let textarea = document.querySelector('textarea')
       localStorage.setItem(`${questionId}`,textarea.value)
     }, 15000);
+    console.log('rodei')
   }, [])
   const [wordCount, setWordCount] = useState(0)
   function handleTextInput(e) {
