@@ -1,35 +1,10 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
-import {
-  OneCollumnQuestion,
-  TwoCollumnQuestion,
-  OneQuestionMultipleChoice,
-  DragQuestion,
-  RegisterAttempt,
-  ListeningClosed,
-  ListeningGap,
-  ListeningTable,
-  BoxText,
-  OneCollumnParagraph,
-  WritingTask,
-  IndentedItem,
-} from "./questions.jsx";
-import {
-  AudioAlternative,
-  InlineOpen,
-  DropAlternative,
-  InlineClosed,
-} from "./Alternatives.jsx";
+import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion,RegisterAttempt,ListeningClosed,ListeningGap,ListeningTable,BoxText,OneCollumnParagraph,WritingTask,IndentedItem,} from "./questions.jsx";
+import { AudioAlternative,InlineOpen,  DropAlternative,  InlineClosed,} from "./Alternatives.jsx";
 import { adicionarTentativa } from "./supabase.js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import {
-  Header,
-  Instruction,
-  Introduction,
-  Footer,
-  Loading,
-} from "./utils.jsx";
-// import {questions} from './test.jsx'
+import {  Header,  Instruction,  Introduction,  Footer,  Loading,} from "./utils.jsx";
 
 export default function Linguaskill() {
   let answers = Object();
@@ -43,6 +18,7 @@ export default function Linguaskill() {
       return "";
     }
     historicoId.push(questionId);
+    
     // Verifica se o local Storage não tem o ID da tentativa e verifica o registro de tentativa
     if (
       currentQuestion >= 1 &&
@@ -114,70 +90,12 @@ export default function Linguaskill() {
     }
   };
 
-  function renderQuestions() {
-    if (currentQuestion == 0) {
-      return (
-        <Introduction title={"Linguaskill - Reading"}>
-          Linguaskill is an adaptive test <br />
-          This demonstration will show you what the Reading questions look like.{" "}
-          <br />
-          To move through the questions, click the arrows in the bottom-right
-          corner of the screen <br />
-          Click <strong>start</strong> in the bottom-right corner of the screen
-          to begin the demonstration.
-        </Introduction>
-      );
-    }
-    if (currentQuestion == 1) {
-      return <RegisterAttempt formRef={formRef}></RegisterAttempt>;
-    }
-    if (currentQuestion == 1.5) {
-      return <Loading status="loading"></Loading>;
-    }
-    if (currentQuestion == 1.75) {
-      return <Loading status="sucess"></Loading>;
-    }
-
-    switch (currentQuestion) {
-      case 3:
-        return (
-          <>
-            <Instruction>
-              Click on each gap then type the word which you think fits best.
-              Type only one word in each gap.
-            </Instruction>
-            <OneCollumnQuestion formRef={formRef} title={"Open gap fill"}>
-              If you <InlineOpen></InlineOpen> ice, it melts <br />
-              If she <InlineOpen /> hard, she will pass the exam <br />
-              If I <InlineOpen /> more confidente, I would speak in the meeting.{" "}
-              <br />
-              If they invite me, I <InlineOpen /> to the party <br />
-              If we <InlineOpen /> earlier, we wouldn't have missed the train.{" "}
-              <br />
-              if I <InlineOpen /> the answer, I would have told you You will
-              feel better if you <InlineOpen /> some rest.
-              <br />
-              If he{" "}
-              <InlineClosed
-                alternatives={[
-                  "alternativa 1",
-                  "alternativa 2",
-                  "alternativa 3",
-                  "alternativa 4",
-                ]}
-              />{" "}
-              the meeting yesterday, he would know the plan now.
-            </OneCollumnQuestion>
-            ;
-          </>
-        );
-      case 2:
-        return (
-          <>
-            <Instruction>
+  const questions = [
+    <>
+      <Instruction>
               Click on each gap then choose the correct answer.
-            </Instruction>
-            <TwoCollumnQuestion
+      </Instruction>
+      <TwoCollumnQuestion
               formRef={formRef}
               title="Blue spaces"
               subtitle="Why time spent near water is the secret of happiness"
@@ -243,7 +161,7 @@ export default function Linguaskill() {
               ]}
             >
               <p>
-                fter the sudden loss of a close relative, Catherine Kelly heard
+                After the sudden loss of a close relative, Catherine Kelly heard
                 the call of the sea. She was in her 20s and had been working as
                 a geographer in London away from her native Ireland, She spent a
                 year in Dublin with her family, then accepted an academic
@@ -320,30 +238,57 @@ export default function Linguaskill() {
               </p>
               {/* <BoxText title='title'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore ad explicabo quidem quo similique rem nulla aut impedit accusantium. Accusantium iste aliquam illo culpa dolorum quia totam aperiam nihil accusamus.</BoxText>
             <BoxText title='title 2'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid asperiores nobis dolorum fugit velit sed, accusantium iste nam iusto debitis voluptatibus! Aliquam voluptate amet fugiat quasi quia deleniti cupiditate cumque?</BoxText> */}
-            </TwoCollumnQuestion>
-          </>
-        );
-      case 4:
-        return (
-          <>
-            <Instruction>
+      </TwoCollumnQuestion>
+    </>,
+    <>
+      <Instruction>
               Click on each gap then type the word which you think fits best.
-            </Instruction>
-            <OneQuestionMultipleChoice
-              formRef={formRef}
-              alternatives={["Test1", "test2", "test3", "test4"]}
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
-              ratione quaerat quae dolores cupiditate aut sint corrupti, ullam
-              facere aperiam impedit quisquam libero nulla nihil officiis saepe?
-              Autem, veniam praesentium.
-            </OneQuestionMultipleChoice>
-          </>
-        );
-      case 5:
-        return (
-          <DragQuestion
-            formRef={formRef}
+              Type only one word in each gap.
+      </Instruction>
+      <OneCollumnQuestion formRef={formRef} title={"Open gap fill"}>
+              If you <InlineOpen></InlineOpen> ice, it melts <br />
+              If she <InlineOpen /> hard, she will pass the exam <br />
+              If I <InlineOpen /> more confidente, I would speak in the meeting.{" "}
+              <br />
+              If they invite me, I <InlineOpen /> to the party <br />
+              If we <InlineOpen /> earlier, we wouldn't have missed the train.{" "}
+              <br />
+              if I <InlineOpen /> the answer, I would have told you You will
+              feel better if you <InlineOpen /> some rest.
+              <br />
+              If he{" "}
+              <InlineClosed
+                alternatives={[
+                  "alternativa 1",
+                  "alternativa 2",
+                  "alternativa 3",
+                  "alternativa 4",
+                ]}
+              />{" "}
+              the meeting yesterday, he would know the plan now.
+      </OneCollumnQuestion>
+    </>,
+    <>
+      <Instruction>
+        Click on each gap then type the word which you think fits best.
+      </Instruction>
+      <OneQuestionMultipleChoice
+        formRef={formRef}
+        alternatives={["Test1", "test2", "test3", "test4"]}
+      >
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
+        ratione quaerat quae dolores cupiditate aut sint corrupti, ullam
+        facere aperiam impedit quisquam libero nulla nihil officiis saepe?
+        Autem, veniam praesentium.
+      </OneQuestionMultipleChoice>
+    </>,
+    <>
+      <Instruction>
+            The following text has some parts removed from it. <br />
+            Click and drag the options to the apropriate place.
+      </Instruction>
+      <DragQuestion
+        formRef={formRef}
             propAlternatives={[
               "teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1",
               "teste 2",
@@ -364,13 +309,10 @@ export default function Linguaskill() {
               ["testing", "drop", "my big text tenisghseugbseuog"],
             ]}
             title="Question Title"
-            subtitle="Sub-title"
-          />
-        );
-      case 6:
-        return (
-          <>
-            <Introduction title="Linguaskill - Listening section">
+            subtitle="Sub-title">
+      </DragQuestion>
+    </>,
+    <Introduction title="Linguaskill - Listening section">
               Linguaskill is an adaptive test. <br />
               This demonstration will show you what the Listening questions look
               like. <br />
@@ -381,183 +323,194 @@ export default function Linguaskill() {
               <br />
               Click <strong>Start</strong> in the bottom-right corner of the
               screen to begin the demonstration.
-            </Introduction>
-            ;
-          </>
-        );
-      case 7:
-        return (
-          <>
-            <Instruction>
-              For this question, choose the correct answer. <br /> You have 10
-              seconds to read the question. You will hear the recording twice.
-            </Instruction>
-            <ListeningClosed
-              formRef={formRef}
-              audioPath={"/audios/audiotest.mp3"}
-              title={"The sport of BASE jumping"}
-            >
-              <AudioAlternative
-                heading={"Question, so nice"}
-                alternatives={["A", "B", "C", "D"]}
-              ></AudioAlternative>
-              <AudioAlternative
-                heading={"My question"}
-                alternatives={["A", "B", "C", "D"]}
-              ></AudioAlternative>
-              <AudioAlternative
-                heading={"My question"}
-                alternatives={["A", "B", "C", "D"]}
-              ></AudioAlternative>
-            </ListeningClosed>
-          </>
-        );
-      case 8:
-        return (
-          <>
-            <Instruction>
-              For these questions, complete the sentences with no more than
-              three words in each gap. <br />
-              You have 45 seconds to read the sentences. You will hear the
-              recording twice. <br /> <br />
-              Listen to a woman called Lucy Townsend talking about an extreme
-              sport called BASE Jumping.
-            </Instruction>
-            <ListeningGap
-              formRef={formRef}
-              audioPath="/audios/audiotest.mp3"
-              title="The sport of BASE jumping"
-            >
-              <p>
-                test beforehand <InlineOpen removeSpace="false" /> testing
-              </p>
-              <p>
-                test beforehand <InlineOpen removeSpace="false" /> testing
-              </p>
-              <p>
-                test beforehand <InlineOpen removeSpace="false" /> testing
-              </p>
-            </ListeningGap>
-          </>
-        );
-      case 9:
-        return (
-          <>
-            <Instruction>
-              For these questions, complete the sentences with no more than
-              three words in each gap. <br />
-              You have 45 seconds to read the sentences. You will hear the
-              recording twice. <br /> <br />
-              Listen to a woman called Lucy Townsend talking about an extreme
-              sport called BASE Jumping.
-            </Instruction>
-            <form
-              className="w-10/12 h-full overflow-y-auto pt-0 pb-8"
-              ref={formRef}
-            >
-              <ListeningTable
-                audioPath="/audios/audiotest.mp3"
-                question="What does each person say was the main benefit to them of studying literature?"
-                rows={[
-                  "I learnt to detect what was hidden beneath the surface.",
-                  "It impressed a number of different employers.",
-                  "It helped me to bring ideas together and express them clearly.",
-                  "I gained the confidence to challenge established writers’ work.",
-                  "It made me reconsider what to do with my life.",
-                  "I became completely objective in my approach.",
-                  "It revealed some solutions to common problems.",
-                  "It led me to a greater understanding of other people.",
-                ]}
-                columns={[
-                  "Speaker 1",
-                  "Speaker 2",
-                  "Speaker 3",
-                  "Speaker 4",
-                  "Speaker 5",
-                ]}
-              ></ListeningTable>
-              <ListeningTable
-                audioPath="/audios/audiotest.mp3"
-                question="What does each person say was the main benefit to them of studying literature?"
-                rows={[
-                  "parental disapproval",
-                  "a persistent injury",
-                  "the negative attitude of friends",
-                  "inconveniently located sports facilities",
-                  "maintaining a strict diet",
-                ]}
-                columns={[
-                  "Speaker 1",
-                  "Speaker 2",
-                  "Speaker 3",
-                  "Speaker 4",
-                  "Speaker 5",
-                ]}
-              ></ListeningTable>
-            </form>
-          </>
-        );
-      case 10:
-        return (
-          <Introduction title="Linguaskill - Writing Section">
-            Linguaskill is an adaptive test. <br />
-            There are two questions in this test. <br />
-            You have 55 minutes. <br />
-            Click <strong>Start</strong> in the bottom-right corner of the
-            screen to continue.
-          </Introduction>
-        );
-      case 11:
-        return (
-          <>
-            <Instruction>You have 45 minutes for this task.</Instruction>
-            <WritingTask propQuestionId={getNextId()} formRef={formRef}>
-              Read the following statement: <br />
-              <BoxText>
-                <strong>
-                  The attention paid to celebrities these days has a negative
-                  effect on society.
-                </strong>
-              </BoxText>
-              <br />
-              Write an <strong>essay</strong> in which you: <br />
-              <IndentedItem decorator={"disk"}>
-                discuss and evaluate arguments both for and against the
-                statement above.
-              </IndentedItem>
-              <IndentedItem decorator={"disk"}>
-                indicate to what extent you agree or disagree with the
-                statement.
-              </IndentedItem>
-              <IndentedItem decorator={"disk"}>
-                indicate to what extent you agree or disagree with the
-                statement.
-              </IndentedItem>
-              <br />
-              Below are some different views you may wish to consider in your
-              essay: <br />
-              <IndentedItem>
-                "Celebrity success inspires young people to aim high in their
-                own lives."{" "}
-              </IndentedItem>
-              <IndentedItem>
-                "Celebrity culture encourages the idea that success is usually
-                instant."{" "}
-              </IndentedItem>
-              <IndentedItem>
-                "Even when promoting good causes, celebrities are only promoting
-                themselves."
-              </IndentedItem>
-              <br />
-              You can also include any other ideas you think are relevant.{" "}
-              <br />
-              Write <strong>at least 250 words.</strong> <br />
-              Use your own words as far as possible.
-            </WritingTask>
-          </>
-        );
-      default:
-        return goToPreviousQuestion();
+    </Introduction>,
+    <>
+      <Instruction>
+        For this question, choose the correct answer. <br /> You have 10
+        seconds to read the question. You will hear the recording twice.
+      </Instruction>
+      <ListeningClosed
+        formRef={formRef}
+        audioPath={"/audios/audiotest.mp3"}
+        title={"The sport of BASE jumping"}
+      >
+        <AudioAlternative
+          heading={"Question, so nice"}
+          alternatives={["A", "B", "C", "D"]}
+        ></AudioAlternative>
+        <AudioAlternative
+          heading={"My question"}
+          alternatives={["A", "B", "C", "D"]}
+        ></AudioAlternative>
+        <AudioAlternative
+          heading={"My question"}
+          alternatives={["A", "B", "C", "D"]}
+        ></AudioAlternative>
+      </ListeningClosed>
+    </>,
+    <>
+      <Instruction>
+        For these questions, complete the sentences with no more than
+        three words in each gap. <br />
+        You have 45 seconds to read the sentences. You will hear the
+        recording twice. <br /> <br />
+        Listen to a woman called Lucy Townsend talking about an extreme
+        sport called BASE Jumping.
+      </Instruction>
+      <ListeningGap
+        formRef={formRef}
+        audioPath="/audios/audiotest.mp3"
+        title="The sport of BASE jumping"
+      >
+        <p>
+          test beforehand <InlineOpen removeSpace="false" /> testing
+        </p>
+        <p>
+          test beforehand <InlineOpen removeSpace="false" /> testing
+        </p>
+        <p>
+          test beforehand <InlineOpen removeSpace="false" /> testing
+        </p>
+      </ListeningGap>
+    </>,
+    <>
+      <Instruction>
+        For these questions, complete the sentences with no more than
+        three words in each gap. <br />
+        You have 45 seconds to read the sentences. You will hear the
+        recording twice. <br /> <br />
+        Listen to a woman called Lucy Townsend talking about an extreme
+        sport called BASE Jumping.
+      </Instruction>
+      <form kind='listening Tables'
+        className="w-10/12 h-full overflow-y-auto pt-0 pb-8"
+        ref={formRef}
+      >
+        <ListeningTable
+          audioPath="/audios/audiotest.mp3"
+          question="What does each person say was the main benefit to them of studying literature?"
+          rows={[
+            "I learnt to detect what was hidden beneath the surface.",
+            "It impressed a number of different employers.",
+            "It helped me to bring ideas together and express them clearly.",
+            "I gained the confidence to challenge established writers’ work.",
+            "It made me reconsider what to do with my life.",
+            "I became completely objective in my approach.",
+            "It revealed some solutions to common problems.",
+            "It led me to a greater understanding of other people.",
+          ]}
+          columns={[
+            "Speaker 1",
+            "Speaker 2",
+            "Speaker 3",
+            "Speaker 4",
+            "Speaker 5",
+          ]}
+        ></ListeningTable>
+        <ListeningTable
+          audioPath="/audios/audiotest.mp3"
+          question="What does each person say was the main benefit to them of studying literature?"
+          rows={[
+            "parental disapproval",
+            "a persistent injury",
+            "the negative attitude of friends",
+            "inconveniently located sports facilities",
+            "maintaining a strict diet",
+          ]}
+          columns={[
+            "Speaker 1",
+            "Speaker 2",
+            "Speaker 3",
+            "Speaker 4",
+            "Speaker 5",
+          ]}
+        ></ListeningTable>
+      </form>
+    </>,
+    <Introduction title="Linguaskill - Writing Section">
+      Linguaskill is an adaptive test. <br />
+      There are two questions in this test. <br />
+      You have 55 minutes. <br />
+      Click <strong>Start</strong> in the bottom-right corner of the
+      screen to continue.
+    </Introduction>,
+    <>
+      <Instruction>You have 45 minutes for this task.</Instruction>
+      <WritingTask formRef={formRef}>
+        Read the following statement: <br />
+        <BoxText>
+          <strong>
+            The attention paid to celebrities these days has a negative
+            effect on society.
+          </strong>
+        </BoxText>
+        <br />
+        Write an <strong>essay</strong> in which you: <br />
+        <IndentedItem decorator={"disk"}>
+          discuss and evaluate arguments both for and against the
+          statement above. </IndentedItem>
+        <IndentedItem decorator={"disk"}>
+          indicate to what extent you agree or disagree with the
+          statement. </IndentedItem>
+        <IndentedItem decorator={"disk"}>
+          indicate to what extent you agree or disagree with the
+          statement. </IndentedItem>
+        
+        <br />
+        Below are some different views you may wish to consider in your
+        essay: <br />
+
+        <IndentedItem>
+          "Celebrity success inspires young people to aim high in their
+          own lives."{" "} </IndentedItem>
+        <IndentedItem>
+          "Celebrity culture encourages the idea that success is usually
+          instant."{" "} </IndentedItem>
+        <IndentedItem>
+          "Even when promoting good causes, celebrities are only promoting
+          themselves." </IndentedItem>
+        <br />
+        You can also include any other ideas you think are relevant.{" "}
+        <br />
+        Write <strong>at least 250 words.</strong> <br />
+        Use your own words as far as possible.
+      </WritingTask>
+    </>
+
+  ]
+  
+  function renderQuestions() {
+    if (currentQuestion == 0) {
+      return (
+        <Introduction title={"Linguaskill - Reading"}>
+          Linguaskill is an adaptive test <br />
+          This demonstration will show you what the Reading questions look like.{" "}
+          <br />
+          To move through the questions, click the arrows in the bottom-right
+          corner of the screen <br />
+          Click <strong>start</strong> in the bottom-right corner of the screen
+          to begin the demonstration.
+        </Introduction>
+      );
+    }
+    if (currentQuestion == 1) {
+      return <RegisterAttempt formRef={formRef}></RegisterAttempt>;
+    }
+    if (currentQuestion == 1.5) {
+      return <Loading status="loading"></Loading>;
+    }
+    if (currentQuestion == 1.75) {
+      return <Loading status="sucess"></Loading>;
+    }
+
+    if (currentQuestion >= 2 && currentQuestion < questions.length+2) {
+      return(questions[currentQuestion-2])
+    }
+    else {
+      // goToPreviousQuestion()
+      return (
+        <h1>Essa página {currentQuestion} não existe</h1>
+      );
     }
   }
 

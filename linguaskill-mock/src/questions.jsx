@@ -4,6 +4,9 @@ import {DragOverlay} from '@dnd-kit/core';
 import { useState, useEffect, createContext, useId, useRef} from 'react';
 import { getNextId } from "./Linguaskill";
 import { useFormState } from 'react-dom';
+import {
+  Instruction,
+} from "./utils.jsx";
 
 
 export function RegisterAttempt({formRef}) {
@@ -79,6 +82,7 @@ export function OneCollumnQuestion({formRef, title, children}) {
       })
     }
     return (
+      <>
       <div className="grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12">
         <div className='flex flex-col gap-5 overflow-y-scroll'>
           <div>
@@ -100,6 +104,7 @@ export function OneCollumnQuestion({formRef, title, children}) {
           })}
         </form> 
     </div>
+      </>
   )
 }
 
@@ -337,7 +342,7 @@ export function ListeningGap({formRef, audioPath = '', children, title}) {
   }, [])
 
   return(
-      <form ref={formRef} className='flex flex-col items-start justify-start w-5xl pt-5 pb-5 px-10 text-xl gap-10 overflow-y-auto'>
+      <form ref={formRef} className='flex flex-col items-start justify-start max-w-5xl pt-5 pb-5 px-10 text-xl gap-10 overflow-y-auto'>
         <strong className='text-xl text-left'>{title}</strong>
         {children}
       </form>
@@ -441,8 +446,8 @@ export function ListeningTable({formRef, audioPath, rows, columns, question}) {
   );
 }
 
-export function WritingTask({formRef,children, propQuestionId}) {
-  const questionId = propQuestionId
+export function WritingTask({formRef,children}) {
+  const questionId = getNextId()
   useEffect(() => {
     let textarea = document.querySelector('textarea')
     let localText = localStorage.getItem(`${questionId}`)
