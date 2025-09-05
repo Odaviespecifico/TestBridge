@@ -14,7 +14,18 @@
   </Introduction>
 
   {/* Reading and use of english */}
-
+  <>
+  <Instruction>
+    Read the text given and check the correct answer to each question on the
+    right.
+  </Instruction>
+  <OneCollumnQuestion  formRef={formRef}  title={'Open gap fill'}>
+    If you <InlineOpen></InlineOpen> ice, it melts <br/>
+    ou
+    If he <InlineClosed  alternatives={['alternativa 1', 'alternativa 2', 'alternativa 3', 'alternativa 4']}/> the meeting yesterday, he would know the plan now.
+  </OneCollumnQuestion>
+  </>
+  
   <Instruction>
     Read the text given and check the correct answer to each question on the
     right.
@@ -35,16 +46,20 @@
   </TwoCollumnQuestion>
 
   <Instruction>
-    Click on each gap then type the word which you think fits best.
+    Choose the correct answer.
   </Instruction>
   <OneQuestionMultipleChoice
     formRef={formRef}
     alternatives={["Test1", "test2", "test3", "test4"]}
   >
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo ratione
-    quaerat quae dolores cupiditate aut sint corrupti, ullam facere aperiam
-    impedit quisquam libero nulla nihil officiis saepe? Autem, veniam
-    praesentium.
+    <strong>To all physics students</strong> <br />
+    The lecture tomorrow is in Room
+    23B due to maintenance works in
+    room 88C. Works should be
+    completed by lunchtime, but you
+    should check the notice board just
+    in case other arrangements are
+    required for afternoon classes.
   </OneQuestionMultipleChoice>
 
   <Instruction>
@@ -214,3 +229,39 @@
     Use your own words as far as possible.
   </WritingTask>
 </>;
+
+
+
+
+
+
+
+// Gabarito:
+// 1: Students who have morning lectures will need to...
+// 2: Element
+// 3: If walkers choose this path, they need to be extra careful.
+// 4: trivialise
+// 5: people think and behave irrationally when it comes to eating.
+// 6: defending Plumlee on an arguable issue.
+// 7: set a concerning precedent for themselves.
+// 8: health gurus are self-centered people.
+// 9: uses irony and humour to agree with Plumlee's position.
+
+// 10: who
+// 11: would
+// 12: from
+// 13: neither
+// 14: while
+
+// 15: devoted
+// 16: sprung
+// 17: foster
+// 18: convival
+// 19: glued to
+
+
+// Sources
+// https://www.tlsprepmaster.online/linguaskill/practice-questions/rl/docuset1/0
+// https://www.tlsprepmaster.online/linguaskill/practice-questions/rl/docuset2/0
+// https://www.flo-joe.co.uk/fce/students/tests/part3.htm
+// 

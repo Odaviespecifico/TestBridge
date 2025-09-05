@@ -1,14 +1,39 @@
 import { useState, useRef, Children } from "react";
 import "./index.css";
-import { OneCollumnQuestion, TwoCollumnQuestion, OneQuestionMultipleChoice, DragQuestion,RegisterAttempt,ListeningClosed,ListeningGap,ListeningTable,BoxText,OneCollumnParagraph,WritingTask,IndentedItem,} from "./questions.jsx";
-import { AudioAlternative,InlineOpen,  DropAlternative,  InlineClosed,} from "./Alternatives.jsx";
+import {
+  OneCollumnQuestion,
+  TwoCollumnQuestion,
+  OneQuestionMultipleChoice,
+  DragQuestion,
+  RegisterAttempt,
+  ListeningClosed,
+  ListeningGap,
+  ListeningTable,
+  BoxText,
+  OneCollumnParagraph,
+  WritingTask,
+  IndentedItem,
+} from "./questions.jsx";
+import {
+  AudioAlternative,
+  InlineOpen,
+  DropAlternative,
+  InlineClosed,
+} from "./Alternatives.jsx";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Outlet } from "react-router";
-import {  Header,  Instruction,  Introduction,  Footer,  Loading,} from "./utils.jsx";
+import {
+  Header,
+  Instruction,
+  Introduction,
+  Footer,
+  Loading,
+} from "./utils.jsx";
+import { useNavigate } from "react-router";
 
 export default function Linguaskill() {
   let answers = Object();
-
+  const navigate = useNavigate()
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const formRef = useRef(null);
@@ -16,7 +41,7 @@ export default function Linguaskill() {
     historicoId.push(questionId);
 
     // Parse do formulário
-     if (formRef.current) {
+    if (formRef.current) {
       let myform = new FormData(formRef.current);
       myform.entries().forEach((pair) => {
         localStorage.setItem(pair[0], pair[1]);
@@ -52,407 +77,293 @@ export default function Linguaskill() {
       Linguaskill is an adaptive test <br />
       This demonstration will show you what the Reading questions look like.{" "}
       <br />
-      To move through the questions, click the arrows in the bottom-right
-      corner of the screen <br />
-      Click <strong>start</strong> in the bottom-right corner of the screen
-      to begin the demonstration.
+      To move through the questions, click the arrows in the bottom-right corner
+      of the screen <br />
+      Click <strong>start</strong> in the bottom-right corner of the screen to
+      begin the demonstration.
     </Introduction>,
+
     <>
-      <Instruction>
-              Click on each gap then choose the correct answer.
-      </Instruction>
-      <TwoCollumnQuestion
-              formRef={formRef}
-              title="Blue spaces"
-              subtitle="Why time spent near water is the secret of happiness"
-              questions={[
-                {
-                  heading:
-                    "What do we learn about Kelly in the first paragraph",
-                  alternatives: [
-                    "She wanted to take up sailing",
-                    "She wanted to get a better job",
-                    "She decided to leave her country",
-                    "She felt she had to live by the sea.",
-                  ],
-                },
-                {
-                  heading:
-                    "What did Kelly realise by the end of her stay on the coast of Ireland?",
-                  alternatives: [
-                    "The academic research she had read was correct.",
-                    "She had been wrong to doubt the benefits of rural life.",
-                    "Living there had enabled her to make a full recovery.",
-                    "She could never be happy living so far from other people",
-                  ],
-                },
-                {
-                  heading:
-                    "What is suggested about spending time in countryside areas?",
-                  alternatives: [
-                    "It is less beneficial than being close to water.",
-                    "There are no health benefits unless there is water nearby.",
-                    "There is no evidence that it improves people's health.",
-                    "It is always healthier than being in urban green zones.",
-                  ],
-                },
-                {
-                  heading: "What does 'one of the best ever' refer to?",
-                  alternatives: [
-                    "a health benefit of blue space",
-                    "a particular academic study",
-                    "a feeling of happiness",
-                    "a natural environment",
-                  ],
-                },
-                {
-                  heading:
-                    "The writer suggests that the easiest way to feel better is by",
-                  alternatives: [
-                    "taking an interest in art.",
-                    "regularly going to the coast.",
-                    "using mobile phones far less.",
-                    "living quite close to the sea.",
-                  ],
-                },
-                {
-                  heading: "What does Kelly suggest in the last paragraph?",
-                  alternatives: [
-                    "Everybody relaxes when they are by the sea.",
-                    "Travelling frequently to the seaside can be stressful.",
-                    "Spending time next toa river is as good as being nearthe sea.",
-                    "The only way to feel any better is to live on the coast.",
-                  ],
-                },
-              ]}
-            >
-              <p>
-                After the sudden loss of a close relative, Catherine Kelly heard
-                the call of the sea. She was in her 20s and had been working as
-                a geographer in London away from her native Ireland, She spent a
-                year in Dublin with her family, then accepted an academic
-                position on the Irish west coast, near Westport. 'l thought: "l
-                need to go and get my head cleared in this place, to be blown
-                away by the wind and natura"'
-              </p>
-              <p>
-                Kelly bought a little house in a remote area and surfed, swam
-                and walked a three-mile-long beach twice a day, 'l guess the
-                five or six years that I spent there on the wild Atlantic coast
-                'ust healed me, really.' She didn't understand why that might be
-                until some years later, when she started to see scientific
-                literature that proved what she had long felt to be true: that
-                she felt much better by the sea. For the past eight years, Kelly
-                has been based in the British seaside resort of Brighton,
-                researching 'outdoor well-being' and the therapeutic effects of
-                nature - particularly of water.
-              </p>
-              <p>
-                In recent years, stressed-out people from urban areas have been
-                seeking peace and quiet in green spaces, for which the proven
-                positive impacts on physical and mental health are often cited
-                in arguments for more inner-city parks and accessible woodlands.
-                The benefits of 'blue space' the sea and coastline, but also
-                rivers, lakes, canals, waterfalls, even fountains - are less
-                well publicised, yet for at least a decade the science has
-                confirmed that being by water is good for body and mind.
-              </p>
-              <p>
-                Spending time near water - especially the sea - is associated
-                with many positive measures of physical and mental well-being,
-                from higher levels of vitamin D to better social relations,
-                'Many of the processes are exactly the same as with green space
-                - with some added benefits,' says Dr Mathew White, a senior
-                lecturer at the University of Exeter and an environmental
-                psychologist with BlueHealth, a programme researching the health
-                and well-being benefits of blue space across 18 (mostly
-                European) countries.
-              </p>
-              <p>
-                An extensive study on happiness in natural environments - to
-                White's mind, <strong>'one of the best ever'</strong> - asked 20,000 smartphone
-                users to record their sense of well-being and their immediate
-                environment at random intervals. Marine and coastal regions were
-                found by some distance to be the happiest locations, with
-                responses approximately six points higher than in a continuous
-                urban environment. The researchers said it was similar to 'the
-                difference between attending an art exhibition and doing
-                housework'.
-              </p>
-              <p>
-                Although living within 1 km of the coast- and to a lesser
-                extent, within 5 km - has been associated with better general
-                and mental health, it seems that making frequent visits is key.
-                'We find people Who visit the coast, for example, at least twice
-                weekly tend to experience better general and mental health,'
-                says Dr Lewis Elliott, also of the University of Exeter and
-                BlueHealth. 'Some of our research suggests around two hours a
-                week is probably beneficial, across many parts of society.' Even
-                sea views have been associated with better mental health.
-              </p>
-              <p>
-                'People work with what they have,' says Kelly. When she lived in
-                London, she would head for the River Thames when she had a spare
-                ten minutes 'and think things over', Then, four times a year,
-                she would go to Brighton 'and the benefits would keep me going
-                for the nextfew months -so I didn't get into a place of being
-                overwhelmed or stressed'. She adds: 'To go to the coast means
-                taking it easy. lt could be lying on a beach or somebody handing
-                you a cool drink. For somebody else, it could be a wild, empty
-                shoreline. But there is this really human sense of: "0h, look,
-                there's the sea" —and the shoulders drop.'
-              </p>
-              {/* <BoxText title='title'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore ad explicabo quidem quo similique rem nulla aut impedit accusantium. Accusantium iste aliquam illo culpa dolorum quia totam aperiam nihil accusamus.</BoxText>
-            <BoxText title='title 2'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid asperiores nobis dolorum fugit velit sed, accusantium iste nam iusto debitis voluptatibus! Aliquam voluptate amet fugiat quasi quia deleniti cupiditate cumque?</BoxText> */}
-      </TwoCollumnQuestion>
-    </>,
-    <>
-      <Instruction>
-              Click on each gap then type the word which you think fits best.
-              Type only one word in each gap.
-      </Instruction>
-      <OneCollumnQuestion formRef={formRef} title={"Open gap fill"}>
-              If you <InlineOpen></InlineOpen> ice, it melts <br />
-              If she <InlineOpen /> hard, she will pass the exam <br />
-              If I <InlineOpen /> more confidente, I would speak in the meeting.{" "}
-              <br />
-              If they invite me, I <InlineOpen /> to the party <br />
-              If we <InlineOpen /> earlier, we wouldn't have missed the train.{" "}
-              <br />
-              if I <InlineOpen /> the answer, I would have told you You will
-              feel better if you <InlineOpen /> some rest.
-              <br />
-              If he{" "}
-              <InlineClosed
-                alternatives={[
-                  "alternativa 1",
-                  "alternativa 2",
-                  "alternativa 3",
-                  "alternativa 4",
-                ]}
-              />{" "}
-              the meeting yesterday, he would know the plan now.
-      </OneCollumnQuestion>
-    </>,
-    <>
-      <Instruction>
-        Click on each gap then type the word which you think fits best.
-      </Instruction>
+      <Instruction>Choose the correct answer.</Instruction>
       <OneQuestionMultipleChoice
         formRef={formRef}
-        alternatives={["Test1", "test2", "test3", "test4"]}
+        alternatives={[
+          "Students who have morning lectures will need to go to a different venue tomorrow.",
+          "Students in the afternoon need to read the notice board until repairs are completed.",
+          "Students will hear which room their lecture will be in by lunchtime tomorrow.",
+        ]}
       >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
-        ratione quaerat quae dolores cupiditate aut sint corrupti, ullam
-        facere aperiam impedit quisquam libero nulla nihil officiis saepe?
-        Autem, veniam praesentium.
+        <strong>To all physics students</strong> <br />
+        The lecture tomorrow is in Room 23B due to maintenance works in room
+        88C. Works should be completed by lunchtime, but you should check the
+        notice board just in case other arrangements are required for afternoon
+        classes.
       </OneQuestionMultipleChoice>
     </>,
+
     <>
       <Instruction>
-            The following text has some parts removed from it. <br />
-            Click and drag the options to the apropriate place.
+        Read the text given and check the correct answer to each question on the
+        right.
+      </Instruction>
+      <OneCollumnQuestion formRef={formRef} title={""}>
+        In all occupations there are
+        <InlineClosed
+          alternatives={["elements", "components", "factors", "volumes"]}
+        />
+        of creativity, albeit there are more in some compared to others.
+      </OneCollumnQuestion>
+    </>,
+
+    <>
+      <Instruction>Choose the correct answer.</Instruction>
+      <OneQuestionMultipleChoice
+        formRef={formRef}
+        alternatives={[
+          "The path is presently too dangerous to be walked on.",
+          "Walkers can only take this path with a guide.",
+          "If walkers choose this path, they need to be extra careful.",
+        ]}
+      >
+        <strong>Alert</strong> <br />
+        This pathway can be very slippery, especially when the weather is bad.
+        Alternative routes are posted online, or speak to one of our guides for
+        other easy-access options.
+      </OneQuestionMultipleChoice>
+    </>,
+
+    <>
+      <Instruction>
+        Read the text given and check the correct answer to each question on the
+        right.
+      </Instruction>
+      <OneCollumnQuestion formRef={formRef} title={""}>
+        Most people of the public did not agree with the court's lenient
+        sentence as they believed that all it did was to
+        <InlineClosed
+          alternatives={["trivialise", "exonerate", "lighten", "vindicate"]}
+        />
+        the seriousness of the crime that has been committed.
+      </OneCollumnQuestion>
+    </>,
+
+    <>
+      <Instruction>
+        Read the text given and check the correct answer to each question on the
+        right.
+      </Instruction>
+      <TwoCollumnQuestion
+        formRef={formRef}
+        title="A Book Review"
+        subtitle=""
+        questions={[
+          {
+            heading:
+              "In the first paragraph, what effect of digitalisation is discussed?",
+            alternatives: [
+              "people are easily led into silly weight reduction programmes.",
+              "people are sometimes suspicious of information that is useful.",
+              "people are attracted to foods that are unhealthy.",
+              "people think and behave irrationally when it comes to eating.",
+            ],
+          },
+          {
+            heading: "In the second paragraph, what is the reviewer doing?",
+            alternatives: [
+              "disagreeing with an opinion that has been given.",
+              "anticipating a critical response to a specific viewpoint.",
+              "defending Plumlee on an arguable issue.",
+              "praising Plumlee for his unique insights.",
+            ],
+          },
+          {
+            heading:
+              "The fourth paragraph explains that people who are interested in healthy eating fashions...",
+            alternatives: [
+              "set a concerning precedent for themselves.",
+              "deserve to be punished from being deceived.",
+              "are well within their rights for doing so.",
+              "cause problems for other people around them.",
+            ],
+          },
+          {
+            heading:
+              "In the last paragraph, the reviewer criticises health gurus because...",
+            alternatives: [
+              "health gurus are cynical people.",
+              "health gurus are attention-seeking people.",
+              "health gurus are stubbornly persistent people.",
+              "health gurus are self-centered people.",
+            ],
+          },
+          {
+            heading: "Throughout this article, the reviewer...",
+            alternatives: [
+              "references experts about the claims being made.",
+              "describes Plumlee as a person whose views have changed over time.",
+              "uses irony and humour to agree with Plumlee's position.",
+              "takes care not to sound critical of people whose views he disagrees with.",
+            ],
+          },
+        ]}
+      >
+        <p>
+          Mason Plumlee is far from the first to observe that in the digital
+          age, "the more information we consume, the less informed we seem to
+          be." Yet, in this engaging and thought-provoking book, he convincingly
+          argues that this phenomenon is especially evident in the realm of food
+          and diet, an area that used to be relatively straightforward. When it
+          comes to eating habits, many of us, as one psychology professor
+          Plumlee cites, have become strikingly "insensitive to evidence." How
+          else can we explain the surge of people without coeliac disease making
+          the scientifically baseless choice to avoid gluten? Or the widespread
+          influence of health websites peddling dubious claims like "wild
+          blueberries remove heavy metals from brain tissue"? Plumlee highlights
+          the absurdity of the detox industry, which thrives by rejecting three
+          basic facts: the modern world does not expose us to unprecedented
+          levels of toxins; a healthy body naturally eliminates toxins in its
+          usual unglamorous ways; and no single food, not even blueberries, can
+          perform this function for us.
+        </p>
+        <p>
+          At this point, though, Plumlee is merely warming up. In subsequent
+          chapters, he systematically dismantles a host of food myths with
+          scientific precision and a touch of mischievous delight. Take, for
+          example, proponents of the Paleo Diet, who claim humans aren’t
+          biologically adapted to eat anything beyond what hunter-gatherers once
+          consumed—despite the fact that nobody knows exactly what that was. Or
+          the baseless fear of sugar, which Plumlee assures us won’t harm us in
+          moderation.
+        </p>
+        <p>
+          Early on, Plumlee's tone is more measured than furious—though it’s
+          easy to see why "The Relatively Measured Chef" might not have been the
+          most marketable title. He even remains composed while debunking the
+          simplistic "natural versus chemical" dichotomy promoted by self-styled
+          wellness gurus, who seem to forget that all of nature is made up of
+          chemicals.
+        </p>
+        <p>
+          As the book progresses, however, Plumlee delves deeper into what he
+          describes as the "dark heart" of dietary fads. On the surface, faking
+          enthusiasm for kale smoothies and quinoa might appear to be harmless,
+          if self-indulgent, nonsense. But Plumlee warns these trends can act as
+          a "gateway", leading individuals into more dangerous forms of
+          credulity.
+        </p>
+      </TwoCollumnQuestion>
+    </>,
+
+    <>
+      <Instruction>
+        Read the text given and check the correct answer to each question on the
+        right.
+      </Instruction>
+      <OneCollumnQuestion formRef={formRef} title={""}>
+        <h1>
+          <strong>The San Francisco Gold Rush</strong>
+        </h1>
+        <p>
+          The identity of <InlineOpen /> the first person to discover gold in
+          San Francisco remains a topic of debate, and it <InlineOpen /> be fair
+          to say that we will likely never know for certain. However, the
+          discovery of gold in 1848 set off the San Francisco Gold Rush, one of
+          the largest in history. Thousands of people flocked to the gold
+          fields, both <InlineOpen /> within San Francisco and from overseas.
+        </p>
+        <p>
+          Life for the prospectors was incredibly challenging. There were{" "}
+          <InlineOpen /> proper roads nor shops, housing was rudimentary, and
+          illness was widespread. <InlineOpen />
+          some miners struck it lucky and amassed great wealth, the majority did
+          not. Those who profited the most were the tradespeople who sold
+          essential supplies and tools or the landowners who sold property to
+          prospectors who, after the rush, chose to settle down and make San
+          Francisco their home.
+        </p>
+      </OneCollumnQuestion>
+    </>,
+
+    <>
+      <Instruction>
+        Read the text given and click each gap to select <thead></thead> correct
+        answer.
+      </Instruction>
+      <OneCollumnQuestion formRef={formRef} title={""}>
+        <h1>
+          <strong>Board Game Culture in Singapore</strong>
+        </h1>
+        <p>
+          Across cities in Singapore, you might notice the growing number of
+          cafés{" "}
+          <InlineClosed
+            alternatives={["devoted", "designated", "attached", "applied"]}
+          />{" "}
+          entirely to board games. Many of these establishments have{" "}
+          <InlineClosed
+            alternatives={["leapt", "sprouted", "hopped", "sprung"]}
+          />{" "}
+          up within the past few years. Singapore, where board game cafés seem
+          to be on almost every corner, has become a leading example for other
+          cities aiming to{" "}
+          <InlineClosed
+            alternatives={["affirm", "justify", "build", "foster"]}
+          />{" "}
+          their own board game scene.
+        </p>
+        <p>
+          These cafés offer more than just games; they also serve an array of
+          unique teas and coffees. Step inside, and you'll encounter a{" "}
+          <InlineClosed
+            alternatives={["noisy", "convival", "outgoing", "dynamic"]}
+          />{" "}
+          environment filled with animated conversation, laughter, and the
+          clatter of dice. One thing you’re unlikely to see is anyone{" "}
+          <InlineClosed
+            alternatives={["fixed on", "tied to", "stuck on", "glued to"]}
+          />{" "}
+          their phone screens.
+        </p>
+      </OneCollumnQuestion>
+    </>,
+
+    <>
+      <Instruction>
+        You are going to read a magazine article about John Prince, a dancer, dance teacher and choreographer. Six sentences have been removed from the article on the left. Choose the most suitable sentence from the list A-G on the right for each part (1-6) of the article. There is one extra sentence which you do not need to use.
       </Instruction>
       <DragQuestion
         formRef={formRef}
-            propAlternatives={[
-              "teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1teste 1",
-              "teste 2",
-              "teste 3",
-              "teste 4",
-              "teste 5",
-            ]}
-            paragraphs={[
-              [
-                "Lorem ipsun et dolor Lorem ipsun et dolorLorem ipsun et dolorLorem ipsun et dolorLorem ipsun et dolorLorem ipsun et dolor ",
-                "drop",
-                "testing Lorem ipsun et dolorLorem ipsun et dolor",
-                "drop",
-                "mytest2 Lorem ipsun et dolorLorem ipsun et dolor",
-                "drop",
-              ],
-              ["", "drop"],
-              ["testing", "drop", "my big text tenisghseugbseuog"],
-            ]}
-            title="Question Title"
-            subtitle="Sub-title">
-      </DragQuestion>
+        propAlternatives={[
+          "It's fine, but I try not to give out too much advice as it gets irritating!",
+          "And if nothing you like comes out of it, then come back and be an actor or dancer.",
+          "Without a strict daily timetable like this you find yourself wasting too much time.",
+          "After that it's back to England to start a new term of dance classes.",
+          "When it comes to coping with stress, I find that exercise helps me to cope with my problems, so I stay in good shape mentally as well.",
+          "Like any profession where you're always travelling, you tend to acquire something new almost every day.",
+          "Being fully equipped with all this stuff beforehand makes it easier when you go for auditions.",
+        ]}
+        paragraphs={[
+          ["I asked John how he got started and what requirements there are. 'Well, to be a professional dancer it's useful to have had acting lessons or some background in drama. If you want to succeed in musical theatre you have to have a good singing voice as well. When you approach an agent you should take a portfolio with your CV, your statistics sheet and some good photos and reviews of past performances. You'll need dance clothes, ballet shoes, tap shoes, and even roller skates depending on what kind of show you are going to go for.'","","'Of course, you need to be extremely fit if you want to be a professional dancer. I dance or move about for about six hours a day. There are great health benefits to being a dancer. I can eat a lot of pasta without gaining weight because dancing increases your metabolism so much.'"],
+          ["John has a very busy schedule in the next few months. He took time out to speak to me today from the making of a pop video to promote N-ergy's latest record. 'I choreographed the dance routine for the boys and they only had 2 days in which to learn it! I am going to be working on a video for another well known band - but that's top secret. Next month I'll be touring Spain in a production of a musical that was written by a friend of mine, Michaela Evans.'",""],
+          ["As for the future, I've come to realise that I would never be content to be just a chorus dancer - I'm too much of an individual for that. Like all artists I'd love to become a household name by writing and choreographing my own musicals.' John was born in Jamaica to a Jamaican father and a Scottish mother but the family emigrated to England 20 years ago. 'I have a little sister I adore, who is also training to be a dancer.' How does it feel to have someone else following in your footsteps?",""],
+          ["Has he much more to learn, I wondered. \"I've spent an incredible amount of my life training to get where I am. I went to college for two years in England, I trained for six months in Paris and about eight months in America. But you never really stop training or learning your art.\"",""],
+          ["So, would you say it's been plain sailing? \"I feel I've been lucky to a degree; many people hit problems breaking into the arts. It can be a vicious circle really. You can't become a member of Equity, which is the actors' and dancers' union, without good contracts. and you can't get good contracts without being a member of Equity. My advice to people who want to get into the arts would be to go out into the world, and try everything else first.",""],
+          [`What has a dance career done for you as a person? "Thanks to dancing, I've visited and performed in 23 countries so far. This has opened my eyes to the world, and I've been able to understand issues like racism and inequality from a wider perspective. Hopefully this has enabled me to become a better and more tolerant person as a result. "So all in all I'm really happy to be a dancer!"`],
+        ]}
+        title="Career success in the arts"
+        subtitle="John Prince, famous dancer and choreographer, gives advice on how to succeed in a career in the arts."
+      />
     </>,
-    <Introduction title="Linguaskill - Listening section">
-              Linguaskill is an adaptive test. <br />
-              This demonstration will show you what the Listening questions look
-              like. <br />
-              To move through the questions, click the arrows in the
-              bottom-right corner of the screen. <br />
-              You will have time to read the questions. The audio will begin
-              when the reading time is finished. You will hear the audio twice.{" "}
-              <br />
-              Click <strong>Start</strong> in the bottom-right corner of the
-              screen to begin the demonstration.
-    </Introduction>,
-    <>
-      <Instruction>
-        For this question, choose the correct answer. <br /> You have 10
-        seconds to read the question. You will hear the recording twice.
-      </Instruction>
-      <ListeningClosed
-        formRef={formRef}
-        audioPath={"/audios/audiotest.mp3"}
-        title={"The sport of BASE jumping"}
-      >
-        <AudioAlternative
-          heading={"Question, so nice"}
-          alternatives={["A", "B", "C", "D"]}
-        ></AudioAlternative>
-        <AudioAlternative
-          heading={"My question"}
-          alternatives={["A", "B", "C", "D"]}
-        ></AudioAlternative>
-        <AudioAlternative
-          heading={"My question"}
-          alternatives={["A", "B", "C", "D"]}
-        ></AudioAlternative>
-      </ListeningClosed>
-    </>,
-    <>
-      <Instruction>
-        For these questions, complete the sentences with no more than
-        three words in each gap. <br />
-        You have 45 seconds to read the sentences. You will hear the
-        recording twice. <br /> <br />
-        Listen to a woman called Lucy Townsend talking about an extreme
-        sport called BASE Jumping.
-      </Instruction>
-      <ListeningGap
-        formRef={formRef}
-        audioPath="/audios/audiotest.mp3"
-        title="The sport of BASE jumping"
-      >
-        <p>
-          test beforehand <InlineOpen removeSpace="false" /> testing
-        </p>
-        <p>
-          test beforehand <InlineOpen removeSpace="false" /> testing
-        </p>
-        <p>
-          test beforehand <InlineOpen removeSpace="false" /> testing
-        </p>
-      </ListeningGap>
-    </>,
-    <>
-      <Instruction>
-        For these questions, complete the sentences with no more than
-        three words in each gap. <br />
-        You have 45 seconds to read the sentences. You will hear the
-        recording twice. <br /> <br />
-        Listen to a woman called Lucy Townsend talking about an extreme
-        sport called BASE Jumping.
-      </Instruction>
-      <form kind='listening Tables'
-        className="w-10/12 h-full overflow-y-auto pt-0 pb-8"
-        ref={formRef}
-      >
-        <ListeningTable
-          audioPath="/audios/audiotest.mp3"
-          question="What does each person say was the main benefit to them of studying literature?"
-          rows={[
-            "I learnt to detect what was hidden beneath the surface.",
-            "It impressed a number of different employers.",
-            "It helped me to bring ideas together and express them clearly.",
-            "I gained the confidence to challenge established writers’ work.",
-            "It made me reconsider what to do with my life.",
-            "I became completely objective in my approach.",
-            "It revealed some solutions to common problems.",
-            "It led me to a greater understanding of other people.",
-          ]}
-          columns={[
-            "Speaker 1",
-            "Speaker 2",
-            "Speaker 3",
-            "Speaker 4",
-            "Speaker 5",
-          ]}
-        ></ListeningTable>
-        <ListeningTable
-          audioPath="/audios/audiotest.mp3"
-          question="What does each person say was the main benefit to them of studying literature?"
-          rows={[
-            "parental disapproval",
-            "a persistent injury",
-            "the negative attitude of friends",
-            "inconveniently located sports facilities",
-            "maintaining a strict diet",
-          ]}
-          columns={[
-            "Speaker 1",
-            "Speaker 2",
-            "Speaker 3",
-            "Speaker 4",
-            "Speaker 5",
-          ]}
-        ></ListeningTable>
-      </form>
-    </>,
-    <Introduction title="Linguaskill - Writing Section">
-      Linguaskill is an adaptive test. <br />
-      There are two questions in this test. <br />
-      You have 55 minutes. <br />
-      Click <strong>Start</strong> in the bottom-right corner of the
-      screen to continue.
-    </Introduction>,
-    <>
-      <Instruction>You have 45 minutes for this task.</Instruction>
-      <WritingTask formRef={formRef}>
-        Read the following statement: <br />
-        <BoxText>
-          <strong>
-            The attention paid to celebrities these days has a negative
-            effect on society.
-          </strong>
-        </BoxText>
-        <br />
-        Write an <strong>essay</strong> in which you: <br />
-        <IndentedItem decorator={"disk"}>
-          discuss and evaluate arguments both for and against the
-          statement above. </IndentedItem>
-        <IndentedItem decorator={"disk"}>
-          indicate to what extent you agree or disagree with the
-          statement. </IndentedItem>
-        <IndentedItem decorator={"disk"}>
-          indicate to what extent you agree or disagree with the
-          statement. </IndentedItem>
-        
-        <br />
-        Below are some different views you may wish to consider in your
-        essay: <br />
+  ];
 
-        <IndentedItem>
-          "Celebrity success inspires young people to aim high in their
-          own lives."{" "} </IndentedItem>
-        <IndentedItem>
-          "Celebrity culture encourages the idea that success is usually
-          instant."{" "} </IndentedItem>
-        <IndentedItem>
-          "Even when promoting good causes, celebrities are only promoting
-          themselves." </IndentedItem>
-        <br />
-        You can also include any other ideas you think are relevant.{" "}
-        <br />
-        Write <strong>at least 250 words.</strong> <br />
-        Use your own words as far as possible.
-      </WritingTask>
-    </>
-
-  ]
-  
   function renderQuestions() {
     if (currentQuestion < questions.length) {
-      return(questions[currentQuestion])
+      return questions[currentQuestion];
+    } else if (currentQuestion == questions.length){
+     navigate("/test/submit")
     }
     else {
-      return (
-        <h1>Essa página {currentQuestion} não existe</h1>
-      );
+      return <h1>Essa página {currentQuestion} não existe</h1>;
     }
   }
 
@@ -464,8 +375,7 @@ export default function Linguaskill() {
         nextQuestion={goToNextQuestion}
         previousQuestion={goToPreviousQuestion}
         currentQuestion={currentQuestion}
-      >
-      </Footer>
+      ></Footer>
     </div>
   );
 }

@@ -115,6 +115,18 @@ function RegisterForm({formRef}) {
       </form>
   )
 }
+
+export function SubmitAttempt({}) {
+  return (
+    <div className='flex items-center flex-col h-full w-screen justify-stretch'>
+      <Header></Header>
+      <h1 className="text-2xl font-bold text-center mb-4 h-full flex items-center">Sending your attempt to the cloud
+        <Loading></Loading>
+      </h1>
+      <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'></div>
+    </div>
+  )
+}
 export function OneCollumnQuestion({formRef, title, children}) {
   return (
     <div className="flex flex-col gap-10 px-6 w-full max-w-5xl flex-1 mt-5" >
@@ -190,12 +202,13 @@ export function OneQuestionMultipleChoice({formRef, children, alternatives}) {
 }
 
 export function DragQuestion({formRef, propAlternatives, title, subtitle, paragraphs}) {
-    const [alternatives, setAlternatives] = useState(Array.from(propAlternatives))
-    const [draggedText, setDraggedText] = useState(null);
-    let dragId = 0
-    // Remover alternativas já populadas
-    const [ids, setIds] = useState([])
-    useEffect(() => {
+  console.log(paragraphs)
+  const [alternatives, setAlternatives] = useState(Array.from(propAlternatives))
+  const [draggedText, setDraggedText] = useState(null);
+  let dragId = 0
+  // Remover alternativas já populadas
+  const [ids, setIds] = useState([])
+  useEffect(() => {
       let ammountDrop = Math.floor(paragraphs.reduce((total, arr) => total + arr.length, 0)/2)
       for (let index = 0; index < ammountDrop; index++) {
           let element = getNextId()
@@ -332,7 +345,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
 
     return (
       <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)} onDragStart={(e) => handleDragStart(e)} onDragOver={(e) => handleOver(e)} collisionDetection={pointerWithin} readOnly>
-        <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12'>
+        <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-9/12'>
           <div className='flex flex-col relative gap-5 overflow-y-scroll z-0'>
             <div>
               <TextTitle center={false}>{title}</TextTitle>
@@ -355,7 +368,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
               })}
             </form>
           </div>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-2 overflow-y-auto'>
             {/* {alternatives.length >= 1 ? alternatives.map((alt) => <DragAlternative id={alt.replaceAll(' ','')} key={alt.replaceAll(' ','')}>{alt}</DragAlternative>) : 'No alternatives left'} */}
             {alternatives.map((alt) => <DragAlternative id={alt} key={alt}>{alt}</DragAlternative>)}
           </div>

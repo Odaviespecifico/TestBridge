@@ -32,7 +32,7 @@ export function InlineOpen({removeSpace = 'true'}) {
 
 export function InlineClosed({alternatives}) {
   // Get the previous answer
-  const questionId = getNextId()
+  const questionId = useRef(getNextId()).current
   useEffect(() => {
     let inputs = document.querySelectorAll('input')
     inputs.forEach((input) => input.value = localStorage.getItem(input.getAttribute('name'))) 
@@ -42,31 +42,42 @@ export function InlineClosed({alternatives}) {
   let alternativeInput = useRef(null)
   
   function hideOptions(e) {
-    alternativeDiv.current.className = alternativeDiv.current.className.replaceAll('hover:grid', '')
+    alternativeDiv.current.className = alternativeDiv.current.className.replaceAll('hover:flex', '')
     alternativeInput.current.value = e.target.innerText
   }
 
+  function handleInputClick(e) {
+    /** @type {HTMLDivElement} **/
+    const alternativeDiv = e.target.parentElement.children[2]
+    console.log(alternativeDiv)
+    alternativeDiv.classList.replace('hidden','flex')
+  }
+  
+  function handleFocusOut(e) {
+    /** @type {HTMLDivElement} **/
+    const alternativeDiv = e.target.parentElement.children[2]
+    alternativeDiv.classList.replace('flex','hidden')
+  }
   return (
     <>
-    <span className="peer group inline-flex gap-1 items-center min-w-32">
+    <span className="peer group inline-flex gap-1 items-center min-w-32 ml-2">
       <span className="size-8 bg-neutral-900 text-white text-base inline-flex justify-center items-center font-bold group-has-focus:bg-blue-700">
         {questionId}
       </span>
       <input name={questionId}
-        className="h-9 lg:w-64 sm:w-40 bg-blue-100 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
+        className="h-9 lg:w-64 sm:w-52 bg-blue-100 outline-0 border-2 font-base border-white box-border group-has-focus:bg-white focus:border-blue-500 text-center"
         type="text"
         ref={alternativeInput}
         readOnly
-        onFocus={() => alternativeDiv.current.className = alternativeDiv.current.className + ' hover:grid'}
+        onFocus={() => alternativeDiv.current.className = alternativeDiv.current.className + ' hover:flex'}
+        onClick={(e) => handleInputClick(e)}
+        onBlur={(e) => handleFocusOut(e)}
       />
+      <div className="hidden absolute bottom-[56px] left-0 w-full h-24 bg-blue-600 animate-(--animate-comeTop)"
+          ref={alternativeDiv}>
+            {alternatives.map((element) => <button type='button' className="flex w-full justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{element}</button>)}
+      </div>
     </span>
-    <div className="absolute bottom-[56px] left-0 w-full h-24 bg-blue-600 hidden grid-cols-4 peer-has-focus:grid active:grid animate-(--animate-comeTop)"
-         ref={alternativeDiv}>
-      <button type='button' className="flex justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{alternatives[0]}</button>
-      <button type='button' className="flex justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{alternatives[1]}</button>
-      <button type='button' className="flex justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{alternatives[2]}</button>
-      <button type='button' className="flex justify-center items-center font-medium text-white text-md hover:bg-blue-700" onClick={(e) => hideOptions(e)}>{alternatives[3]}</button>
-    </div>
     </>
   )
 }
@@ -131,8 +142,8 @@ export function RadioTableInput({children, id}) {
     e.unfocus()
   }
   return (
-    <div className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
-      <input onClick={(e) => handleFocus(e)} type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 hover:cursor-pointer"/>
+    <div className='flex gap-8 items-center px-8 odd:bg-gray-100 min-h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
+      <input onClick={(e) => handleFocus(e)} type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 aspect-square hover:cursor-pointer"/>
       <label htmlFor={"input-"+id+children+'id'} className="hover:cursor-pointer">{children}</label>
     </div>
   )
@@ -155,7 +166,7 @@ export function OneQuestionAlternative({children,id}) {
     div.children[0].click()
   }
   return(
-    <div className='flex gap-8 items-center p-8 odd:bg-gray-100 h-14 w-full select-none' readOnly onClick={(e) => handleClick(e)}>
+    <div className='flex gap-8 items-center px-8 odd:bg-gray-100 min-h-14 w-full select-none' readOnly onClick={(e) => handleClick(e)}>
           <input type="radio" name={id} id={id+children} className="size-6 hover:cursor-pointer" value={children}/>
           <label htmlFor={id+children} className="hover:cursor-pointer">{children}</label>
     </div>
