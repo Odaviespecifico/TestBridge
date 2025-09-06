@@ -7,7 +7,7 @@ import { adicionarTentativa } from "./supabase.js";
 import { useFormState } from 'react-dom';
 import { useNavigate } from "react-router";
 import {  Header,  Footer,  Loading,} from "./utils.jsx";
-
+import { adicionarResposta, verificarresposta } from './supabase.js';
 
 export function RegisterAttempt() {
   const formRef = useRef()
@@ -18,9 +18,9 @@ export function RegisterAttempt() {
       navigate("/test")
     }
   },[])
+
   async function handleClick() {
     if (state == 'form' && formRef.current.reportValidity()) {
-      console.log('registering attempt')
       let myform = new FormData(formRef.current);
       let myformObj = Object.fromEntries(myform.entries());
       setState('loading')
@@ -117,12 +117,31 @@ function RegisterForm({formRef}) {
 }
 
 export function SubmitAttempt({}) {
+  let state = useRef('uploading')
+  useEffect(() => {
+    async function postAnswers() {
+      // Check if it is loaded
+      const id = localStorage.getItem('id')
+      localStorage.removeItem('id')
+      const answers = localStorage
+      let resposta = await adicionarResposta(id,answers)
+      if (resposta.error.code == 23505) {
+        console.log('Resposta dessa tentativa já no banco de dados. Avançando para próxima etapa')
+      }
+      localStorage.setItem('id',id)
+      state = 'uploaded'
+    } 
+    postAnswers()
+  }, [])
   return (
     <div className='flex items-center flex-col h-full w-screen justify-stretch'>
       <Header></Header>
-      <h1 className="text-2xl font-bold text-center mb-4 h-full flex items-center">Sending your attempt to the cloud
-        <Loading></Loading>
-      </h1>
+      <div className="text-2xl font-bold text-center mb-4 p-20 h-full flex flex-col justify-start items-center">
+        Sending your attempt to the cloud
+        {
+          (state == 'uploading') ? <Loading></Loading> : <Loading status='sucess'></Loading>
+        }
+      </div>
       <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'></div>
     </div>
   )
@@ -202,7 +221,6 @@ export function OneQuestionMultipleChoice({formRef, children, alternatives}) {
 }
 
 export function DragQuestion({formRef, propAlternatives, title, subtitle, paragraphs}) {
-  console.log(paragraphs)
   const [alternatives, setAlternatives] = useState(Array.from(propAlternatives))
   const [draggedText, setDraggedText] = useState(null);
   let dragId = 0
@@ -210,7 +228,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
   const [ids, setIds] = useState([])
   useEffect(() => {
       let ammountDrop = Math.floor(paragraphs.reduce((total, arr) => total + arr.length, 0)/2)
-      for (let index = 0; index < ammountDrop; index++) {
+      for (let index = 0; index < ammountDrop-1; index++) {
           let element = getNextId()
           ids.push(element)
         }
@@ -258,7 +276,6 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
         try {
           document.getElementById(e.collisions[1].id).classList.add('shadow-xl','shadow-yellow-300','z-20')
         } catch (error) {
-          console.log('nenhum elemento')
         }
       }
     }
@@ -324,7 +341,6 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
     
     function handleAlternativeRemoval(e) {
       if (e.target.textContent != '') {
-        console.log(e.target.value)
         // Change it back to inline-Block TODO: Change it to depend only on the content of the span
         const span = document.querySelector(`span[id="${e.target.id}"]`)
         toggleSpanDisplay(span)
@@ -542,7 +558,6 @@ export function WritingTask({formRef,children}) {
       let textarea = document.querySelector('textarea')
       localStorage.setItem(`${questionId}`,textarea.value)
     }, 15000);
-    console.log('rodei')
   }, [])
   const [wordCount, setWordCount] = useState(0)
   function handleTextInput(e) {

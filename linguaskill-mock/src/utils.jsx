@@ -26,7 +26,7 @@ export function Introduction({title,children}) {
   return (
     <div className="flex flex-col gap-10 py-7 max-w-3xl xl:-ml-48 px-6 flex-1">
       <img
-        src="./Logo-Linguaskill.jpg"
+        src="/Logo-Linguaskill.jpg"
         alt="Linguaskill Logo"
         className="h-[65px] w-fit"
       />
@@ -91,7 +91,7 @@ export function Loading({status}) {
     return (
       <div className="flex justify-center items-center h-full">
         <DotLottieReact className="h-6/12 hue-rotate-250 brightness-160 saturate-200"
-        src="./success.lottie"
+        src="/success.lottie"
         autoplay/>
       </div>
     )}
@@ -99,7 +99,7 @@ export function Loading({status}) {
   else {
     return (
       <div className="flex h-full justify-center items-center">
-        <img src="./loading.svg" alt="Loading icon" className="size-9/12" />
+        <img src="/loading.svg" alt="Loading icon" className="size-9/12" />
       </div>
     )
   }

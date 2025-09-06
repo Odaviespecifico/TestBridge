@@ -14,13 +14,20 @@ export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId) {
   return {data, error}
 }
 
-export async function adicionarResposta(idTentativa, idQuestão, resposta,) {
-    const { data, error } = await supabase
-  .from('Resposta')
+export async function adicionarResposta(idTentativa, resposta,) {
+  const { data, error } = await supabase
+  .from('resposta')
   .insert([
-    { id_tentativa: idTentativa, resposta: resposta },
+    { tentativa: idTentativa, respostas: resposta },
   ])
-  .select('id')
-  .single()
-  return data
+  .select('*')
+  return {data, error}
+}
+
+export async function verificarresposta(idTentativa) {
+  const { data, error } = await supabase
+  .from('resposta')
+  .select('*')
+  .eq('tentativa', idTentativa)
+  return {data, error}
 }

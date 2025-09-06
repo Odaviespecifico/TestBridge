@@ -1,4 +1,4 @@
-import { useState, useRef, Children } from "react";
+import { useState, useRef, Children, use, useEffect } from "react";
 import "./index.css";
 import {
   OneCollumnQuestion,
@@ -37,6 +37,13 @@ export default function Linguaskill() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const formRef = useRef(null);
+
+  useEffect(() => {
+    // check if there is an Id
+    if (!localStorage.getItem('id')) {
+      navigate('/')
+    }
+  })
   const goToNextQuestion = async () => {
     historicoId.push(questionId);
 
@@ -343,7 +350,8 @@ export default function Linguaskill() {
           "Being fully equipped with all this stuff beforehand makes it easier when you go for auditions.",
         ]}
         paragraphs={[
-          ["I asked John how he got started and what requirements there are. 'Well, to be a professional dancer it's useful to have had acting lessons or some background in drama. If you want to succeed in musical theatre you have to have a good singing voice as well. When you approach an agent you should take a portfolio with your CV, your statistics sheet and some good photos and reviews of past performances. You'll need dance clothes, ballet shoes, tap shoes, and even roller skates depending on what kind of show you are going to go for.'","","'Of course, you need to be extremely fit if you want to be a professional dancer. I dance or move about for about six hours a day. There are great health benefits to being a dancer. I can eat a lot of pasta without gaining weight because dancing increases your metabolism so much.'"],
+          ["I asked John how he got started and what requirements there are. 'Well, to be a professional dancer it's useful to have had acting lessons or some background in drama. If you want to succeed in musical theatre you have to have a good singing voice as well. When you approach an agent you should take a portfolio with your CV, your statistics sheet and some good photos and reviews of past performances. You'll need dance clothes, ballet shoes, tap shoes, and even roller skates depending on what kind of show you are going to go for.'","","'Of course, you need to be extremely fit if you want to be a professional dancer. I dance or move about for about six hours a day. There are great health benefits to being a dancer. I can eat a lot of pasta without gaining weight because dancing increases your metabolism so much.'",],
+          ["","drop"],
           ["John has a very busy schedule in the next few months. He took time out to speak to me today from the making of a pop video to promote N-ergy's latest record. 'I choreographed the dance routine for the boys and they only had 2 days in which to learn it! I am going to be working on a video for another well known band - but that's top secret. Next month I'll be touring Spain in a production of a musical that was written by a friend of mine, Michaela Evans.'",""],
           ["As for the future, I've come to realise that I would never be content to be just a chorus dancer - I'm too much of an individual for that. Like all artists I'd love to become a household name by writing and choreographing my own musicals.' John was born in Jamaica to a Jamaican father and a Scottish mother but the family emigrated to England 20 years ago. 'I have a little sister I adore, who is also training to be a dancer.' How does it feel to have someone else following in your footsteps?",""],
           ["Has he much more to learn, I wondered. \"I've spent an incredible amount of my life training to get where I am. I went to college for two years in England, I trained for six months in Paris and about eight months in America. But you never really stop training or learning your art.\"",""],
@@ -352,6 +360,114 @@ export default function Linguaskill() {
         ]}
         title="Career success in the arts"
         subtitle="John Prince, famous dancer and choreographer, gives advice on how to succeed in a career in the arts."
+      />
+    </>,
+
+    <>
+      <Instruction>
+        Read the text given and check the correct answer to each question on the
+        right.
+      </Instruction>
+      <TwoCollumnQuestion
+        formRef={formRef}
+        title="Home Confort"
+        subtitle=""
+        questions={[
+          {
+            heading:
+              "Rebecca's mood at the start of the story is",
+            alternatives: ["calm and reflective.","cross and irritable.", "restless and agitated.", "sad and upset."]
+          },
+          {
+            heading: "What action does Rebecca take with her daughter?",
+            alternatives: ["She reprimands Katy for making a mess on the floor.", "She asks David to speak to Katy.", "She appeals to Katy to play a wider range of music.", "She does nothing in order to avoid a fuss."]
+          },
+          {
+            heading:
+              "What is Rebecca's attitude to the letter lying on the table?",
+            alternatives: ["The adverb's claims are misleading.", "She hopes it will prompt her to take up exercise.", "It makes her feel more motivated.", "She thinks the slimming club is good value for money."]
+          },
+          {
+            heading:
+              "When David first leaves the sitting room, Rebecca is",
+            alternatives: ["relieved that her baby is awake.", "surprised to hear her baby chattering.", "guilty that she's being lazy.", "glad to have got her own way."]
+          },
+          {
+            heading: "Rebecca is worried when her husband brings in the drinks because",
+            alternatives: ["he might trip over Katy's equipment.", "he doesn't like the smell of her tea.", "tea is dripping from the saucer.", "he might damage an item of furniture."]
+          },
+          {
+            heading: "The curtain referred to in Katy's bedroom",
+            alternatives: ["is identical in design to one from a previous generation.", "makes a tinkling sound.", "is made up of unusual colours.", "keeps out the light at night."]
+          },
+        ]}
+      >
+        <p>
+          It was a lazy Sunday afternoon, the lull before the storm of Monday morning madness of alarm clocks, traffic jams and deadlines. The clock struck three and Rebecca's elbow still rested on the arm of the tapestry-covered sofa. With her fingertips she began caressing the rough piping that ran along its seams. Simultaneously, the toes of her left foot moved back and forth across the edges of the sheepskin rug. This action Rebecca found comforting; it reminded her of being at home as a child when she used to sit in the family sitting room, her toes playing with the fringes of another kind of rug. Her mother would snap at her to stop it, so of course she did it all the more.
+        </p>
+        <p>
+          Rebecca had a sudden whiff of the glue that Katy was applying to make one of her artistic creations. Her daughter was seated on a cushion right in the middle of the room, looking like an island, surrounded by a sea of cardboard cut-offs, sequins, felt-tip pens, and pristine sheets of white A4 paper that she had disobediently pinched from her father's study. She really should be working at the kitchen table, Rebecca thought, but I don't have the appetite for the outburst that might happen if my genius-daughter-at-work is disturbed. Every three minutes and 50 seconds Katy got up to replay Kylie Minogue's version of 'The Locomotion'.
+        </p>
+        <p>
+          "Why don't you listen to the CD all the way through, Katy?" her dad said, who was sprawled out on the other sofa. "You'd like the other songs as well." "Nah, too boring."
+        </p>
+        <p>
+          Rebecca glanced at David and then said, "I could do with something to perk me up." Her words trailed off with a heavy sigh, and then a yawn. It was the first in a series of hints that she would like him to get up and make her a cup of tea.
+        </p>
+        <p>
+          On the lamp table next to the sofa, she noticed a letter that had been delivered a week ago, advertising exercises classes and a slimming club. She had kept it on the table as a reminder, or perhaps to conjure up the same kind of magical effect that people believe in when they splash out on membership to a fancy gym without going near the place more than once every two months.
+        </p>
+        <p>
+          "Have you seen this flyer?" she said to her husband. "Just the thought of going for a workout makes me want to go and lie down." Once more she didn't get a response. "Who's going to make the tea then?" was her third and most blatant attempt to get a drink before she died of thirst.
+        </p>
+        <p>
+          He stood up. "I suppose it's my turn. Again." He went off into the kitchen while Rebecca, the victor, snuggled a bit further into the sofa. Charlie, who'd been asleep on the sheepskin rug, now started up with his own brand of baby chatter. He was attempting to cover the whole repertoire of vowel sounds this afternoon, like a singer performing warm-up exercises. Then, occasionally, he jammed his fingers into his mouth to make a sound approaching an elongated 'w'.
+        </p>
+        <p>
+          He lay underneath a baby gym, which consisted of a tubular frame in patriotic colours of red, white and blue and a top bar, from which dangled two clowns, one on a swing and one in a position that Rebecca thought was called a pike. (It was a long time ago that she had achieved her gold star award in the trampoline.) Once Charlie made eye contact with Rebecca, his happy babbling began to turn into a grizzle.
+        </p>
+        <p>
+          "Does Charlie want feeding again?" Rebecca asked in the baby voice that irritated them all, herself included. She bent down to scoop her son up. "Mum, he doesn't want feeding again. You've only just fed him," Katy said. "I'll try - just in case he's hungry." In the kitchen she warmed through the mush of potatoes and broccoli that Charlie liked and took it back through to be with Katy.
+        </p>
+        <p>
+          Luckily, the baby was actually ready for a feed, which meant that Rebecca not only saved face with her daughter, but showed that she had no need to feel guilty about sending her husband to make the tea. David walked back in the sitting room that very minute, her cup of Earl Grey with its delicate scent of bergamot wobbling in its saucer. In his other hand he clutched a large mug. Rebecca gave him a warning look that dared him not to put the cups down on the oak blanket box that served as their coffee table. Its surface was already scarred by two rings where hot drinks had been carelessly placed directly onto it.
+        </p>
+        <p>
+          "Thanks. You're a treasure." She settled down to feed Charlie, knowing that her tea would be the perfect temperature to drink in one go by the time he had had enough. "Where's Katy got to?" David said, after a few minutes. The answer came from upstairs as they heard the sound of their older child passing through the curtain in the doorway of her bedroom. It was like those beaded curtains that used to be in fashion when Rebecca was a child, but instead of beads this one was formed from a dazzling collection of pink, purple and silver shimmering plastic squares. She couldn't remember which one of them had named it the 'jingle-jangler' but it was very apt.
+        </p>
+      </TwoCollumnQuestion>
+    </>,
+
+
+    <>
+    {/* https://www.flo-joe.co.uk/cae/students/tests/CAE-Part-7-Gapped-Text-Practice-Test.htm */}
+      <Instruction> 
+        You are going to read an extract from a magazine article. Six paragraphs have been removed from the extract. Choose from the paragraphs A-G the one which fits each gap (1-6). There is one extra paragraph which you do not need to use.
+      </Instruction>
+      <DragQuestion
+        formRef={formRef}
+        propAlternatives={["The recruitment of men to the armed forces during the conflict in Europe from 1914 to 1918 meant there was very little persecution, since gamekeepers went off to fight. As the number of gamekeepers decreased, the wildcat began to increase its range, recolonising many of its former haunts. Extinction was narrowly averted.", "The wildcat waits for a while in rapt concentration, ears twitching and eyes watching, seeing everything and hearing everything, trying to detect the tell-tale movement of a vole or a mouse. But there is nothing, and in another leap he disappears into the gloom.", "The results, which are expected shortly, will be fascinating. But anyone who has seen a wildcat will be in little doubt that there is indeed a unique and distinctive animal living in the Scottish Highlands, whatever his background.", "They probably used deciduous and coniferous woodland for shelter, particularly in winter, and hunted over more open areas such as forest edge, open woodland, thickets and scrub, grassy areas and marsh. The wildcat was probably driven into more mountainous areas by a combination of deforestation and persecution.", "As the animals emerge, their curiosity is aroused by every movement and rustle in the vegetation. Later they will accompany their mother on hunting trips, learning quickly, and soon become adept hunters themselves.", "This is what makes many people think that the wildcat is a species in its own right. Research currently being undertaken by Scottish Natural Heritage is investigating whether the wildcat really is distinct from its home- living cousin, or whether it is nothing more than a wild-living form of the domestic cat.", "It is a typical image most folk have of the beast, but it is very much a false one, for the wildcat is little more than a bigger version of the domestic cat, and probably shows his anger as often"]}
+        paragraphs={[
+          ['On my living-room wall I have a painting of a wildcat by John Holmes of which I am extremely fond. It depicts a snarling, spitting animal, teeth bared and back arched: a taut coiled spring ready to unleash some unknown fury.'],
+          ['', 'drop'],
+          ['However, the physical differences are tangible. The wildcat is a much larger animal, weighing in some cases up to seven kilos, the same as a typical male fox. The coat pattern is superficially similar to a domestic tabby cat but it is all stripes and no spots. The tail is thicker and blunter, with three to five black rings. The animal has an altogether heavier look.'],
+          ["The Scottish wildcat was originally distinguished as a separate subspecies in 1912, but it is now generally recognised that there is little difference between the Scottish and other European populations. According to an excellent report on the wildcat printed in 1991, the animals originally occurred in a variety of habitats throughout Europe."],
+          ['', 'drop'],
+          ["It was during the nineteenth century, with the establishment of many estates used by landowners for hunting, that the wildcat became a nuisance and its rapid decline really began; 198 wildcats were killed in three years in the area of Glengarry, for example. However, things were later to improve for the species."],
+          ['', 'drop'],
+          ["The future is by no means secure, though, and recent evidence suggests that the wildcat is particularly vulnerable to local eradication, especially in the remoter parts of northern and western Scotland. This is a cause for real concern, given that the animals in these areas have less contact with domestic cats and are therefore purer."],
+          ['', 'drop'],
+          ["Part of the problem stems from the fact that the accepted physical description of the species originates from the selective nature of the examination process by the British Natural History Museum at the start of the century, and this has been used as the type-definition for the animal ever since. Animals that did not conform to that large blunt-tailed 'tabby' description were discarded as not being wildcats. In other words, an artificial collection of specimens was built up, exhibiting the features considered typical of the wildcat."],
+          ["The current research aims to resolve this potential problem. It is attempting to find out whether there are any physical features which characterise the so-called wild-living cats."],
+          ['', 'drop'],
+          ["But what of his lifestyle? Wildcat kittens are usually born in May/June in a secluded den, secreted in a gap amongst boulders. Another favourite location is in the roots of a tree."],
+          ['', 'drop'],
+          ["Rabbits are a favourite prey, and some of the best areas to see wildcats are at rabbit warrens close to the forest and moorland edge. Mice, small birds and even insects also form a large part of the diet, and the animal may occasionally take young deer."],
+          ["The wildcat is one of the Scottish Highlands' most exciting animals. Catch a glimpse of one and the memory will linger forever."]
+        ]}
+        // Add paragraphs
+        title="Scottish Wildcat"
+        subtitle=""
       />
     </>,
   ];

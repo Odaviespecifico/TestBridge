@@ -139,8 +139,13 @@ export function RadioTableInput({children, id}) {
   }, [])
 
   function handleFocus(e) {
-    e.unfocus()
+    try {
+      e.unfocus()
+    } catch (error) {
+      
+    }
   }
+
   return (
     <div className='flex gap-8 items-center px-8 odd:bg-gray-100 min-h-14 w-full hover:cursor-pointer' key={children} onClick={(e) => {if (e.target.children[0]) {e.target.children[0].click()}}}>
       <input onClick={(e) => handleFocus(e)} type="radio" name={id} id={"input-"+id+children+'id'} value={children} className="size-6 aspect-square hover:cursor-pointer"/>
