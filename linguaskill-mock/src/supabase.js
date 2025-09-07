@@ -14,19 +14,19 @@ export async function verificarSessão(sessionId) {
 export async function verificarToken(token,sessionId) {
   const session = await supabase
   .from('tokens')
-  .select(`token, sessions (
+  .select(`token, used, sessions (
     session_code, versão, id)`)
   .eq('token', token)
   .eq('sessions.session_code', sessionId)
   .single()
   if (session.error) {
-    if (session.error.code === 'PGRST116') {
-      return { valid: false, message: "Token ou Session ID inválido." }
-    }
+      return { valid: false, message: "Invalid token", response: session}
   }
-  else {
-    return { valid: true, message: "Token e Session ID válidos.", data: session.data }
+  if (session.data.used) {
+    return { valid: false, message: "This token has already been used", response: session}
   }
+  
+  return { valid: true, message: "Token and Session ID are valid.", data: session.data }
 }
 export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId, token) {
   const session = await supabase
@@ -43,31 +43,41 @@ export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId, to
   ])
   .select('id')
   .single()
+
+  // Set token as used
+  let tokenReq = await supabase
+  .from('tokens')
+  .update({ used: true })
+  .eq('token', token)
+  .select('*')
+  .single()
+
   return {data, error}
 }
 
 export async function adicionarResposta(idTentativa, resposta,) {
   const { data, error } = await supabase
-  .from('resposta')
-  .insert([
-    { tentativa: idTentativa, respostas: resposta },
+  .from('tentativas')
+  .update([
+    { respostas: resposta },
   ])
+  .eq('id', idTentativa)
   .select('*')
   return {data, error}
 }
 
 export async function calcularPontuacao(idTentativa, versão) {
   const resposta = await supabase
-  .from('resposta')
+  .from('tentativas')
   .select('respostas')
-  .eq('tentativa', idTentativa)
+  .eq('id', idTentativa)
   .single()
   if (resposta.error) {
     console.error('Erro ao buscar respostas da tentativa:', resposta.error, "Tentativa ID:", idTentativa, "Versão:", versão)
     return null
   }
   const gabarito = await supabase
-  .from('gabarito')
+  .from('gabaritos')
   .select('respostas')
   .eq('versão', versão)
   .single()
@@ -86,6 +96,15 @@ export async function calcularPontuacao(idTentativa, versão) {
   }
   let pontuação = (acertos/(acertos + erros)).toFixed(2)
   
+  // Salvar a pontuação
+  const updateScore = await supabase
+  .from('tentativas')
+  .update({ grade: percentageToCEFR(pontuação), porcentagem: pontuação, finalizado: true })
+  .eq('id', idTentativa)
+  if (updateScore.error) {
+    console.error('Erro ao atualizar pontuação da tentativa:', updateScore.error, "Tentativa ID:", idTentativa, "Versão:", versão)
+    return null
+  }
   return {pontuação: pontuação, acertos: acertos, erros: erros, nivel: percentageToCEFR(pontuação)}
 }
 

@@ -41,7 +41,7 @@ Dentro do arquivo Linguaskill.jsx você vai reordenar as questões e criar novas
 
 - Adicionar Integração de pagamento e sistema de chaves de acesso para prova
 
-  
+- Adicionar report de respostas para os alunos
 
 #### Implementação
 

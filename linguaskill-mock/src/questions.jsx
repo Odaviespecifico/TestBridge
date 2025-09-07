@@ -45,7 +45,8 @@ export function RegisterAttempt() {
       )
       console.log(tokenValidity)
       if (!tokenValidity.valid) {
-        token.current.setCustomValidity('Invalid token')
+        console.log(tokenValidity)
+        token.current.setCustomValidity(tokenValidity.message)
         setTimeout(() => {
           token.current.setCustomValidity("")
           token.current.focus()
