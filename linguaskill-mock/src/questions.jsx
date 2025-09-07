@@ -65,11 +65,8 @@ export function RegisterAttempt() {
       console.log(id)
 
       if (id.error != null) {
-        alert("One error has occurred. Restarting the page" + id.error.code);
-        setTimeout(() => {
-          localStorage.clear();
-          window.location.reload(true);
-        }, 1500);
+        alert("One error has occurred. Restarting the page" + id.error);
+        
       }
       else {
         setTimeout(() => {
