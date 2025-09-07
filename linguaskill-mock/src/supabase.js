@@ -39,7 +39,7 @@ export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId, to
   const { data, error } = await supabase
   .from('tentativas')
   .insert([
-    { nome_aluno: nomeAluno, nome_professor: nomeProfessor , versão: session.data.sessions.versão,  session_id: session.data.sessions.id, access_token: session.data.token, valido: true},
+    { nome_aluno: nomeAluno, nome_professor: nomeProfessor , versão: session.data.sessions.versão,  session_id: session.data.sessions.id, access_token: session.data.token, finalizado: false},
   ])
   .select('id')
   .single()
@@ -76,6 +76,7 @@ export async function calcularPontuacao(idTentativa, versão) {
     console.error('Erro ao buscar respostas da tentativa:', resposta.error, "Tentativa ID:", idTentativa, "Versão:", versão)
     return null
   }
+
   const gabarito = await supabase
   .from('gabaritos')
   .select('respostas')
@@ -105,6 +106,8 @@ export async function calcularPontuacao(idTentativa, versão) {
     console.error('Erro ao atualizar pontuação da tentativa:', updateScore.error, "Tentativa ID:", idTentativa, "Versão:", versão)
     return null
   }
+  // Reinicia o localStorage
+  localStorage.clear()
   return {pontuação: pontuação, acertos: acertos, erros: erros, nivel: percentageToCEFR(pontuação)}
 }
 
@@ -117,5 +120,6 @@ if (score <= .25) return "A1";
 if (score <= .40) return "A2";
 if (score <= .60) return "B1";
 if (score <= .90) return "B2";
-return "C1";
+if (score < .97) return "C1";
+return "C2";
 }
