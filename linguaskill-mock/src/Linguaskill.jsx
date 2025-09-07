@@ -61,22 +61,11 @@ export default function Linguaskill() {
   };
 
   const goToPreviousQuestion = () => {
-    // Desativa os botões durante carregamento
-    if (currentQuestion < 2 && currentQuestion > 1) {
-      return "";
-    }
     setCurrentQuestion((prevState) => prevState - 1);
     // Atualiza o valor da questão com base
     setQuestionId(historicoId.at(-2));
     historicoId.pop();
 
-    // Caso tenha o ID pular a de cadastro de tentativa
-    if (localStorage.getItem("id") != null && currentQuestion == 2) {
-      // Reinicia o contador
-      setQuestionId(1);
-      historicoId = [];
-      setCurrentQuestion((prevState) => prevState - 1);
-    }
   };
 
   const questions = [
