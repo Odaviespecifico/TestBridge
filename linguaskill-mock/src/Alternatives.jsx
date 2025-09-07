@@ -82,50 +82,6 @@ export function InlineClosed({alternatives}) {
   )
 }
 
-export function FourAlternatives({alternatives,heading, handleToggle}) {
-  const questionId = getNextId()
-  return(
-    <div readonly className="w-full select-none">
-      <button type="button" readonly className="flex items-start gap-1 py-2 w-full transition all duration-300" onClick={(e) => handleToggle(e)} id={questionId}>
-        <img src="/triangleArrow.png" alt="arrow" className="size-8 inline rotate-180 transition all duration-300"/>
-        <IdBox>{questionId}</IdBox>
-        <h1 className="text-lg text-left">{heading}</h1>
-      </button>
-      <div className="hidden w-full">
-        <div className="w-full">
-          {alternatives.map((alternative) => <RadioTableInput id={questionId} readonly key={questionId + alternative}>{alternative}</RadioTableInput>)}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export function AudioAlternative({alternatives,heading}) {
-  const questionId = getNextId()
-  return(
-    <div className="w-full">
-      <button type="button" className="flex items-start gap-3 py-2 w-full">
-        <IdBox>{questionId}</IdBox>
-        <h1 className="text-lg text-left">{heading}</h1>
-      </button>
-      <table className="w-full">
-        <tbody className="w-full">
-          {alternatives.map((alternative) => <RadioTableInput id={questionId}>{alternative}</RadioTableInput>)}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-
-export function IdBox({children}) {
-  return(
-  <span className="h-8 w-8 aspect-square bg-neutral-900 border-white border-2 p-0.5 text-white justify-center items-center inline-flex font-bold text-lg group-has-focus:bg-blue-700">
-    {children}      
-  </span>
-  )
-}
-
 export function RadioTableInput({children, id}) {
   // Get the previous answer
   useEffect(() => {
@@ -178,6 +134,41 @@ export function OneQuestionAlternative({children,id}) {
   )
 }
 
+export function FourAlternatives({alternatives,heading, handleToggle}) {
+  const questionId = getNextId()
+  return(
+    <div readonly className="w-full select-none">
+      <button type="button" readonly className="flex items-start gap-1 py-2 w-full transition all duration-300" onClick={(e) => handleToggle(e)} id={questionId}>
+        <img src="/triangleArrow.png" alt="arrow" className="size-8 inline rotate-180 transition all duration-300"/>
+        <IdBox>{questionId}</IdBox>
+        <h1 className="text-lg text-left">{heading}</h1>
+      </button>
+      <div className="hidden w-full">
+        <div className="w-full">
+          {alternatives.map((alternative) => <RadioTableInput id={questionId} readonly key={questionId + alternative}>{alternative}</RadioTableInput>)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function AudioAlternative({alternatives,heading}) {
+  const questionId = getNextId()
+  return(
+    <div className="w-full">
+      <button type="button" className="flex items-start gap-3 py-2 w-full">
+        <IdBox>{questionId}</IdBox>
+        <h1 className="text-lg text-left">{heading}</h1>
+      </button>
+      <table className="w-full">
+        <tbody className="w-full">
+          {alternatives.map((alternative) => <RadioTableInput id={questionId}>{alternative}</RadioTableInput>)}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 export function DragAlternative({children, id,}) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: id,
@@ -222,4 +213,12 @@ export function DropAlternative({children, id, handleclick, inlineStyle}) {
       
     </span>
   );
+}
+
+export function IdBox({children}) {
+  return(
+  <span className="h-8 w-8 aspect-square bg-neutral-900 border-white border-2 p-0.5 text-white justify-center items-center inline-flex font-bold text-lg group-has-focus:bg-blue-700">
+    {children}      
+  </span>
+  )
 }

@@ -31,18 +31,13 @@ Dentro do arquivo Linguaskill.jsx você vai reordenar as questões e criar novas
   
 
 ## todo
-
-- Adicionar animação do hover para questões de click and drag
-
-  
+- Refatorar banco de dados para guardar resultados dentro da tabela
 
 - Adicionar instrução para cada tipo de questão
 
-  
+- Adicionar nota automática e correção automática (Possível revisão de respostas)
 
 - Separar as questões em um outro arquivo para facilitar a importação na base de dados via CDN
-
-  
 
 - Adicionar Integração de pagamento e sistema de chaves de acesso para prova
 

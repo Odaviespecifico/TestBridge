@@ -7,10 +7,12 @@ import { adicionarTentativa } from "./supabase.js";
 import { useFormState } from 'react-dom';
 import { useNavigate } from "react-router";
 import {  Header,  Footer,  Loading,} from "./utils.jsx";
-import { adicionarResposta, verificarresposta } from './supabase.js';
+import { adicionarResposta, calcularPontuacao, verificarToken, verificarSessão } from './supabase.js';
 
 export function RegisterAttempt() {
   const formRef = useRef()
+  const session = useRef(null)
+  const token = useRef(null)
   const [state, setState] = useState('form')
   const navigate = useNavigate()
   useEffect(() => {
@@ -23,19 +25,52 @@ export function RegisterAttempt() {
     if (state == 'form' && formRef.current.reportValidity()) {
       let myform = new FormData(formRef.current);
       let myformObj = Object.fromEntries(myform.entries());
+      console.log(myformObj)
+      let sessionValidity = await verificarSessão(myformObj.sessionId)
+      console.log(sessionValidity)
+      if (sessionValidity.error) {
+        session.current.setCustomValidity('Invalid session code')
+        setTimeout(() => {
+          session.current.setCustomValidity("")
+          session.current.focus()
+          session.current.value = ''
+        }, 2000);
+        session.current.reportValidity()
+        return
+      }
+
+      let tokenValidity = await verificarToken(
+        myformObj.accessToken,
+        myformObj.sessionId,
+      )
+      console.log(tokenValidity)
+      if (!tokenValidity.valid) {
+        token.current.setCustomValidity('Invalid token')
+        setTimeout(() => {
+          token.current.setCustomValidity("")
+          token.current.focus()
+          token.current.value = ''
+        }, 2000);
+        token.current.reportValidity()
+        return
+      }
       setState('loading')
       let id = await adicionarTentativa(
         myformObj.studentName,
         myformObj.teacherName,
-        myformObj.sessionId
+        myformObj.sessionId,
+        myformObj.accessToken,
       );
+      console.log(id)
+
       if (id.error != null) {
-        alert("Ocorreu um erro. Reiniciando a pagina");
+        alert("One error has occurred. Restarting the page");
         setTimeout(() => {
           localStorage.clear();
           window.location.reload(true);
         }, 1500);
-      } else {
+      }
+      else {
         setTimeout(() => {
           setState('success')
         }, 500);
@@ -50,7 +85,7 @@ export function RegisterAttempt() {
   function renderContent() {
     switch (state) {
       case 'form':
-        return (<RegisterForm formRef={formRef}></RegisterForm>)
+        return (<RegisterForm formRef={formRef} sessionRef={session} tokenRef={token}></RegisterForm>)
       case 'loading':
         return(<Loading></Loading>)
       case 'success':
@@ -62,7 +97,7 @@ export function RegisterAttempt() {
   return (
     <div className='flex items-center flex-col h-full w-screen justify-stretch'>
       <Header></Header>
-      {renderContent(formRef)}
+      {renderContent(formRef, session, token)}
       <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'>
         <button
           type="button"
@@ -75,9 +110,18 @@ export function RegisterAttempt() {
   )
 }
 
-function RegisterForm({formRef}) {
+function RegisterForm({formRef, sessionRef, tokenRef}) {
+  function handleIdInput(e,maxLength) {
+    /** @type {string} */
+    let value = e.target.value
+
+    if (value.length > maxLength) {
+      e.target.value = value.substring(0,maxLength)
+    }
+    e.target.value = e.target.value.toUpperCase()
+  }
   return(
-    <form ref={formRef} className="flex flex-col gap-4 p-4 max-w-md mx-auto h-full justify-center -mt-35">
+    <form ref={formRef} className="flex flex-col gap-4 p-4 w-96 mx-auto h-full justify-center -mt-35">
         <h1 className="text-2xl font-bold text-center mb-4">Register attempt</h1>
         <label className="flex flex-col font-semibold text-lg">
           Your name
@@ -87,7 +131,7 @@ function RegisterForm({formRef}) {
             type="text"
             name="studentName"
             className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            placeholder="Digite seu nome"
+            placeholder="Your name"
           />
         </label>
         <label className="flex flex-col font-semibold text-lg">
@@ -98,7 +142,7 @@ function RegisterForm({formRef}) {
             type="text"
             name="teacherName"
             className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            placeholder="Digite o nome do professor"
+            placeholder="Teacher's name"
             />
         </label>
         <label className="flex flex-col font-semibold text-lg">
@@ -109,7 +153,23 @@ function RegisterForm({formRef}) {
             type="text"
             name="sessionId"
             className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            placeholder="Digite o nome do professor"
+            placeholder="AB123"
+            ref={sessionRef}
+            onInput={(e) => handleIdInput(e,5)}
+          />
+        </label>
+        <label className="flex flex-col font-semibold text-lg">
+          Access token
+          <input
+            required
+            minLength='7'
+            maxLength='7'
+            type="text"
+            name="accessToken"
+            onInput={(e) => handleIdInput(e,7)}
+            ref={tokenRef}
+            className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            placeholder="ABCD123"
           />
         </label>
       </form>
@@ -118,19 +178,23 @@ function RegisterForm({formRef}) {
 
 export function SubmitAttempt({}) {
   let state = useRef('uploading')
+  const navigate = useNavigate()
   useEffect(() => {
     async function postAnswers() {
       // Check if it is loaded
       const id = localStorage.getItem('id')
-      localStorage.removeItem('id')
       const answers = localStorage
       let resposta = await adicionarResposta(id,answers)
-      if (resposta.error.code == 23505) {
-        console.log('Resposta dessa tentativa já no banco de dados. Avançando para próxima etapa')
-      }
+      if (resposta.error) {
+        if (resposta.error.code == 23505) {
+          console.log('Resposta dessa tentativa já no banco de dados. Avançando para próxima etapa')
+        } } 
       localStorage.setItem('id',id)
       state = 'uploaded'
-    } 
+      setTimeout(() => {
+        navigate('/test/result')
+      }, 2000);
+      }
     postAnswers()
   }, [])
   return (
@@ -139,8 +203,37 @@ export function SubmitAttempt({}) {
       <div className="text-2xl font-bold text-center mb-4 p-20 h-full flex flex-col justify-start items-center">
         Sending your attempt to the cloud
         {
-          (state == 'uploading') ? <Loading></Loading> : <Loading status='sucess'></Loading>
-        }
+          (state == 'uploading') ? <Loading status='sucess'></Loading> : <Loading></Loading>} 
+      </div>
+      <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'></div>
+    </div>
+  )
+}
+
+export function ResultsDisplay() {
+  let [pontos, setPontos] = useState()  
+
+  useEffect(() => {(async () => {
+    console.log('calculando pontuação')
+    setPontos(await calcularPontuacao(localStorage.getItem('id'),'1.0.1'))
+  })();
+  }, [])
+  return (
+    <div className='flex items-center flex-col h-full w-screen justify-stretch'>
+      <Header></Header>
+      <div className='flex items-center flex-col h-full w-screen justify-stretch'>
+        <div className="flex h-full w-lg flex-col justify-center items-center gap-5">
+          <h1 className='text-2xl font-bold text-center flex flex-col justify-start items-center'>
+            Your estimate CEFR level
+          </h1>
+          <div className='flex flex-col justify-center items-center -mt-20 '>
+            <div className=" h-96 w-96 text-[30vh] text-center font-medium text-amber-400">  
+                {pontos ? pontos.nivel : <Loading />}
+            </div>
+            <p className='text-lg -mt-20 text-justify'>ADICIONAR TEXTO SOBRE O NÍVEL</p>
+          </div>
+          <button className='bg-gray-950 text-white font-bold rounded-sm w-64 text-xl p-2 hover:cursor-pointer hover:bg-gray-800 hover:shadow-amber-400/45 hover:shadow-lg transition duration-100 active:bg-gray-600'>Back to the start</button>
+        </div>
       </div>
       <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'></div>
     </div>
