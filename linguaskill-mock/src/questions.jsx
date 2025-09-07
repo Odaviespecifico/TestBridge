@@ -217,6 +217,9 @@ export function ResultsDisplay() {
   useEffect(() => {(async () => {
     console.log('calculando pontuação')
     setPontos(await calcularPontuacao(localStorage.getItem('id'),'1.0.1'))
+    if (!pontos.error) {
+      localStorage.clear()
+    }
   })();
   }, [])
   return (
