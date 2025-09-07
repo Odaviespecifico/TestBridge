@@ -213,15 +213,42 @@ export function SubmitAttempt({}) {
 
 export function ResultsDisplay() {
   let [pontos, setPontos] = useState()  
-
+  let [texto, setTexto] = useState('Loading...')
+  const navigate = useNavigate()
   useEffect(() => {(async () => {
     console.log('calculando pontuação')
-    setPontos(await calcularPontuacao(localStorage.getItem('id'),'1.0.1'))
-    if (!pontos.error) {
-      localStorage.clear()
+    let resultado = await calcularPontuacao(localStorage.getItem('id'),'1.0.1')
+    setPontos(resultado)
+    if (resultado) {
+      console.log(resultado)
+    }
+    switch(resultado.nivel) {
+      case "A1":
+        setTexto("Great start! You can understand and use simple everyday expressions and introduce yourself. To keep improving, practice common phrases and listen to short dialogues. Try speaking a little every day.");
+        break;
+      case "A2":
+        setTexto("Well done! You can handle simple conversations about familiar topics like family, shopping, or work. To improve, read short texts and practice writing simple sentences. Focus on building your vocabulary step by step.");
+        break;
+      case "B1":
+        setTexto("Impressive progress! You can talk about experiences, opinions, and plans with more confidence. To level up, watch TV shows or podcasts in English and try writing short paragraphs or diary entries.");
+        break;
+      case "B2":
+        setTexto("Great work! You can interact fluently on many topics and understand the main ideas in complex texts. Keep pushing by debating, reading articles, and expanding your academic or professional vocabulary.");
+        break;
+      case "C1":
+        setTexto("Excellent! You can express yourself naturally, with detail and nuance, even on complex subjects. To refine your skills, focus on advanced vocabulary, idioms, and academic writing. Try reading books or joining discussions.");
+        break;
+      case "C2":
+        setTexto("Outstanding achievement! You understand almost everything with ease and can express yourself precisely in any situation. Keep sharp by exploring specialized materials, teaching others, or practicing professional-level communication.");
+        break;
     }
   })();
   }, [])
+
+  function handleClick(e) {
+    localStorage.clear()
+    navigate('/')
+  }
   return (
     <div className='flex items-center flex-col h-full w-screen justify-stretch'>
       <Header></Header>
@@ -230,13 +257,13 @@ export function ResultsDisplay() {
           <h1 className='text-2xl font-bold text-center flex flex-col justify-start items-center'>
             Your estimate CEFR level
           </h1>
-          <div className='flex flex-col justify-center items-center -mt-20 '>
+          <div className='flex flex-col justify-center items-center -mt-20 h-[512px]'>
             <div className=" h-96 w-96 text-[30vh] text-center font-medium text-amber-400">  
                 {pontos ? pontos.nivel : <Loading />}
             </div>
-            <p className='text-lg -mt-20 text-justify'>ADICIONAR TEXTO SOBRE O NÍVEL</p>
+            <p className='text-lg -mt-20 text-justify font-medium'>{texto}</p>
           </div>
-          <button className='bg-gray-950 text-white font-bold rounded-sm w-64 text-xl p-2 hover:cursor-pointer hover:bg-gray-800 hover:shadow-amber-400/45 hover:shadow-lg transition duration-100 active:bg-gray-600'>Back to the start</button>
+          <button onClick={handleClick} className='bg-gray-950 text-white font-bold rounded-sm w-64 text-xl p-2 hover:cursor-pointer hover:bg-gray-800 hover:shadow-amber-400/45 hover:shadow-lg transition duration-100 active:bg-gray-600'>Back to the start</button>
         </div>
       </div>
       <div className='flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2'></div>

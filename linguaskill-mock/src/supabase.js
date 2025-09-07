@@ -47,7 +47,7 @@ export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId, to
     console.error("Error adding attempt:", error, "Student Name:", nomeAluno, "Teacher Name:", nomeProfessor, "Attempt ID:", attemptId, "Token:", token)
     return {data, error}
   }
-  
+
   // Set token as used
   let tokenReq = await supabase
   .from('tokens')
@@ -110,8 +110,6 @@ export async function calcularPontuacao(idTentativa, versão) {
     console.error('Erro ao atualizar pontuação da tentativa:', updateScore.error, "Tentativa ID:", idTentativa, "Versão:", versão)
     return null
   }
-  // Reinicia o localStorage
-  localStorage.clear()
   return {pontuação: pontuação, acertos: acertos, erros: erros, nivel: percentageToCEFR(pontuação)}
 }
 
