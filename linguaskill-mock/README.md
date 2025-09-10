@@ -33,15 +33,16 @@ Dentro do arquivo Linguaskill.jsx você vai reordenar as questões e criar novas
 ## todo
 - Refatorar banco de dados para guardar resultados dentro da tabela
 
-- Adicionar instrução para cada tipo de questão
-
-- Adicionar nota automática e correção automática (Possível revisão de respostas)
-
 - Separar as questões em um outro arquivo para facilitar a importação na base de dados via CDN
 
 - Adicionar Integração de pagamento e sistema de chaves de acesso para prova
 
-- Adicionar report de respostas para os alunos
+- Adicionar autenticação para os TOkens
+
+- Adicionar report de respostas para o gestor da escola (Possível coordenador pedagógico)
+
+- Adicionar filtro dos tokens
+
 
 #### Implementação
 

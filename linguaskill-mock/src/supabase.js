@@ -125,3 +125,11 @@ if (score <= .90) return "B2";
 if (score < .97) return "C1";
 return "C2";
 }
+
+
+export async function getTokens() {
+  const { data, error } = await supabase
+  .from('tokens')
+  .select('*')
+  return {data, error}
+}

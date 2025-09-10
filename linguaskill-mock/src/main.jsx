@@ -4,6 +4,7 @@ import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router";
 import {  Header,  Instruction,  Introduction,  Footer,  Loading,} from "./utils.jsx";
 import { RegisterAttempt, SubmitAttempt, ResultsDisplay } from './questions.jsx';
+import { Tokens } from './tokens.jsx';
 import Linguaskill from './Linguaskill.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
         <Route path='/test/submit' element={<SubmitAttempt></SubmitAttempt>}/>
         <Route path='/test/result' element={<ResultsDisplay></ResultsDisplay>}/>
       <Route path='/' element={<RegisterAttempt/>}/>
+      <Route path='/token' element={<Tokens/>}></Route>
     </Routes>
   </BrowserRouter>
 )

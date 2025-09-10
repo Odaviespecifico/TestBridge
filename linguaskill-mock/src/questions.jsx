@@ -219,9 +219,9 @@ export function ResultsDisplay() {
     console.log('calculando pontuação')
     let resultado = await calcularPontuacao(localStorage.getItem('id'),'1.0.1')
     setPontos(resultado)
-    if (resultado) {
-      console.log(resultado)
-    }
+    setTimeout(() => {
+      localStorage.clear()
+    }, 100);
     switch(resultado.nivel) {
       case "A1":
         setTexto("Great start! You can understand and use simple everyday expressions and introduce yourself. To keep improving, practice common phrases and listen to short dialogues. Try speaking a little every day.");
@@ -249,6 +249,7 @@ export function ResultsDisplay() {
     localStorage.clear()
     navigate('/')
   }
+  
   return (
     <div className='flex items-center flex-col h-full w-screen justify-stretch'>
       <Header></Header>
