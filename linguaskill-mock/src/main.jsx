@@ -6,6 +6,7 @@ import {  Header,  Instruction,  Introduction,  Footer,  Loading,} from "./utils
 import { RegisterAttempt, SubmitAttempt, ResultsDisplay } from './questions.jsx';
 import { Tokens } from './tokens.jsx';
 import Linguaskill from './Linguaskill.jsx'
+import Linguaskill2 from './Linguaskill2.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
         <Route path='/test/result' element={<ResultsDisplay></ResultsDisplay>}/>
       <Route path='/' element={<RegisterAttempt/>}/>
       <Route path='/token' element={<Tokens/>}></Route>
+      <Route path='/writing' element={<Linguaskill2/>}></Route>
     </Routes>
   </BrowserRouter>
 )
