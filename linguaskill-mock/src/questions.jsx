@@ -258,11 +258,11 @@ export function ResultsDisplay() {
           <h1 className='text-2xl font-bold text-center flex flex-col justify-start items-center'>
             Your estimate CEFR level
           </h1>
-          <div className='flex flex-col justify-center items-center -mt-20 h-[512px]'>
+          <div className='flex flex-col justify-center items-center -mt-20 gap-2 h-[512px]'>
             <div className=" h-96 w-96 text-[30vh] text-center font-medium text-amber-400">  
                 {pontos ? pontos.nivel : <Loading />}
             </div>
-            <p className='text-lg -mt-20 text-justify font-medium'>{texto}</p>
+            <p className='text-lg text-justify font-medium'>{texto}</p>
           </div>
           <button onClick={handleClick} className='bg-gray-950 text-white font-bold rounded-sm w-64 text-xl p-2 hover:cursor-pointer hover:bg-gray-800 hover:shadow-amber-400/45 hover:shadow-lg transition duration-100 active:bg-gray-600'>Back to the start</button>
         </div>
