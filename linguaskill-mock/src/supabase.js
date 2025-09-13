@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = 'https://lwxhswosqyfujmjspryh.supabase.co'
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
+const supabaseKey =
+  import.meta.env?.VITE_SUPABASE_KEY || process.env.VITE_SUPABASE_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function verificarSessão(sessionId) {
@@ -92,7 +93,7 @@ export async function calcularPontuacao(idTentativa, versão) {
   let acertos = 0
   let erros = 0
   for (let [key, element] of respostasAluno) {
-    if (element === gabarito.data.respostas[key]) {
+    if (element.toUpperCase() === gabarito.data.respostas[key].toUpperCase()) {
       acertos++
     }
     else {
@@ -113,16 +114,30 @@ export async function calcularPontuacao(idTentativa, versão) {
   return {pontuação: pontuação, acertos: acertos, erros: erros, nivel: percentageToCEFR(pontuação)}
 }
 
-function percentageToCEFR(score) {
+
+export function calculateScore(respostasAluno, gabarito) {
+  let acertos = 0
+  let erros = 0
+  for (let [key, element] of Object.entries(gabarito)) {
+    if (element.toUpperCase() === respostasAluno[key]?.toUpperCase()) {
+      acertos++
+    } else {
+      erros++
+    }
+  }
+  return { acertos, erros, pontuação: (acertos / (acertos + erros)).toFixed(2) }
+}
+
+export function percentageToCEFR(score) {
 if (score < 0 || score > 1) {
   return "Invalid score (must be 0–100)";
 }
 
-if (score <= .25) return "A1";
-if (score <= .40) return "A2";
-if (score <= .60) return "B1";
-if (score <= .90) return "B2";
-if (score < .97) return "C1";
+if (score < .20) return "A1";
+if (score < .35) return "A2";
+if (score < .55) return "B1";
+if (score < .70) return "B2";
+if (score < .90) return "C1";
 return "C2";
 }
 

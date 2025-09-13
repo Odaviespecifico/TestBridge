@@ -260,7 +260,7 @@ export default function Linguaskill() {
           <strong>The San Francisco Gold Rush</strong>
         </h1>
         <p>
-          The identity of <InlineOpen /> the first person to discover gold in
+          The identity of <InlineOpen /> was the first person to discover gold in
           San Francisco remains a topic of debate, and it <InlineOpen /> be fair
           to say that we will likely never know for certain. However, the
           discovery of gold in 1848 set off the San Francisco Gold Rush, one of

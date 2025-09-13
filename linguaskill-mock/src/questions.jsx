@@ -120,6 +120,9 @@ function RegisterForm({formRef, sessionRef, tokenRef}) {
       e.target.value = value.substring(0,maxLength)
     }
     e.target.value = e.target.value.toUpperCase()
+    let verifyId = setTimeout(() => {
+      
+    },200)
   }
   return(
     <form ref={formRef} className="flex flex-col gap-4 p-4 w-96 mx-auto h-full justify-center -mt-35">
