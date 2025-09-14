@@ -25,9 +25,7 @@ export function RegisterAttempt() {
     if (state == 'form' && formRef.current.reportValidity()) {
       let myform = new FormData(formRef.current);
       let myformObj = Object.fromEntries(myform.entries());
-      console.log(myformObj)
       let sessionValidity = await verificarSessão(myformObj.sessionId)
-      console.log(sessionValidity)
       if (sessionValidity.error) {
         session.current.setCustomValidity('Invalid session code')
         setTimeout(() => {
@@ -43,7 +41,7 @@ export function RegisterAttempt() {
         myformObj.accessToken,
         myformObj.sessionId,
       )
-      console.log(tokenValidity)
+
       if (!tokenValidity.valid) {
         console.log(tokenValidity)
         token.current.setCustomValidity(tokenValidity.message)
@@ -55,6 +53,7 @@ export function RegisterAttempt() {
         token.current.reportValidity()
         return
       }
+
       setState('loading')
       let id = await adicionarTentativa(
         myformObj.studentName,
@@ -76,6 +75,7 @@ export function RegisterAttempt() {
           setState('success')
         }, 500);
         localStorage.setItem("id", id.data.id);
+        localStorage.setItem("versão",tokenValidity.data.sessions.versão)
         setTimeout(() => {
           navigate("/test")
         }, 3000);
@@ -123,9 +123,10 @@ function RegisterForm({formRef, sessionRef, tokenRef}) {
     let verifyId = setTimeout(() => {
       
     },200)
+    
   }
   return(
-    <form ref={formRef} className="flex flex-col gap-4 p-4 w-96 mx-auto h-full justify-center -mt-35">
+    <form ref={formRef} className="flex flex-col gap-4 p-4 w-96 mx-auto h-full justify-start">
         <h1 className="text-2xl font-bold text-center mb-4">Register attempt</h1>
         <label className="flex flex-col font-semibold text-lg">
           Your name

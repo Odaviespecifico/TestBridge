@@ -1,22 +1,19 @@
-import { useState, useRef, Children, use, useEffect } from "react";
+import { useState, useRef, Children, use, useEffect, useLayoutEffect } from "react";
 import "./index.css";
 import {
   Header,
   Footer,
 } from "./utils.jsx";
 import { useNavigate } from "react-router";
-import { questions } from "./externalQuestions.jsx";
 import { ConcludedTestAlert, FinishTestAlert } from "./modals.jsx";
 
-export default function Linguaskill() {
+export default function Linguaskill({questions}) {
   let answers = Object();
   const navigate = useNavigate()
   const [currentQuestion, setCurrentQuestion] = useState(0);
-
   const concludedDialogRef = useRef(null)
   const finalDialogRef = useRef(null)
   const formRef = useRef(null)
-
   useEffect(() => {
     // check if there is an Id
     if (!localStorage.getItem('id')) {
@@ -25,8 +22,7 @@ export default function Linguaskill() {
     if(localStorage.getItem('concluido') == 'true') {
       concludedDialogRef.current.showModal()
     }
-    // Add modal indicating that the test has already been finished
-  })
+  },[])
 
   const goToNextQuestion = async () => {
     historicoId.push(questionId);
@@ -56,7 +52,7 @@ export default function Linguaskill() {
 
   };
 
-  function finishTest(option) {
+  function handlefinishTestModal(option) {
     if (option == 'yes') {
       navigate("/test/submit")
     }
@@ -64,6 +60,16 @@ export default function Linguaskill() {
       goToPreviousQuestion()
       finalDialogRef.current.close()
     }
+  }
+  function handleConcludedModal(choice) {
+    if (choice == 'results') {
+      navigate('/test/result')
+    }
+    if (choice == 'New Test') {
+      localStorage.clear()
+      navigate('/')
+    }
+    concludedDialogRef.current.close()
   }
 
   function renderQuestions() {
@@ -78,22 +84,13 @@ export default function Linguaskill() {
       return <h1>Essa página {currentQuestion} não existe</h1>;
     }
   }
-  function handleConcludedModal(choice) {
-    console.log(choice)
-    if (choice == 'results') {
-      navigate('/test/result')
-    }
-    if (choice == 'New Test') {
-      localStorage.clear()
-      navigate('/')
-    }
-    concludedDialogRef.current.close()
-  }
+
+  
   return (
     <div className="flex items-center flex-col h-full w-screen justify-stretch">
       <Header />
       <ConcludedTestAlert ref={concludedDialogRef} handleConcludedModal={handleConcludedModal}/>
-      <FinishTestAlert ref={finalDialogRef} handleFinishTest={finishTest}></FinishTestAlert>
+      <FinishTestAlert ref={finalDialogRef} handleFinishTest={handlefinishTestModal}></FinishTestAlert>
       {renderQuestions()}
       <Footer
         nextQuestion={goToNextQuestion}

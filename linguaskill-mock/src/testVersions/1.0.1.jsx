@@ -1,5 +1,5 @@
   import { useState, useRef, Children, use, useEffect } from "react";
-import "./index.css";
+import "../index.css";
 import {
   OneCollumnQuestion,
   TwoCollumnQuestion,
@@ -13,13 +13,13 @@ import {
   OneCollumnParagraph,
   WritingTask,
   IndentedItem,
-} from "./questions.jsx";
+} from "../questions.jsx";
 import {
   AudioAlternative,
   InlineOpen,
   DropAlternative,
   InlineClosed,
-} from "./Alternatives.jsx";
+} from "../Alternatives.jsx";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Outlet } from "react-router";
 import {
@@ -28,7 +28,7 @@ import {
   Introduction,
   Footer,
   Loading,
-} from "./utils.jsx";
+} from "../utils.jsx";
 import { useNavigate } from "react-router";
   
   
