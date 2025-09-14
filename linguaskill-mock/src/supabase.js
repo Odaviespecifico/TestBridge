@@ -89,29 +89,18 @@ export async function calcularPontuacao(idTentativa, versão) {
   .single()
 
   // Calcular a pontuação
-  let respostasAluno = Object.entries(resposta.data.respostas)
-  let acertos = 0
-  let erros = 0
-  for (let [key, element] of respostasAluno) {
-    if (element.toUpperCase() === gabarito.data.respostas[key].toUpperCase()) {
-      acertos++
-    }
-    else {
-      erros++
-    }
-  }
-  let pontuação = (acertos/(acertos + erros)).toFixed(2)
+  const score = calculateScore(resposta.data.respostas,gabarito.data.respostas)
   
   // Salvar a pontuação
   const updateScore = await supabase
   .from('tentativas')
-  .update({ grade: percentageToCEFR(pontuação), porcentagem: pontuação, finalizado: true })
+  .update({ grade: percentageToCEFR(score.pontuação), porcentagem: score.pontuação, finalizado: true })
   .eq('id', idTentativa)
   if (updateScore.error) {
     console.error('Erro ao atualizar pontuação da tentativa:', updateScore.error, "Tentativa ID:", idTentativa, "Versão:", versão)
     return null
   }
-  return {pontuação: pontuação, acertos: acertos, erros: erros, nivel: percentageToCEFR(pontuação)}
+  return {pontuação: score.pontuação, acertos: score.acertos, erros: score.erros, nivel: percentageToCEFR(score.pontuação)}
 }
 
 export function calculateScore(respostasAluno, gabarito) {
@@ -120,7 +109,8 @@ export function calculateScore(respostasAluno, gabarito) {
   for (let [key, element] of Object.entries(gabarito)) {
     let opções = element.split('///')
     opções.forEach(element => {
-      if (element.toUpperCase() === respostasAluno[key]?.toUpperCase()) {
+
+      if (element.toUpperCase() == respostasAluno[key]?.toUpperCase()) {
         acertos++
       } 
     });

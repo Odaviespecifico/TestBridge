@@ -223,7 +223,7 @@ export function ResultsDisplay() {
     let resultado = await calcularPontuacao(localStorage.getItem('id'),'1.0.1')
     setPontos(resultado)
     setTimeout(() => {
-      localStorage.clear()
+      localStorage.setItem('concluido', true)
     }, 100);
     switch(resultado.nivel) {
       case "A1":

@@ -40,9 +40,20 @@ export function Introduction({title,children}) {
   );
 }
 
-export function Footer({ nextQuestion, previousQuestion, currentQuestion }) {
+export function Footer({ nextQuestion, previousQuestion, currentQuestion, questions }) {
   const renderBottomButton = () => {
-    if (currentQuestion != 0) {
+    if (currentQuestion == questions.length-1) {
+      {console.log('last question')}
+      return(
+        <button
+            type="button"
+            onClick={nextQuestion}
+            className="text-gray-100 font-medium text-2xl hover:text-gray-300">
+            Finish test
+        </button>
+      )
+    }
+    else if (currentQuestion != 0) {
       return (
         <div className="flex gap-4 justify-center items-center">
           <button
