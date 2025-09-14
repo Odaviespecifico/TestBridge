@@ -14,6 +14,8 @@ export function RegisterAttempt() {
   const session = useRef(null)
   const token = useRef(null)
   const [state, setState] = useState('form')
+  const [validity,setvalidity] = useState([false,false])
+
   const navigate = useNavigate()
   useEffect(() => {
     if (localStorage.getItem('id')) {
@@ -25,35 +27,16 @@ export function RegisterAttempt() {
     if (state == 'form' && formRef.current.reportValidity()) {
       let myform = new FormData(formRef.current);
       let myformObj = Object.fromEntries(myform.entries());
-      let sessionValidity = await verificarSessão(myformObj.sessionId)
-      if (sessionValidity.error) {
-        session.current.setCustomValidity('Invalid session code')
-        setTimeout(() => {
-          session.current.setCustomValidity("")
-          session.current.focus()
-          session.current.value = ''
-        }, 2000);
+      if (validity[0] == false) {
+        console.log(session.current.reportValidity())
         session.current.reportValidity()
         return
       }
-
-      let tokenValidity = await verificarToken(
-        myformObj.accessToken,
-        myformObj.sessionId,
-      )
-
-      if (!tokenValidity.valid) {
-        console.log(tokenValidity)
-        token.current.setCustomValidity(tokenValidity.message)
-        setTimeout(() => {
-          token.current.setCustomValidity("")
-          token.current.focus()
-          token.current.value = ''
-        }, 2000);
+      if (validity[1] == false) {
         token.current.reportValidity()
         return
       }
-
+      
       setState('loading')
       let id = await adicionarTentativa(
         myformObj.studentName,
@@ -75,7 +58,7 @@ export function RegisterAttempt() {
           setState('success')
         }, 500);
         localStorage.setItem("id", id.data.id);
-        localStorage.setItem("versão",tokenValidity.data.sessions.versão)
+        localStorage.setItem("versão",id.data.versão)
         setTimeout(() => {
           navigate("/test")
         }, 3000);
@@ -83,10 +66,73 @@ export function RegisterAttempt() {
     }
   }
 
+  async function verifyToken(tokenNumber) {
+    if (tokenNumber.length != 7) {
+      token.current.setCustomValidity("The token needs to be 7 characters long")
+      return false}
+    else {
+      token.current.setCustomValidity('')
+    }
+    if (!verifySession(session.current.value)) {
+      return false
+    }
+    let tokenValidity = await verificarToken(
+        tokenNumber,
+        session.current.value,
+      )
+    
+    if (!tokenValidity.valid) {
+      token.current.setCustomValidity(tokenValidity.message)
+      setTimeout(() => {
+        token.current.setCustomValidity("")
+        token.current.focus()
+      }, 1000);
+      token.current.reportValidity()
+      let validityArray = Array.from(validity)
+      validityArray[1] = false 
+      setvalidity(validityArray)
+      return false
+    }
+    else {
+      let validityArray = Array.from(validity)
+      validityArray[1] = true 
+      setvalidity(validityArray)
+      return tokenValidity
+    }
+  }
+
+  async function verifySession(sessionNumber) {
+    if (sessionNumber.length != 5) {
+      session.current.setCustomValidity("The session needs to be 5 characters long")
+      return false}
+    else{
+      session.current.setCustomValidity("")
+    }
+    let sessionValidity = await verificarSessão(sessionNumber)
+      if (sessionValidity.error) {
+        session.current.setCustomValidity('Invalid session code')
+        setTimeout(() => {
+          session.current.setCustomValidity("")
+          session.current.focus()
+        }, 1000); 
+        session.current.reportValidity()
+        let validityArray = Array.from(validity)
+        validityArray[0] = false 
+        setvalidity(validityArray)
+        return false
+      }
+      else {
+        let validityArray = Array.from(validity)
+        validityArray[0] = true 
+        setvalidity(validityArray)
+        return true
+      }
+  }
+  
   function renderContent() {
     switch (state) {
       case 'form':
-        return (<RegisterForm formRef={formRef} sessionRef={session} tokenRef={token}></RegisterForm>)
+        return (<RegisterForm formRef={formRef} sessionRef={session} tokenRef={token} verifyToken={verifyToken} verifySession={verifySession}></RegisterForm>)
       case 'loading':
         return(<Loading></Loading>)
       case 'success':
@@ -111,7 +157,7 @@ export function RegisterAttempt() {
   )
 }
 
-function RegisterForm({formRef, sessionRef, tokenRef}) {
+function RegisterForm({formRef, sessionRef, tokenRef, verifySession, verifyToken}) {
   function handleIdInput(e,maxLength) {
     /** @type {string} */
     let value = e.target.value
@@ -123,7 +169,7 @@ function RegisterForm({formRef, sessionRef, tokenRef}) {
     let verifyId = setTimeout(() => {
       
     },200)
-    
+
   }
   return(
     <form ref={formRef} className="flex flex-col gap-4 p-4 w-96 mx-auto h-full justify-start">
@@ -155,12 +201,15 @@ function RegisterForm({formRef, sessionRef, tokenRef}) {
           <input
             required
             minLength='5'
+            maxLength='5'
             type="text"
             name="sessionId"
             className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             placeholder="AB123"
             ref={sessionRef}
-            onInput={(e) => handleIdInput(e,5)}
+            onInput={(e) => {handleIdInput(e,5)
+              verifySession(e.target.value)
+            }}
           />
         </label>
         <label className="flex flex-col font-semibold text-lg">
@@ -171,7 +220,9 @@ function RegisterForm({formRef, sessionRef, tokenRef}) {
             maxLength='7'
             type="text"
             name="accessToken"
-            onInput={(e) => handleIdInput(e,7)}
+            onInput={(e) => {handleIdInput(e,7)
+              verifyToken(e.target.value)
+            }}
             ref={tokenRef}
             className="mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             placeholder="ABCD123"

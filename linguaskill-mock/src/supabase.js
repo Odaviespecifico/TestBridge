@@ -42,7 +42,7 @@ export async function adicionarTentativa(nomeAluno, nomeProfessor, attemptId, to
   .insert([
     { nome_aluno: nomeAluno, nome_professor: nomeProfessor , versão: session.data.sessions.versão,  session_id: session.data.sessions.id, access_token: session.data.token, finalizado: false},
   ])
-  .select('id')
+  .select()
   .single()
   if (error) {
     console.error("Error adding attempt:", error, "Student Name:", nomeAluno, "Teacher Name:", nomeProfessor, "Attempt ID:", attemptId, "Token:", token)
