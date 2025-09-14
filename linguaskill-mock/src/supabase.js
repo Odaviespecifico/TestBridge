@@ -114,18 +114,20 @@ export async function calcularPontuacao(idTentativa, versão) {
   return {pontuação: pontuação, acertos: acertos, erros: erros, nivel: percentageToCEFR(pontuação)}
 }
 
-
 export function calculateScore(respostasAluno, gabarito) {
   let acertos = 0
   let erros = 0
   for (let [key, element] of Object.entries(gabarito)) {
-    if (element.toUpperCase() === respostasAluno[key]?.toUpperCase()) {
-      acertos++
-    } else {
-      erros++
-    }
+    let opções = element.split('///')
+    opções.forEach(element => {
+      if (element.toUpperCase() === respostasAluno[key]?.toUpperCase()) {
+        acertos++
+      } 
+    });
   }
-  return { acertos, erros, pontuação: (acertos / (acertos + erros)).toFixed(2) }
+  erros = Object.entries(gabarito).length - acertos
+  
+  return { acertos, erros, pontuação: parseFloat((acertos / (acertos + erros)).toFixed(2)) }
 }
 
 export function percentageToCEFR(score) {
