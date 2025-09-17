@@ -87,7 +87,7 @@ export default function Linguaskill({questions}) {
 
   
   return (
-    <div className="flex items-center flex-col h-full w-screen justify-stretch">
+    <div className="flex items-center flex-col h-screen w-screen">
       <Header />
       <ConcludedTestAlert ref={concludedDialogRef} handleConcludedModal={handleConcludedModal}/>
       <FinishTestAlert ref={finalDialogRef} handleFinishTest={handlefinishTestModal}></FinishTestAlert>

@@ -46,7 +46,6 @@ export const questions = [
 
     (formRef) => {
     return(<>
-      <Instruction>Choose the correct answer.</Instruction>
       <OneQuestionMultipleChoice
         formRef={formRef}
         alternatives={[
@@ -54,6 +53,7 @@ export const questions = [
           "Students in the afternoon need to read the notice board until repairs are completed.",
           "Students will hear which room their lecture will be in by lunchtime tomorrow.",
         ]}
+        instruction={'Read the text given and check the correct answer to each question on the right.'}
       >
         <strong>To all physics students</strong> <br />
         The lecture tomorrow is in Room 23B due to maintenance works in room
@@ -65,11 +65,8 @@ export const questions = [
 
     (formRef) => {
     return(<>
-      <Instruction>
-        Read the text given and check the correct answer to each question on the
-        right.
-      </Instruction>
-      <OneCollumnQuestion formRef={formRef} title={""}>
+      
+      <OneCollumnQuestion formRef={formRef} title={""} instruction={'Choose the best word to fit the gap'}>
         In all occupations there are
         <InlineClosed
           alternatives={["elements", "components", "factors", "volumes"]}

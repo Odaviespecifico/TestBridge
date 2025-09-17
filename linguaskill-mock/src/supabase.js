@@ -128,8 +128,9 @@ if (score < 0 || score > 1) {
 if (score < .20) return "A1";
 if (score < .35) return "A2";
 if (score < .55) return "B1";
-if (score < .70) return "B2";
-if (score < .90) return "C1";
+if (score < .65) return "B2";
+if (score < .75) return "C1";
+if (score < .90) return "C2";
 return "C2";
 }
 
@@ -139,4 +140,13 @@ export async function getTokens() {
   .from('tokens')
   .select('*')
   return {data, error}
+}
+
+export async function getAnswers(id) {
+  const {data, error} = await supabase
+  .from('tentativas')
+  .select('*')
+  .eq('id',id)
+  .single()
+  return data
 }

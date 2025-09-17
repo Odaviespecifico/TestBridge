@@ -6,7 +6,7 @@ import {adicionarTentativa} from './supabase.js'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export function Header() {
-  return <div className="flex w-full h-10 bg-neutral-800"></div>;
+  return <div className="flex w-full h-12 bg-neutral-800"></div>;
 }
 
 export function Instruction({ children }) {
@@ -89,7 +89,7 @@ export function Footer({ nextQuestion, previousQuestion, currentQuestion, questi
   };
 
   return (
-    <div className="flex w-full min-h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2">
+    <div className="flex w-full h-14 bg-gray-950 flex-row-reverse px-10 justify-self-end mt-auto z-2">
       {renderBottomButton()}
     </div>
   );

@@ -15,11 +15,7 @@
 
   {/* Reading and use of english */}
   <>
-  <Instruction>
-    Read the text given and check the correct answer to each question on the
-    right.
-  </Instruction>
-  <OneCollumnQuestion  formRef={formRef}  title={'Open gap fill'}>
+  <OneCollumnQuestion  formRef={formRef}  title={'Open gap fill'} instruction={'Read the text given and check the correct answer to each question on the right.'}>
     If you <InlineOpen></InlineOpen> ice, it melts <br/>
     ou
     If he <InlineClosed  alternatives={['alternativa 1', 'alternativa 2', 'alternativa 3', 'alternativa 4']}/> the meeting yesterday, he would know the plan now.

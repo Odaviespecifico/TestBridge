@@ -51,6 +51,13 @@ export function InlineClosed({alternatives}) {
     const alternativeDiv = e.target.parentElement.children[2]
     console.log(alternativeDiv)
     alternativeDiv.classList.replace('hidden','flex')
+    /**@type {HTMLElement} */
+    const body = document.querySelector('body')
+    body.classList.add('overflow-hidden')
+    console.log('animationStarted')
+    setTimeout(() => {
+      body.classList.remove('overflow-hidden')
+    }, 400);
   }
   
   function handleFocusOut(e) {
@@ -58,6 +65,7 @@ export function InlineClosed({alternatives}) {
     const alternativeDiv = e.target.parentElement.children[2]
     alternativeDiv.classList.replace('flex','hidden')
   }
+
   return (
     <>
     <span className="peer group inline-flex gap-1 items-center min-w-32 ml-2">

@@ -6,7 +6,7 @@ import { getNextId } from "./Linguaskill";
 import { adicionarTentativa } from "./supabase.js";
 import { useFormState } from 'react-dom';
 import { useNavigate } from "react-router";
-import {  Header,  Footer,  Loading,} from "./utils.jsx";
+import {  Header,  Footer,  Loading, Instruction, Introduction} from "./utils.jsx";
 import { adicionarResposta, calcularPontuacao, verificarToken, verificarSessão } from './supabase.js';
 
 export function RegisterAttempt() {
@@ -326,15 +326,20 @@ export function ResultsDisplay() {
     </div>
   )
 }
-export function OneCollumnQuestion({formRef, title, children}) {
+export function OneCollumnQuestion({formRef, title, children, instruction}) {
   return (
-    <div className="flex flex-col gap-10 px-6 w-full max-w-5xl flex-1 mt-5" >
+    <>
+    <Instruction>
+        {instruction}
+    </Instruction>
+    <div className="flex flex-col gap-10 px-6 max-w-5xl flex-1 mt-5" >
         <TextTitle>{title}</TextTitle>
         <form id='formQuestion' ref={formRef} className='mb-3 text-xl/loose'> 
         {children}
         </form>
         {/* <InlineClosed id={incrementId()} alternatives={['You','have to', 'pass the alternatives','as a array prop']}></InlineClosed> */}
     </div>
+    </>
     )
   }
   
@@ -359,16 +364,15 @@ export function OneCollumnQuestion({formRef, title, children}) {
       })
     }
     return (
-      <>
-      <div className="grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-10/12">
-        <div className='flex flex-col gap-5 overflow-y-scroll'>
+      <div className="grid grid-cols-2 gap-5 w-full flex-1 pt-5 px-5 h-full min-h-0">
+        <div className='flex flex-col gap-5 overflow-y-scroll h-full min-h-0'>
           <div>
             <TextTitle center={false}>{title}</TextTitle>
             <em className='text-[18px]'>{subtitle}</em>
           </div>
           {children}
         </div>
-        <form id='formQuestion' ref={formRef} className='p-5 overflow-y-auto'>
+        <form id='formQuestion' ref={formRef} className='px-5 pt-5 overflow-y-auto'>
           {questions.map((question) => {
             return (
               <FourAlternatives
@@ -381,14 +385,15 @@ export function OneCollumnQuestion({formRef, title, children}) {
           })}
         </form> 
     </div>
-      </>
   )
 }
 
-export function OneQuestionMultipleChoice({formRef, children, alternatives}) {
+export function OneQuestionMultipleChoice({formRef, children, alternatives, instruction}) {
   const questionId = getNextId()
   return (
-    <div className="flex gap-8 items-start p-8 w-full max-w-5xl h-full">
+    <>
+    <Instruction>{instruction}</Instruction>
+    <div className="flex gap-8 items-start p-8 w-full max-w-5xl">
       <IdBox>{questionId}</IdBox>
       <div className='border-4 rounded-2xl p-2 max-w-96 text-base'>{children}</div>
       <form ref={formRef} className='flex-1'>
@@ -397,6 +402,7 @@ export function OneQuestionMultipleChoice({formRef, children, alternatives}) {
         })}
       </form>
     </div>
+    </>
   )
 }
 
@@ -541,7 +547,7 @@ export function DragQuestion({formRef, propAlternatives, title, subtitle, paragr
 
     return (
       <DndContext autoScroll={false} onDragEnd={(e) => handleDragEnd(e)} onDragStart={(e) => handleDragStart(e)} onDragOver={(e) => handleOver(e)} collisionDetection={pointerWithin} readOnly>
-        <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 max-h-9/12'>
+        <div className='grid grid-cols-2 gap-5 w-full flex-1 p-5 h-full min-h-0'>
           <div className='flex flex-col relative gap-5 overflow-y-scroll z-0'>
             <div>
               <TextTitle center={false}>{title}</TextTitle>
