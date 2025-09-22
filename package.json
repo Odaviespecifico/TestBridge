@@ -5,8 +5,8 @@
   "homepage": "https://odaviespecifico.github.io/Linguaskill/",
   "type": "module",
   "scripts": {
-    "dev": "tsc && vite --host",
-    "build": "tsc && vite build",
+    "dev": "vite --host",
+    "build": "vite build",
     "lint": "eslint .",
     "test": "tsc && vitest --mode test",
     "preview": "tsc && vite preview",
